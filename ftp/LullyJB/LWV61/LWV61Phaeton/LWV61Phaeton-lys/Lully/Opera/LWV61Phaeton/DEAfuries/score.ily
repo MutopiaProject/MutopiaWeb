@@ -1,5 +1,0 @@
-\score {
-  \dessusHauteContreTailleQuinteBasse
-  \layout { }
-  \midi { }
-}

@@ -1,1 +1,0 @@
-R1*15 R1 R1 \noBreak R1*17

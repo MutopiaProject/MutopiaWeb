@@ -1,7 +1,0 @@
-\piecePartSpecs #`((violino1)
-                   (violino2)
-                   (violino3)
-                   (viola)
-                   (bassi #:score-template "score")
-                   (keyboard)
-                   (vocal-keyboard #:score-template "score-keyboard"))

@@ -1,2 +1,0 @@
-
-Vo -- lez, plai -- sirs, 

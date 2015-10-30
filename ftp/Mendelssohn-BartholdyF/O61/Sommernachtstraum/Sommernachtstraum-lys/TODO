@@ -1,5 +1,0 @@
-- convert text-only dynamics so that they show up in midi output
-- check against another source
-
-DONE
-- use \combineparts for automatic "Solo" and "a due"
