@@ -1,59 +1,81 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
+  [[ INCLUDE("head-pre.html-include") ]]
+  <title>Mutopia: Advanced search</title>
+  [[ INCLUDE("head-post.html-include") ]]
 
-<head>
-<title>Mutopia: Advanced search</title>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<link type="text/css" rel="stylesheet" href="mutopia.css" />
-</head>
-<!-- http://www.cs.helsinki.fi/group/cbrahms/demoengine/ -->
-<body>
+  <body>
+    [[ INCLUDE("nav-pre.html-include") ]]
+    [[ INDEX("advsearch") ]]
+    [[ INCLUDE("nav-post.html-include") ]]
 
-[[ HEAD("advsearch") ]]
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-3">
+            <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" width="260" height="68" />
+          </div>
+          <div class="col-sm-4 col-sm-offset-1 text-center">
+            <b>All music in the Mutopia Project is free to download, print out, perform and distribute.<br />
+              [[ NUMBER_OF_PIECES() ]] pieces of music are now available.</b>
+          </div>
+          <div class="col-sm-4 text-center">
+            Save our bandwidth - use a mirror!<br />
+            <a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
+            <a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h2>Advanced search</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h2>Advanced search</h2>
 
-<p>Select the appropriate options and then click on "Display Music Table".</p>
+          <p>Select the appropriate options and then click on "Display Music Table".</p>
 
-<form action="cgibin/make-table.cgi" method="get">
-<ul>
-<li>Options which change the <i>way</i> the music is displayed:
-<ul>
-<li><input type="checkbox" name="preview" value="1" /> Include preview images in page</li>
-</ul>
-</li>
+          <form action="cgibin/make-table.cgi" method="get">
+            <ul>
+              <li>Options which change the <i>way</i> the music is displayed:
+                <ul>
+                  <li><input type="checkbox" name="preview" value="1" /> Include preview images in page</li>
+                </ul>
+              </li>
 
-<li>Options which narrow down the range of music which is displayed:
-<ul>
-<li>Search for <input type="text" name="searchingfor" size="30" /></li>
-<li>Display music by <select name="Composer">
-<option value="">all composers</option>
-[[ COMPOSER_OPTIONS() ]]
-</select></li>
-<li>for <select name="Instrument">
-<option value="">any instrument</option>
-[[ INSTRUMENT_OPTIONS() ]]
-</select></li>
-<li><input type="checkbox" name="solo" value="1" /> Solo music only</li>
-<li>style: <select name="Style">
-<option value="">any</option>
-[[ STYLE_OPTIONS() ]]
-</select></li>
-</ul></li>
-<li><input type="checkbox" name="recent" value="1" /> Display only music that's been added or updated in the last <input type="text" name="timelength" size="3" value="1" /> <select name="timeunit">
-<option value="week">week(s)</option>
-<option value="day">day(s)</option>
-</select></li>
+              <li>Options which narrow down the range of music which is displayed:
+                <ul>
+                  <li>Search for <input type="text" name="searchingfor" size="30" /></li>
+                  <li>Display music by <select name="Composer">
+                      <option value="">all composers</option>
+                      [[ COMPOSER_OPTIONS() ]]
+                  </select></li>
+                  <li>for <select name="Instrument">
+                      <option value="">any instrument</option>
+                      [[ INSTRUMENT_OPTIONS() ]]
+                  </select></li>
+                  <li><input type="checkbox" name="solo" value="1" /> Solo music only</li>
+                  <li>style: <select name="Style">
+                      <option value="">any</option>
+                      [[ STYLE_OPTIONS() ]]
+                  </select></li>
+              </ul></li>
+              <li><input type="checkbox" name="recent" value="1" /> Display only music that's been added or updated in the last <input type="text" name="timelength" size="3" value="1" /> <select name="timeunit">
+                  <option value="week">week(s)</option>
+                  <option value="day">day(s)</option>
+              </select></li>
 
-<li><input type="checkbox" name="lilyv" value="1" /> Display only music created with LilyPond version <input type="text" name="lilyversion" size="6" /> (can be a major version, eg. '2', or a more specific version, eg. '2.0' or '2.0.1')</li>
+              <li><input type="checkbox" name="lilyv" value="1" /> Display only music created with LilyPond version <input type="text" name="lilyversion" size="6" /> (can be a major version, eg. '2', or a more specific version, eg. '2.0' or '2.0.1')</li>
 
-<li><input type="checkbox" name="printav" value="1" /> Display only music which is available to purchase as a printed copy</li>
-</ul>
-<p style="text-align: center;"><input type="submit" value="Display Music Table" /></p>
-</form>
+              <li><input type="checkbox" name="printav" value="1" /> Display only music which is available to purchase as a printed copy</li>
+            </ul>
+            <p class="text-center"><input type="submit" value="Display Music Table" /></p>
+          </form>
+        </div>
+      </div> <!-- row -->
+    </div> <!-- .container -->
 
-[[ TAIL("advsearch") ]]
+    [[ INCLUDE("footer.html-include") ]]
 
-</body>
-</html> 
+  </body>
+</html>

@@ -1,0 +1,13 @@
+    <footer class="footer">
+      <div class="container">
+        <p class="text-center"><u>Disclaimer:</u><br />
+          <small>The Mutopia Project is run by volunteers, and the material within it is provided
+            "as-is". NO WARRANTY of any kind is made, including fitness
+            for any particular purpose.<br />No claim is made as to the accuracy or the
+            factual, editorial or musical correctness of any of the material
+            provided here.</small></p>
+      </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>

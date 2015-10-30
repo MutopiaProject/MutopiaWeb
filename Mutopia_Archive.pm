@@ -48,6 +48,7 @@ sub getData {
     return map { chomp; $_ } <FILE>;
 }
 
+
 # RDFtoCACHE %RDFData
 # returns RDF data in format suitable for the new cache format
 #
@@ -160,3 +161,50 @@ sub byInstrument($$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Mutopia_Archive - routines for reading RDF files
+
+=head1 DESCRIPTION
+
+There are several artifacts of a musical build besides a PDf and a
+MIDI file. After preview images are built an RDF is created to
+completely describe the catalog entry. During the publication process,
+this RDF file is a convenient place in which to find information.
+
+=over
+
+=item readRDFFile(filename)
+
+Reads an RDF file, and returns a data structure.
+
+=item getData(filename)
+
+Reads $filename and returns a hash. For "key\nvalue\n"-structured
+files, such as datafiles/composers.dat
+
+=item RDFtoCACHE(RDF-datastructure)
+
+Returns RDF data in format suitable for the new cache format.
+
+=item RDFtoSEARCHCACHE(RDF-datastructure)
+
+Returns RDF data in a format (almost) suitable for the "search" cache.
+
+=item byComposer(left, right)
+
+Compare routine for sorting by composer. This gives special attention
+to Traditional and Anonymous which should appear at the end of lists.
+
+=item byInstrument(left, right)
+
+Compare routine for sorting by instrument. This gives special
+attention to Orchestra and Ensembles which should appear at the
+end of a sorted list.
+
+=back
+
+=cut

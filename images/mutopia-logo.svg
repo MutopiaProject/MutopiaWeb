@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="262.27173"
+   height="73.246277"
+   id="svg2"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="mutopia-logo.svg">
+  <title
+     id="title3017">MutopiaProject logo</title>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1191"
+     inkscape:window-height="690"
+     id="namedview23"
+     showgrid="false"
+     inkscape:zoom="1.3878736"
+     inkscape:cx="9.7271108"
+     inkscape:cy="34.461558"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>MutopiaProject logo</dc:title>
+        <dc:date>25 Oct 2015</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Glen Larsen</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Mutopia Project</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:description>A stroked Mutopia logo for the website.</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0088aa;fill-opacity:1;stroke:none;font-family:Sans"
+     id="text2989-5"
+     transform="translate(-122.131,-409.39989)">
+    <path
+       inkscape:connector-curvature="0"
+       style="font-size:64px;font-variant:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-1px;writing-mode:lr-tb;text-anchor:start;fill:#0088aa;font-family:Utopia;-inkscape-font-specification:Utopia"
+       id="path3368"
+       transform="translate(122.131,409.39989)"
+       d="m 1,4.0625 0,1.875 c 5.63199,0.384 5.75,0.50976 5.75,4.09375 l 0,25.34375 c 0,3.392 -0.1175,5.82551 -0.4375,7.9375 -0.384,2.688 -1.92201,2.9315 -5.25,3.1875 l 0,1.84375 15.15625,0 0,-1.84375 c -4.16,-0.32 -5.6785,-0.4995 -6.0625,-3.1875 -0.32,-2.11199 -0.4375,-4.5455 -0.4375,-7.9375 l 0,-25.40625 0.125,0 16.5,37.625 1.71875,0 16.71875,-37.625 0.1875,0 0,32.4375 c 0,3.584 -0.11801,3.70975 -5.75,4.09375 l 0,1.84375 17.84375,0 0,-1.84375 c -5.568,-0.384 -5.75,-0.50975 -5.75,-4.09375 l 0,-32.375 c 0,-3.4015621 0.209378,-4.0317769 5,-4.03125 4.871068,5.357e-4 5.03125,0.6221294 5.03125,4.03125 l 0,22.125 c 0.064,3.776 0.63075,7.16776 1.71875,9.34375 2.944,6.272 9.66551,7.8125 15.9375,7.8125 6.336,0 13.05601,-1.4765 16,-7.8125 1.088,-2.23999 1.71875,-5.62875 1.71875,-9.46875 L 97.149625,11.199503 C 97.580499,7.711507 98.918257,6.3125 106.40625,6.3125 l 3.78125,0 0,36.09375 c 0,3.583996 -0.18326,3.70975 -7.03125,4.09375 l 0,1.84375 20.40625,0 0,-1.84375 c -6.84799,-0.384 -7.03125,-0.509754 -7.03125,-4.09375 l 0,-36.09375 3.75,0 c 7.48799,0 8.857,1.399007 9.625,8.375 l 1.90625,0 0,-10.625 -47.1875,0 0,1.875 c 5.632,0.384 5.78125,0.50976 5.78125,4.09375 l 0,20.71875 c 0,6.08 -0.955,9.94001 -2.875,12.5 -1.984,2.56 -4.81925,3.8125 -8.53125,3.8125 -3.64799,0 -6.4535,-1.2525 -8.4375,-3.8125 -1.92,-2.55999 -2.875,-6.42 -2.875,-12.5 l 0,-20.71875 c 0,-3.58399 0.18251,-3.70975 5.7505,-4.09375 l 0,-1.875 -29.2505,0 c -2.176,5.696 -4.78376,11.33676 -7.34375,16.96875 l -7.6875,17.15625 -0.125,0 -7.5625,-17.09375 C 18.97275,15.39776 16.30399,9.7585 14,4.0625 z" />
+  </g>
+  <g
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0088aa;fill-opacity:1;stroke:none;font-family:Sans"
+     id="text2989-5-8"
+     transform="translate(-122.131,-409.39989)" />
+  <g
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0088aa;fill-opacity:1;stroke:none;font-family:Sans"
+     id="text2989-5-8-3-1"
+     transform="translate(-122.131,-409.39989)">
+    <path
+       inkscape:connector-curvature="0"
+       style="font-size:64px;font-variant:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-1px;writing-mode:lr-tb;text-anchor:start;fill:#0088aa;font-family:Utopia;-inkscape-font-specification:Utopia"
+       id="path3404"
+       d="m 273.75827,415.7099 c 11.39199,0 14.016,11.456 14.144,20.864 -0.128,9.40799 -2.75201,20.864 -14.144,20.864 -11.39199,0 -14.016,-11.45601 -14.144,-20.864 0.128,-9.408 2.75201,-20.864 14.144,-20.864 m 0,-2.24 c -7.04,0 -12.28801,2.176 -15.872,6.208 -3.456,3.83999 -5.44,9.664 -5.44,16.896 0,7.16799 1.984,13.056 5.44,16.896 3.58399,4.03199 8.832,6.208 15.872,6.208 7.10399,0 12.288,-2.17601 15.872,-6.208 3.51999,-3.84 5.44,-9.72801 5.44,-16.896 0,-7.232 -1.92001,-13.05601 -5.44,-16.896 -3.584,-4.032 -8.76801,-6.208 -15.872,-6.208" />
+  </g>
+  <g
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0088aa;fill-opacity:1;stroke:none;font-family:Sans"
+     id="text2989-5-8-3-1-6"
+     transform="translate(-122.131,-409.39989)">
+    <path
+       inkscape:connector-curvature="0"
+       style="font-size:64px;font-variant:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-1px;writing-mode:lr-tb;text-anchor:start;fill:#0088aa;font-family:Utopia;-inkscape-font-specification:Utopia"
+       id="path3401"
+       d="m 303.48251,439.5819 3.648,0 c 2.944,0 5.82401,-0.256 8.192,-0.832 4.928,-1.27999 10.56,-4.736 10.56,-12.736 0,-4.86399 -2.112,-8.192 -4.992,-9.984 -3.07199,-1.91999 -7.168,-2.56 -11.648,-2.56 l -17.856,0 0,1.856 c 5.632,0.384 5.76,0.51201 5.76,4.096 l 0,32.384 c 0,3.584 -0.128,3.712 -5.76,4.096 l 0,1.856 18.88,0 0,-1.856 c -6.59199,-0.384 -6.784,-0.512 -6.784,-4.096 l 0,-12.224 m 0,-21.504 c 0,-1.79199 0.70401,-2.368 4.864,-2.368 6.592,0 10.624,3.77601 10.624,10.752 0,8 -5.248,10.88 -10.752,10.88 -3.77599,0 -4.736,-0.128 -4.736,-2.496 l 0,-16.768" />
+  </g>
+  <g
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0088aa;fill-opacity:1;stroke:none;font-family:Sans"
+     id="text2989-5-8-3-1-6-9"
+     transform="translate(-122.131,-409.39989)">
+    <path
+       inkscape:connector-curvature="0"
+       style="font-size:64px;font-variant:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-1px;writing-mode:lr-tb;text-anchor:start;fill:#0088aa;font-family:Utopia;-inkscape-font-specification:Utopia"
+       id="path3398"
+       d="m 335.57141,419.4219 c 0,-3.58399 0.19201,-3.712 5.76,-4.096 l 0,-1.856 -17.856,0 0,1.856 c 5.632,0.384 5.76,0.51201 5.76,4.096 l 0,32.384 c 0,3.584 -0.128,3.712 -5.76,4.096 l 0,1.856 17.856,0 0,-1.856 c -5.56799,-0.384 -5.76,-0.512 -5.76,-4.096 l 0,-32.384" />
+  </g>
+  <g
+     style="font-size:12px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0088aa;fill-opacity:1;stroke:none;font-family:Sans"
+     id="text2989-5-8-3-1-6-9-1"
+     transform="translate(-122.131,-409.39989)">
+    <path
+       inkscape:connector-curvature="0"
+       style="font-size:64px;font-variant:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:-1px;writing-mode:lr-tb;text-anchor:start;fill:#0088aa;font-family:Utopia;-inkscape-font-specification:Utopia"
+       id="path3395"
+       d="m 383.25695,457.7579 0,-1.856 c -3.71199,-0.32 -4.416,-0.512 -5.568,-3.84 l -13.568,-38.592 -4.736,0 -6.72,18.944 c -1.984,5.568 -4.672,13.24801 -6.912,19.072 -1.344,3.456 -1.92,4.224 -5.952,4.416 l 0,1.856 14.08,0 0,-1.856 -3.328,-0.32 c -1.92,-0.192 -2.112,-0.832 -1.6,-2.56 1.088,-3.83999 2.432,-7.808 3.904,-12.352 l 14.336,0 4.288,12.224 c 0.64,1.856 0.32,2.56 -1.728,2.752 l -2.88,0.256 0,1.856 16.384,0 m -16.832,-19.52 -12.736,0 c 2.048,-6.39999 4.288,-12.672 6.208,-18.304 l 0.192,0 6.336,18.304" />
+  </g>
+  <text
+     sodipodi:linespacing="125%"
+     style="font-size:4.85368919px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:1;stroke:none;font-family:Sans"
+     xml:space="preserve"
+     id="text2985-6"
+     y="70.650894"
+     x="102.24243"><tspan
+       style="font-size:25.88634109px;font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:6px;writing-mode:lr-tb;text-anchor:start;fill:#4d4d4d;font-family:FreeSans;-inkscape-font-specification:FreeSans Semi-Bold"
+       id="tspan2987-0"
+       y="70.650894"
+       x="102.24243">PROJECT</tspan></text>
+</svg>

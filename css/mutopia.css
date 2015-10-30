@@ -1,0 +1,44 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 40px;
+    padding-bottom: 20px;
+/*  margin-bottom: 60px;*/
+}
+.jumbotron {
+    padding-top: 40px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    color: inherit;
+    background-color: #eee;
+}
+
+h2 {
+    text-align: center;
+}
+
+.footer {
+    background-color: #eee;
+}
+.sidebar-module-inset {
+    padding: 15px;
+    background-color: #eee;
+    border-radius: 4px;
+}
+.sidebar-module {
+    padding: 15px;
+    margin: 0 -15px 15px;
+}
+
+th { text-align: center; }
+
+/* Browse table styling */
+table.browse_table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+table.browse_table td, table.browse_table th {
+    border: 1px solid black;
+    padding: 4px 30px 4px 20px;
+    vertical-align: top;
+}

@@ -21,7 +21,7 @@ my $OUTPUT_FILE;
 sub makeHTML($) {
     my $rdf_ref = shift;
 
-    %RDF_DATA = %$rdf_ref; 
+    %RDF_DATA = %$rdf_ref;
     chdir "html-in" or die "cannot chdir to html-in: $!";
     my @infiles = glob("*.html-in");
     chdir "..";
@@ -30,7 +30,7 @@ sub makeHTML($) {
         open (IN, "<:utf8", "html-in/$infile") or die "cannot open $infile: $!";
         local $_ = join "", <IN>;
         close IN;
-    
+
         # stick warning message in
         my $msg = <<________EOM;$msg=~s/^ {8}//gm;s/<head/\n$msg\n<head/;
         <!--*********************************************************
@@ -73,6 +73,7 @@ ________EOM
     }
 }
 
+
 # replace_placeholders(\$html)
 # Replaces placeholders like [[ code ]] with generated HTML
 #
@@ -82,7 +83,7 @@ sub replace_placeholders($) {
     # Execute the contents of [[ ]] brackets in the HTML, and substitute
     # the value returned.  The trickery with "eval" is to ensure that we
     # see the error messages generated, if there were any.
-    
+
     1 while $$html =~ s(\[\[(.*?)\]\])(
         my $return;
         eval "\$return = (sub{$1})->()";
@@ -91,11 +92,13 @@ sub replace_placeholders($) {
     )ges;
 }
 
+
 ###################################################################
 # Subroutines to generate useful fragments of HTML.  The variable
 # %RDF_DATA contains the collection data, and $OUTPUT_FILE contains
 # the name of the file currently being outputted to.
 ###################################################################
+
 
 sub BROWSE_BY_COMPOSER {
     my %comps = Mutopia_Archive::getData("datafiles/composers.dat");
@@ -104,34 +107,35 @@ sub BROWSE_BY_COMPOSER {
 
         # How many pieces by this composer?
 	open (SEARCHCACHE, '<:utf8', 'datafiles/searchcache.dat')
-            or die "cannot open datafiles/searchcache.dat: $!";
+        or die "cannot open datafiles/searchcache.dat: $!";
 	my $noofpieces = 0;
 	my $finish = 0;
 	do {
-            chomp(my $templine = <SEARCHCACHE>);
+        chomp(my $templine = <SEARCHCACHE>);
 	    if ($templine =~ /^composerK:$k/) { $noofpieces++ }
 	    if ($templine =~ /^date/) { $finish = 1 }
         } until (($finish == 1) || (eof SEARCHCACHE));
         close(SEARCHCACHE);
-        
+
         $html .= "<a href='cgibin/make-table.cgi?Composer=$k'>";
         $html .= $comps{$k} . "</a> [$noofpieces]<br />\n";
     }
     return $html;
 }
 
+
 sub BROWSE_BY_INSTRUMENT {
     my %insts = Mutopia_Archive::getData("datafiles/instruments.dat");
     my $html = "";
     for my $k (sort {Mutopia_Archive::byInstrument($a,$b)} keys %insts) {
-    
-        # How many pieces for this instrument?
+
+    # How many pieces for this instrument?
 	open (SEARCHCACHE, '<:utf8', 'datafiles/searchcache.dat')
-            or die "cannot open datafiles/searchcache.dat: $!";
+        or die "cannot open datafiles/searchcache.dat: $!";
 	my $noofpieces = 0;
 	my $finish = 0;
 	do {
-            chomp(my $templine = <SEARCHCACHE>);
+        chomp(my $templine = <SEARCHCACHE>);
 	    if ( ($templine =~ /^instruments:/) &&
 	         ( $templine =~ /$k/ )) { $noofpieces++ }
             if (($k eq "Harp") and ($templine =~ /Harpsichord/)) { $noofpieces-- }
@@ -145,18 +149,19 @@ sub BROWSE_BY_INSTRUMENT {
     return $html;
 }
 
+
 sub BROWSE_BY_STYLE {
     my %styles = Mutopia_Archive::getData("datafiles/styles.dat");
     my $html = "";
     for my $k (sort keys %styles) {
-    
-        # How many pieces in this style?
+
+    # How many pieces in this style?
 	open (SEARCHCACHE, '<:utf8', 'datafiles/searchcache.dat')
             or die "cannot open datafiles/searchcache.dat: $!";
 	my $noofpieces = 0;
 	my $finish = 0;
 	do {
-            chomp(my $templine = <SEARCHCACHE>);
+        chomp(my $templine = <SEARCHCACHE>);
 	    if ($templine =~ /^style:$styles{$k}/) { $noofpieces++ }
 	    if ($templine =~ /^title/) { $finish = 1 }
         } until (($finish == 1) || (eof SEARCHCACHE));
@@ -167,6 +172,7 @@ sub BROWSE_BY_STYLE {
     }
     return $html;
 }
+
 
 sub BROWSE_COLLECTIONS {
     open (COLLECTIONS, '<:utf8', 'datafiles/collections.dat');
@@ -186,18 +192,20 @@ sub BROWSE_COLLECTIONS {
 
     $html .= "</ul>\n";
     close (COLLECTIONS);
-    
+
     return $html;
 }
+
 
 sub COMPOSER_OPTIONS {
     my %comps = Mutopia_Archive::getData("datafiles/composers.dat");
     my $html = "";
     for my $k (sort {Mutopia_Archive::byComposer($a,$b)} keys %comps) {
         $html .= "<option value='$k'>" . $comps{$k} . "</option>\n";
-    } 
+    }
     return $html;
 }
+
 
 sub COMPOSER_LIST {
     my %comps = Mutopia_Archive::getData("datafiles/composers.dat");
@@ -208,23 +216,26 @@ sub COMPOSER_LIST {
     return substr($html, 0, -2);
 }
 
+
 sub INSTRUMENT_OPTIONS {
     my %insts = Mutopia_Archive::getData("datafiles/instruments.dat");
-    my $html = "";         
+    my $html = "";
     for my $k (sort {Mutopia_Archive::byInstrument($a,$b)} keys %insts) {
         $html .= "<option value='$k'>" . $insts{$k} . "</option>\n";
-    } 
+    }
     return $html;
 }
+
 
 sub STYLE_OPTIONS {
     my %styles = Mutopia_Archive::getData("datafiles/styles.dat");
     my $html = "";
     for my $k (sort keys %styles) {
         $html .= "<option value='$k'>" . $styles{$k} . "</option>\n";
-    } 
+    }
     return $html;
 }
+
 
 sub STYLE_LIST {
     my %styles = Mutopia_Archive::getData("datafiles/styles.dat");
@@ -235,9 +246,10 @@ sub STYLE_LIST {
     return substr($html, 0, -2);
 }
 
+
 sub NUMBER_OF_PIECES {
     # returns the number of pieces (counted from musiccache.dat)
-    
+
     open (CACHE, '<:utf8', 'datafiles/musiccache.dat');
     chomp(my $headerlength = <CACHE>);
     my $numberofpieces = 0;
@@ -250,10 +262,11 @@ sub NUMBER_OF_PIECES {
     return $numberofpieces;
 }
 
+
 sub LATEST_ADDITIONS($) {
     # returns HTML of links to the most recent pieces.
     # argument is the number of pieces to display
-    
+
     #order by ID, most recent first
     my @recent = sort {
         $a->{id} =~ /-(\d+)$/ or die "invalid id: ", $a->{id};
@@ -263,9 +276,9 @@ sub LATEST_ADDITIONS($) {
 
         return $idB <=> $idA;
     } values %RDF_DATA;
-   
+
     # generate HTML listing for most recent pieces
-    my $html = ""; 
+    my $html = "";
     my $last_piece = (shift) - 1;
     for my $piece(@recent[0 .. $last_piece]) {
         my($date, $id) = $piece->{id} =~ m|-(\d+/\d+/\d+)-(\d+)$|
@@ -284,20 +297,21 @@ sub LATEST_ADDITIONS($) {
     return $html;
 }
 
+
 sub LATEST_ADDITIONS_RSS($) {
     # returns XML of links to the most recent pieces.
     # argument is the number of pieces to display
-        
+
     #order by ID, most recent first
     my @recent = sort {
         $a->{id} =~ /-(\d+)$/ or die "invalid id: ", $a->{id};
         my $idA = $1;
-        $b->{id} =~ /-(\d+)$/ or die "invalid id: ", $b->{id}; 
+        $b->{id} =~ /-(\d+)$/ or die "invalid id: ", $b->{id};
         my $idB = $1;
-        
+
         return $idB <=> $idA;
     } values %RDF_DATA;
-    
+
     # generate XML listing for most recent pieces
     my $xml = "<pubDate>". strftime("%a, %d %b %Y %T %z", localtime()) . "</pubDate>\n";
     my ($fy, $fm, $fd) = $recent[0]->{id} =~ m|-(\d+)/(\d+)/(\d+)-\d+$|;
@@ -307,7 +321,7 @@ sub LATEST_ADDITIONS_RSS($) {
     for my $piece(@recent[0 .. $last_piece]) {
         my($y, $m, $d, $id) = $piece->{id} =~ m|-(\d+)/(\d+)/(\d+)-(\d+)$|
                 or die "invalid id: " . $piece->{id};
-    
+
         $xml .= "<item>\n";
         $xml .= "<title>" . $piece->{composer} . ": " . $piece->{title} . "</title>\n";
         $xml .= "<link>http://www.mutopiaproject.org/cgibin/piece-info.cgi?id=" . $id . "</link>\n";
@@ -325,111 +339,220 @@ sub LATEST_ADDITIONS_RSS($) {
     return $xml;
 }
 
+
 sub ALL_PIECES {
- # returns HTML of links to all pieces in the archive (made from the cache)
- my $html = "";
- 
- open (CACHE, '<:utf8', 'datafiles/musiccache.dat');
+    # returns HTML of links to all pieces in the archive (made from the cache)
+    my $html = "";
 
- chomp (my $headerlength = <CACHE>);
- seek CACHE, $headerlength, 0;
+    open (CACHE, '<:utf8', 'datafiles/musiccache.dat');
 
- until (eof CACHE) {
-  chomp (my $checkline = <CACHE>);
-  if ($checkline ne "**********") { print "ERROR in the datafile - rebuild cache"; }
-  chomp (my $idno = <CACHE>);
-  chomp (my $midrif = <CACHE>);
-  chomp (my $musicnm = <CACHE>);
-  chomp (my $lyfile = <CACHE>);
-  chomp (my $midfile = <CACHE>);
-  chomp (my $a4psfile = <CACHE>);
-  chomp (my $a4pdffile = <CACHE>);
-  chomp (my $letpsfile = <CACHE>);
-  chomp (my $letpdffile = <CACHE>);
-  chomp (my $pngfile = <CACHE>);
-  chomp (my $pngheight = <CACHE>);
-  chomp (my $pngwidth = <CACHE>);
-  chomp (my $title = <CACHE>);
-  chomp (my $composer = <CACHE>);
-  chomp (my $opus = <CACHE>);
-  chomp (my $lyricist = <CACHE>);
-  chomp (my $instrument = <CACHE>);
-  chomp (my $date = <CACHE>);
-  chomp (my $style = <CACHE>);
-  chomp (my $metre = <CACHE>);
-  chomp (my $arranger = <CACHE>);
-  chomp (my $source = <CACHE>);
-  chomp (my $copyright = <CACHE>);
-  chomp (my $id = <CACHE>);
-  chomp (my $maintainer = <CACHE>);
-  chomp (my $maintaineremail = <CACHE>);
-  chomp (my $maintainerweb = <CACHE>);
-  chomp (my $extrainfo = <CACHE>);
-  chomp (my $lilypondversion = <CACHE>);
-  chomp (my $collections = <CACHE>);
-  chomp (my $printurl = <CACHE>);
-  
-  if ($opus eq "") { $opus = "&nbsp;" }
-  my $compLessDates;
-  if (index($composer, "(") > 0) {
-    $compLessDates = substr($composer, 0, index($composer, "(") - 1);;
-  } else {
-    $compLessDates = $composer;
-  }
- 
-  $html .= "<tr><td>".$compLessDates."</td><td><a href=\"cgibin/piece-info.cgi?id=".$idno."\">";
-  $html .= $title."</a></td><td>".$opus."</td><td>".$instrument."</td></tr>\n";
- }
+    chomp (my $headerlength = <CACHE>);
+    seek CACHE, $headerlength, 0;
 
- close(CACHE);
- return $html;
+    until (eof CACHE) {
+        chomp (my $checkline = <CACHE>);
+        if ($checkline ne "**********") { print "ERROR in the datafile - rebuild cache"; }
+        chomp (my $idno = <CACHE>);
+        chomp (my $midrif = <CACHE>);
+        chomp (my $musicnm = <CACHE>);
+        chomp (my $lyfile = <CACHE>);
+        chomp (my $midfile = <CACHE>);
+        chomp (my $a4psfile = <CACHE>);
+        chomp (my $a4pdffile = <CACHE>);
+        chomp (my $letpsfile = <CACHE>);
+        chomp (my $letpdffile = <CACHE>);
+        chomp (my $pngfile = <CACHE>);
+        chomp (my $pngheight = <CACHE>);
+        chomp (my $pngwidth = <CACHE>);
+        chomp (my $title = <CACHE>);
+        chomp (my $composer = <CACHE>);
+        chomp (my $opus = <CACHE>);
+        chomp (my $lyricist = <CACHE>);
+        chomp (my $instrument = <CACHE>);
+        chomp (my $date = <CACHE>);
+        chomp (my $style = <CACHE>);
+        chomp (my $metre = <CACHE>);
+        chomp (my $arranger = <CACHE>);
+        chomp (my $source = <CACHE>);
+        chomp (my $copyright = <CACHE>);
+        chomp (my $id = <CACHE>);
+        chomp (my $maintainer = <CACHE>);
+        chomp (my $maintaineremail = <CACHE>);
+        chomp (my $maintainerweb = <CACHE>);
+        chomp (my $extrainfo = <CACHE>);
+        chomp (my $lilypondversion = <CACHE>);
+        chomp (my $collections = <CACHE>);
+        chomp (my $printurl = <CACHE>);
+
+        if ($opus eq "") { $opus = "&nbsp;" }
+        my $compLessDates;
+        if (index($composer, "(") > 0) {
+            $compLessDates = substr($composer, 0, index($composer, "(") - 1);;
+        } else {
+            $compLessDates = $composer;
+        }
+
+        $html .= "<tr><td>".$compLessDates."</td><td><a href=\"cgibin/piece-info.cgi?id=".$idno."\">";
+        $html .= $title."</a></td><td>".$opus."</td><td>".$instrument."</td></tr>\n";
+    }
+
+    close(CACHE);
+    return $html;
 }
 
+
+# A simple include routine
+sub INCLUDE($) {
+    my $infile = shift;
+    if (! -e $infile) {
+        $infile = "html-in/" . $infile;
+    }
+    open (IN, "<:utf8", $infile) or die "cannot open include file $infile: $!";
+    local $htmlinc = join "", <IN>;
+    close IN;
+    return $htmlinc;
+}
+
+
 sub HEAD($) {
-    # returns nice index, to go at top of document.  Puts main body
-    # of document in a table.  Must be used with TAIL.
-
     my $dontlinkto = shift;
-    
-    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace 
-    <div class="header_section">
-
-    <table class="invisible"><tr>
+    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
+    <table class="masthead">
+    <tr>
     <td><img src="images/logo-small.png" alt="Mutopia Project Logo" width="186" height="61" /></td>
-
     <td style="font-weight: bold;">All music in the Mutopia Project is free to download, print out, perform and distribute.<br />
-
-[[ NUMBER_OF_PIECES() ]]
-    pieces of music are now available.</td>
-
-    <td>
-      Save our bandwidth - use a mirror!<br />
-      <!--<a href="http://www.ibiblio.org/mutopia/" title="Mirror in the USA">USA</a> |-->
-      <a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
-      <!-- <a href="http://mutopia.planetmirror.com/" title="Mirror in Australia">Australia</a> | -->
-
-      <!-- <a href="http://gd.tuwien.ac.at/art/Mutopia/" title="Mirror in Austria">Austria</a> | -->
-      <a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a><!--<br />
-      <a href="ftp://ibiblio.org/pub/multimedia/mutopia/" title="FTP in USA">Mutopia Archive via FTP</a>-->
-    </td>
+    [[ NUMBER_OF_PIECES() ]] pieces of music are now available.</td>
     </tr>
-
-    <tr><td colspan="3" style="padding: 5px; border-top: 1px solid black;">
-    [[ INDEX("$dontlinkto") ]]
-    </td></tr></table>
-
-    [[ BREAK() ]]
 ____EOH
     return $html;
 }
+
+
+sub INDEXHEAD {
+    my @composers = ("BachJS", "Bach",
+                     "BeethovenLv", "Beethoven",
+                     "ChopinFF", "Chopin",
+                     "DiabelliA", "Diabelli",
+                     "HandelGF", "Handel",
+                     "MozartWA", "Mozart",
+                     "SchumannR", "Schumann",
+                     "SorF", "Sor"
+        );
+    my $sb_1 = "<p><b>Browse by composer:</b>";
+    my $comma = "";
+    for (my $comp = 0; $comp < (@composers); $comp += 2) {
+        $sb_1 .= "$comma <a href=\"cgibin/make-table.cgi?Composer="
+            . $composers[$comp] . "\">"
+            . $composers[$comp+1] . "</a>";
+        $comma = ",";
+    }
+    $sb_1 .= " <a href=\"browse.html#byComposer\">[Full list of composers]</a></p>";
+
+    $comma = "";
+    $sb_1 .= "<p><b>Browse by instrument:</b>";
+    my @instruments = ("Piano", "Vocal", "Organ", "Violin", "Guitar", "Orchestra");
+    foreach my $instr (@instruments) {
+        $sb_1 .= "$comma <a href=\"cgibin/make-table.cgi?Instrument=$instr\">$instr</a>";
+        $comma = ",";
+    }
+    $sb_1 .= " <a href=\"browse.html#byInstrument\">[Full list of instruments]</a></p>";
+
+    return $sb_1;
+}
+
+# DEPRECATED routines
+
+sub BANDWIDTH() {
+    my $html = <<___EOB; $html =~ s/^ *//gm; # trim leading whitespace
+    <p>Save our bandwidth - use a mirror!<br />
+    <a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
+    <a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a>
+    </p>
+___EOB
+    return $html;
+}
+
+
+sub BREAK {
+    # When using HEAD and TAIL, use BREAK to start a new table.
+    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
+    </div>
+
+    <div class="main_section">
+____EOH
+    return $html;
+}
+
+
+# deprecated, replaced by template code.
+sub TAIL($) {
+    # returns index and disclaimer for bottom of document.  Puts
+    # main body of document in a "window".  Must be used with HEAD.
+
+    my $dontlinkto = shift;
+    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
+    [[ BREAK() ]]
+
+    <p class="link_list">
+    [[ INDEX("$dontlinkto") ]]
+    </p>
+
+    <p class="disclaimer">Disclaimer: The Mutopia
+    Project is run by volunteers, and the material within it is provided
+    "as-is".  NO WARRANTY of any kind is made, including fitness
+    for any particular purpose.<br />No claim is made as to the accuracy or the
+    factual, editorial or musical correctness of any of the material
+    provided here.</p>
+    </div>
+
+____EOH
+    return $html;
+}
+
+
+# Create a list of links to the site's main pages. This is primarily
+# used for navigation code.
+sub INDEX($) {
+    my $dontlinkto = shift;
+    my $html = "";
+    my @pages = ("index", "Home",
+                 "browse", "Browse",
+                 "advsearch", "Search",
+                 "legal", "Licensing",
+                 "contribute", "Contribute",
+                 "projects", "In-Progress",
+                 "contact", "Contact");
+
+    # We don't want the current page to be made a link
+    for (my $currpage = 0; $currpage < (@pages); $currpage += 2) {
+        my $ref = "#";
+        if ($pages[$currpage] eq $dontlinkto) {
+            $html .= "<li class=\"active\">";
+        } else {
+            $html .= "<li>";
+            $ref = $pages[$currpage] . ".html";
+        }
+        $html .= "<a href=\"$ref\">"
+            . $pages[$currpage+1] . "</a></li>\n";
+    }
+
+    return $html;
+}
+
+
+#################################
+# Non-English language support
+# Moved here during HTML5 rework.
+#################################
+
 
 sub HEAD_DE($) {
     # returns nice index, to go at top of document.  Puts main body
     # of document in a table.  Must be used with TAIL.
 
     my $dontlinkto = shift;
-    
-    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace 
+
+    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
     <table width="100%" border="0"><tr><td> </td></tr></table>
 
     <table border="1" width="95%" cellpadding="10" cellspacing="0"
@@ -462,47 +585,15 @@ ____EOH
     return $html;
 }
 
-sub INDEXHEAD {
-    # I thought I'd stick this in here rather than in index.html-in as
-    # we might want to put it differently in the CD version. Possibly.
-    # I don't know - feel free to move it back!
-    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
-<div class="index_rhs_cont">
-<div class="index_rhs">
-
-  <form action="cgibin/make-table.cgi" method="get">
-    <p style="text-align: center;">
-      <input type="text" name="searchingfor" size="20" />
-      <input type="submit" value="Search" />
-    </p>
-  </form>
-
-  <p><b>Browse by composer:</b> <a href="cgibin/make-table.cgi?Composer=BachJS">Bach</a>, <a href="cgibin/make-table.cgi?Composer=BeethovenLv">Beethoven</a>, <a href="cgibin/make-table.cgi?Composer=ChopinFF">Chopin</a>, <a href="cgibin/make-table.cgi?Composer=DiabelliA">Diabelli</a>, <a href="cgibin/make-table.cgi?Composer=HandelGF">Handel</a>, <a href="cgibin/make-table.cgi?Composer=MozartWA">Mozart</a>, <a href="cgibin/make-table.cgi?Composer=SchumannR">Schumann</a>, <a href="cgibin/make-table.cgi?Composer=SorF">Sor</a>. <a href="browse.html#byComposer">[Full list of composers]</a></p>
-
-  <p><b>Browse by instrument:</b> <a href="cgibin/make-table.cgi?Instrument=Piano">Piano</a>, <a href="cgibin/make-table.cgi?Instrument=Voice">Vocal</a>, <a href="cgibin/make-table.cgi?Instrument=Organ">Organ</a>, <a href="cgibin/make-table.cgi?Instrument=Violin">Violin</a>, <a href="cgibin/make-table.cgi?Instrument=Guitar">Guitar</a>, <a href="cgibin/make-table.cgi?Instrument=Orchestra">Orchestra</a>. <a href="browse.html#byInstrument">[Full list of instruments]</a></p>
-
-  <p style="text-align: center;"><b><a href="piece-list.html">List all music</a></b></p>
-</div>
-<div class="index_rhs">
-  <h4 style="text-align: center;">Latest additions [<a href="latestadditions.html">More...</a>]</h4>
-  <p>
-    [[ LATEST_ADDITIONS(8) ]]
-  </p>
-</div>
-</div>
-       
-____EOH
-    return $html;
-}
 
 sub INDEXHEAD_DE {
     my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
     <p align="center"><b>Latest additions</b> (<a href="latestadditions.html">
        more...</a>)</p>
     <p>
-    
+
     [[ LATEST_ADDITIONS(6) ]]
-    
+
     </p>
     </td>
 
@@ -517,59 +608,26 @@ sub INDEXHEAD_DE {
        <a href="browse.de.html#byInstrument">Instrument</a><br />
        or <a href="browse.de.html#byStyle">Musical Style</a></p>
     <!--<p><a href="http://www.cs.helsinki.fi/group/cbrahms/demoengine/">Search by melody with C-Brahms melody-based search</a></p>-->
-       
+
     [[ BREAK() ]]
 ____EOH
     return $html;
 }
 
-sub BREAK {
-    # When using HEAD and TAIL, use BREAK to start a new table.
-    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
-    </div>
-
-    <div class="main_section">
-____EOH
-    return $html;
-}
-
-sub TAIL($) {
-    # returns index and disclaimer for bottom of document.  Puts
-    # main body of document in a "window".  Must be used with HEAD.
-
-    my $dontlinkto = shift;
-    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace 
-    [[ BREAK() ]]
-    
-    <p class="link_list">
-    [[ INDEX("$dontlinkto") ]]
-    </p>
-    
-    <p class="disclaimer">Disclaimer: The Mutopia
-    Project is run by volunteers, and the material within it is provided
-    "as-is".  NO WARRANTY of any kind is made, including fitness
-    for any particular purpose.<br />No claim is made as to the accuracy or the
-    factual, editorial or musical correctness of any of the material
-    provided here.</p>
-    </div>
-
-____EOH
-    return $html;
-}
 
 sub TAIL_DE($) {
     # returns index and disclaimer for bottom of document.  Puts
     # main body of document in a "window".  Must be used with HEAD.
 
     my $dontlinkto = shift;
-    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace 
+    my $html = <<____EOH; $html =~ s/^ *//gm; # trim leading whitespace
     [[ BREAK() ]]
-    
+
     <!-- XXX Valid XHTML button -->
     <p align="center">
-    
+
     [[ INDEX_DE("$dontlinkto") ]]
-    
+
     </p>
 	<p><font size="-1em"><b>Disclaimer: The Mutopia
     Project is run by volunteers, and the material within it is provided
@@ -586,41 +644,11 @@ ____EOH
     return $html;
 }
 
-sub INDEX($) {
-    my $dontlinkto = shift;
-    my $html = "";
-    my $currpage = 0;
-    
-    my @pages = ("index", "Home",
-                 "browse", "Browse the Archive",
-                 "advsearch", "Advanced Search",
-                 "legal", "License Details",
-                 "contribute", "How to Contribute",
-                 "projects", "In Progress",
-                 "contact", "Contact and Discussion");
-
-    # We don't want the current page to be made a link
-    for($currpage = 0; $currpage < (@pages); $currpage += 2) {
-       if ($pages[$currpage] eq $dontlinkto) {
-          $html = $html . $pages[$currpage+1];
-       } else {
-          $html = $html . "<a href=\"" . $pages[$currpage] . ".html\">" .
-             $pages[$currpage+1] . "</a>";
-       }
-       
-    # The last link on the line doesn't want a "|" after it; the rest do
-       if ($currpage != (@pages) - 2) { $html = $html . " |\n" }
-          else { $html = $html . "\n" }
-    }
-
-    return $html;
-}
-
 sub INDEX_DE($) {
     my $dontlinkto = shift;
     my $html = "";
     my $currpage = 0;
-    
+
     my @pages = ("index", "Startseite",
                  "browse", "Archiv durchblättern",
                  "advsearch", "Erweiterte Suche",
@@ -632,19 +660,99 @@ sub INDEX_DE($) {
 
     # We don't want the current page to be made a link
     for($currpage = 0; $currpage < (@pages); $currpage += 2) {
-       if ($pages[$currpage] eq $dontlinkto) {
-          $html = $html . $pages[$currpage+1];
-       } else {
-          $html = $html . "<a href=\"" . $pages[$currpage] . ".de.html\">" .
-             $pages[$currpage+1] . "</a>";
-       }
-       
-    # The last link on the line doesn't want a "|" after it; the rest do
-       if ($currpage != (@pages) - 2) { $html = $html . " |\n" }
-          else { $html = $html . "\n" }
+        if ($pages[$currpage] eq $dontlinkto) {
+            $html = $html . $pages[$currpage+1];
+        } else {
+            $html = $html . "<a href=\"" . $pages[$currpage] . ".de.html\">" .
+                $pages[$currpage+1] . "</a>";
+        }
+
+        # The last link on the line doesn't want a "|" after it; the rest do
+        if ($currpage != (@pages) - 2) { $html = $html . " |\n" }
+        else { $html = $html . "\n" }
     }
 
     return $html;
 };
 
+
 1;
+
+__END__
+
+=head1 TITLE
+
+Subroutines to help with generating HTML pages from html-in/* files.
+
+=head1 DESCRIPTION
+
+It is best to think of this module as a very basic templating system.
+All templates have an extension that ends in C<-in>, typically either
+C<.html-in> or C<.rss-in> and may contain directives of the form,
+
+=begin
+
+    [[ DIRECTIVE-NAME() ]]
+
+=end
+
+When the template processor encounters this token, the enclosing
+bracket tags are stripped off, the directive is called as a perl
+subroutine, and the output is inserted into the template at that
+point.
+
+The output filename is derived from input name with the C<-in>
+stripped from off.
+
+=over
+
+=item makeHTML()
+
+Walk through B<all> input files (*.html-in and *.rss-in) and process
+them, passing input to output and calling directives as they are
+encountered.
+
+=item replace_placeholders(infile)
+
+Translate a directive name into a perl subroutine call. Kind of magic.
+
+=item BROWSE_BY_COMPOSER()
+
+=item BROWSE_BY_INSTRUMENT()
+
+=item BROWSE_BY_STYLE()
+
+=item BROWSE_COLLECTIONS()
+
+=item COMPOSER_OPTIONS()
+
+=item COMPOSER_LIST()
+
+=item INSTRUMENT_OPTIONS()
+
+=item STYLE_OPTIONS()
+
+=item STYLE_LIST()
+
+=item NUMBER_OF_PIECES()
+
+=item LATEST_ADDITIONS($)
+
+=item LATEST_ADDITIONS_RSS($)
+
+=item ALL_PIECES()
+
+=item INCLUDE($infile)
+
+Read a file into the input stream. The given input file is checked for
+existence and, if not found, the string is prepended with "html-in/"
+and the open is attempted.
+
+Note that because all template files C<*.html-in and *.rss-in> are
+processed in C<makeHTML>, include files cannot have the extension,
+C<.html-in>. Include file names can have any extension that doesn't
+end in C<-in> but the preferred extension is C<.html-include>.
+
+=back
+
+=cut
