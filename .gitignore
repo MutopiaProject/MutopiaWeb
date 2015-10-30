@@ -1,4 +1,11 @@
-/*.html
-/*.rss
-/Expat.so
-/XML
+*~
+*.html
+*.rss
+
+# ignoring the ftp folder allows that tree to be populated with
+# psuedo mutopia data
+ftp/
+
+# bin & lib may be created during installs but should not be committed
+bin/
+lib/
