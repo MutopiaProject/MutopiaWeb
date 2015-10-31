@@ -6,6 +6,7 @@
  *   Class to generate an RDF file from a MutopiaPiece object.
  */
 
+package mutopia.core;
 import java.io.*;
 import javax.xml.*;
 import javax.xml.parsers.*;
@@ -22,36 +23,36 @@ public class MutopiaRDF
          int urlEnd = inputString.indexOf(" ", urlStart);
          if (urlEnd == -1) { urlEnd = inputString.length(); }
          String url = inputString.substring(urlStart, urlEnd);
-         
+
          inputString = inputString.substring(0, urlStart) +
             "<a href=\"" + url + "\">" + url + "</a>" +
             inputString.substring(urlEnd, inputString.length());
       }*/
-      
+
       // Replace & < > by escaped versions
       inputString = inputString.replaceAll("&", "&amp;amp;");
       inputString = inputString.replaceAll("<", "&amp;lt;");
       inputString = inputString.replaceAll(">", "&amp;gt;");
-      
+
       return inputString;
    }
-   
+
    private static String htmlIfy(String inputString)
    {
       // Replace & < > by escaped versions
       inputString = inputString.replaceAll("&", "&amp;");
       inputString = inputString.replaceAll("<", "&lt;");
       inputString = inputString.replaceAll(">", "&gt;");
-      
+
       return inputString;
    }
-   
+
    private static void writeln(BufferedWriter wr, String str) throws IOException
    {
       wr.write(str);
       wr.newLine();
    }
-   
+
    // Should already have called check consistency methods on the piece
    public static void outputRDF(MutopiaPiece piece, BufferedWriter wr) throws IOException
    {
@@ -96,26 +97,26 @@ public class MutopiaRDF
       wr.newLine();
       writeln(wr, "</rdf:RDF>");
    }
-   
+
    private static String getText(Element mainElement, String descendant)
    {
       Node textElement = mainElement.getElementsByTagName(descendant).item(0).getFirstChild();
       return (textElement == null) ? null : textElement.getNodeValue();
    }
-   
+
    public static MutopiaPiece inputRDF(String lyFilename)
    {
       MutopiaPiece piece = new MutopiaPiece(lyFilename);
-      
+
       try
       {
          InputStream is = new FileInputStream(lyFilename);
          DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
          Document rdfDoc = db.parse(is);
-         
+
          // Find rdf:Description element...
          Element description = (Element)rdfDoc.getElementsByTagName("rdf:Description").item(0);
-         
+
          piece.setTitle(getText(description, "mp:title"));
          piece.setComposer(getText(description, "mp:composer"));
          piece.setOpus(getText(description, "mp:opus"));
@@ -127,23 +128,23 @@ public class MutopiaRDF
          piece.setArranger(getText(description, "mp:arranger"));
          piece.setSource(getText(description, "mp:source"));
          piece.setLicense(getText(description, "mp:licence"));
-         
+
          piece.setMultipleLyFiles(getText(description, "mp:lyFile").endsWith("-lys.zip"));
          piece.setMultipleMidFiles(getText(description, "mp:midFile").endsWith("-mids.zip"));
          piece.setMultiplePdfFiles(getText(description, "mp:psFileA4").endsWith("-a4-pss.zip"));
-         
+
          piece.setFooter(getText(description, "mp:id"));
          piece.setMaintainer(getText(description, "mp:maintainer"));
          piece.setMaintainerEmail(getText(description, "mp:maintainerEmail"));
          piece.setMaintainerWeb(getText(description, "mp:maintainerWeb"));
-         
+
          piece.setLilyVersion(getText(description, "mp:lilypondVersion"));
       }
       catch (Exception ex)
       {
          System.err.println(ex);
       }
-      
+
       return piece;
    }
 }

@@ -14,6 +14,7 @@
  *   $@ - File names to process
  */
 
+package mutopia.core;
 import java.io.*;
 import java.util.*;
 
@@ -45,7 +46,7 @@ public class Mutopia
                mutopia.moveIntoDirectory(args[i]);
             }
          }
-         
+
          if (args[0].contains("f"))
          {
             for (int i = 1; i < args.length; i++)
@@ -53,7 +54,7 @@ public class Mutopia
                mutopia.fixFooter(args[i]);
             }
          }
-         
+
          if (args[0].contains("c"))
          {
             for (int i = 1; i < args.length; i++)
@@ -65,7 +66,7 @@ public class Mutopia
                }
             }
          }
-         
+
          if (args[0].contains("r"))
          {
             for (int i = 1; i < args.length; i++)
@@ -77,7 +78,7 @@ public class Mutopia
 
       System.exit(returnCode);
    }
-   
+
    public void moveIntoDirectory(String filename)
    {
       if (!filename.endsWith(".ly"))
@@ -89,7 +90,7 @@ public class Mutopia
          File lyFile = new File(filename);
          File directory = new File(filename.substring(0, filename.length() - 3));
          File lyNewFile = new File(directory + File.separator + filename);
-         
+
          if (!lyFile.isFile())
          {
             System.err.println("File " + filename + " not found");
@@ -108,7 +109,7 @@ public class Mutopia
          }
       }
    }
-   
+
    public void fixFooter(String filename)
    {
       int headerStart = -1;
@@ -116,24 +117,24 @@ public class Mutopia
       int nestedLevel = 0;
       String licence = null;
       String idString = null;
-      
+
       // Rename file
       File tempFile = new File(filename + "o");
       File lyFile = new File(filename);
       lyFile.renameTo(tempFile);
-      
+
       // Process file
       System.out.println("Processing " + filename);
       try
       {
          BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(tempFile), "UTF-8"));
          BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(lyFile), "UTF-8"));
-         
+
          String nextLine = in.readLine();
          for (int i = 0; nextLine != null; i++)
          {
             boolean writeThisLine = true;
-            
+
             if (nextLine.matches("\\s*\\\\header\\s*\\{\\s*")) // Start of header
             {
                headerStart = i;
@@ -158,7 +159,7 @@ public class Mutopia
                   else // End of header
                   {
                      headerEnd = i;
-                     
+
                      // Write out footer
                      if (idString == null)
                      {
@@ -167,7 +168,7 @@ public class Mutopia
                      }
                      out.write(" footer = \"Mutopia-" + getDateStringNow() + "-" + idString + "\"");
                      out.newLine();
-                     
+
                      // Write out tagline
                      if ((licence == null) || (!MutopiaMaps.licenceMapNew.keySet().contains(licence)))
                      {
@@ -211,7 +212,7 @@ public class Mutopia
                      }
                   }
                }
-               else if ((nextLine.matches("\\s*copyright\\s*=\\s*\".*\"\\s*")) || 
+               else if ((nextLine.matches("\\s*copyright\\s*=\\s*\".*\"\\s*")) ||
                         (nextLine.matches("\\s*mutopiacopyright\\s*=\\s*\".*\"\\s*"))) // Old copyright field
                {
                   // Copyright header field changed to license (US/International spelling) Feb 2014
@@ -220,7 +221,7 @@ public class Mutopia
                   nextLine = nextLine.replace("copyright", "license");
                   System.out.println("Warning: Rewriting 'copyright' field as 'license': " + nextLine);
                }
-               else if ((nextLine.matches("\\s*license\\s*=\\s*\".*\"\\s*")) || 
+               else if ((nextLine.matches("\\s*license\\s*=\\s*\".*\"\\s*")) ||
                         (nextLine.matches("\\s*mutopialicense\\s*=\\s*\".*\"\\s*"))) // License field
                {
                   licence = nextLine.split("\"")[1];
@@ -231,7 +232,7 @@ public class Mutopia
                   if (nextLine.matches("\\s*footer\\s*=\\s*\"Mutopia-.*-.*\"\\s*"))
                   {
                      String foundIdString = nextLine.split("-")[2].split("\"")[0];
-                     
+
                      // If we have an integer, set the idString field
                      try
                      {
@@ -255,7 +256,7 @@ public class Mutopia
                   {
                      System.out.println("Warning: discarding footer field: " + nextLine);
                   }
-                  
+
                   writeThisLine = false;
                }
                else if (nextLine.matches("\\s*tagline\\s*=.*")) // Tagline (footer) field
@@ -269,16 +270,16 @@ public class Mutopia
                   writeThisLine = false;
                }
             }
-            
+
             if (writeThisLine)
             {
                out.write(nextLine);
                out.newLine();
             }
-            
+
             nextLine = in.readLine();
          }
-         
+
          in.close();
          out.close();
       }
@@ -290,7 +291,7 @@ public class Mutopia
       {
          System.err.println(ex);
       }
-      
+
       // Possible problems
       if (headerEnd == -1)
       {
@@ -301,7 +302,7 @@ public class Mutopia
          tempFile.delete();
       }
    }
-   
+
    private String getDateStringNow()
    {
       Calendar now = Calendar.getInstance();
@@ -310,7 +311,7 @@ public class Mutopia
       int day = now.get(Calendar.DAY_OF_MONTH);
       return year + "/" + (month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day;
    }
-   
+
    public boolean checkFields(String filenameIn)
    {
       boolean result = false;
@@ -319,7 +320,7 @@ public class Mutopia
       {
          // Open files
          BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filenameIn), "UTF-8"));
-         
+
          MutopiaPiece myPiece = new MutopiaPiece(filenameIn);
          String nextLine = in.readLine();
          while (nextLine != null)
@@ -331,7 +332,7 @@ public class Mutopia
             nextLine = in.readLine();
          }
          in.close();
-         
+
          // Check field consistency (but not footer)
          result = myPiece.checkFieldConsistency(false);
       }
@@ -343,10 +344,10 @@ public class Mutopia
       {
             System.err.println(ex);
       }
-      
+
       return result;
    }
-   
+
    public void createRDF(String filenameIn, String filenameOut)
    {
       try
@@ -354,7 +355,7 @@ public class Mutopia
          // Open files
          BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filenameIn), "UTF-8"));
          BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filenameOut), "UTF-8"));
-         
+
          MutopiaPiece myPiece = new MutopiaPiece(filenameIn);
          String nextLine = in.readLine();
          while (nextLine != null)
@@ -365,11 +366,11 @@ public class Mutopia
             }
             nextLine = in.readLine();
          }
-         
+
          in.close();
-         
+
          myPiece.deriveCompileStuff(lilyCommandLine);
-         
+
          if (myPiece.checkFieldConsistency(true)) // Check field consistency (including footer)
          {
             if (myPiece.checkCompileConsistency()) // Check compile consistency (image size + lily version)
@@ -385,7 +386,7 @@ public class Mutopia
          {
             System.err.println("Field consistency checks failed");
          }
-         
+
          out.close();
       }
       catch (FileNotFoundException ex)
@@ -397,12 +398,12 @@ public class Mutopia
          System.err.println(ex);
       }
    }
-   
+
    private boolean isField(String unparsedLine)
    {
       return unparsedLine.matches("\\s*\\w+\\s*=\\s*\".*\"\\s*");
    }
-   
+
    private boolean addFieldToPiece(MutopiaPiece myPiece, String unparsedLine)
    {
       // Strip out empty fields
@@ -410,7 +411,7 @@ public class Mutopia
       {
          return false;
       }
-      
+
       String field = unparsedLine.trim().split("\\s*=")[0];
       String[] valueParts = unparsedLine.split("\"");
       StringBuilder value = new StringBuilder(valueParts[1]);
@@ -422,7 +423,7 @@ public class Mutopia
          value.append("\"");
          value.append(valueParts[i]);
       }
-      
+
       myPiece.populateField(field, value.toString());
       return true;
    }
