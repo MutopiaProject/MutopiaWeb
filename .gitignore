@@ -6,6 +6,5 @@
 # psuedo mutopia data
 ftp/
 
-# bin & lib may be created during installs but should not be committed
-bin/
+#  lib may be created during installs but should not be committed
 lib/
