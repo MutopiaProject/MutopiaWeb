@@ -9,6 +9,8 @@
 package Mutopia_Archive;
 use strict;
 
+our $VERSION = '0.02';
+
 # readRDFFile($filename)
 # reads an RDF file, and returns a data structure.
 # XXX this is Not how namespaces Should be dealt with.

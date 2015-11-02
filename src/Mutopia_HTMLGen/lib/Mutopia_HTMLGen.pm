@@ -12,6 +12,8 @@ use Time::Local;
 use utf8;
 use vars qw(%RDF_DATA);
 
+our $VERSION = '0.02';
+
 my %RDF_DATA;
 my $OUTPUT_FILE;
 
