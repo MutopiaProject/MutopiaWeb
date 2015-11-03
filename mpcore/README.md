@@ -14,7 +14,7 @@ doesn't find it,
 
 ```bash
 $ cd mpcore
-$ gradlew install
+$ gradlew installDist
 ```
 
 What to do with gradle?
@@ -28,17 +28,22 @@ Install the Mutopia application so it can be used conveniently,
 
 ```bash
 $ cd mpcore
-$ gradle installApp
-$ (cd Mutopia/build/install/Mutopia; tar cf - bin lib) | (cd ..; tar xf -)
+$ gradle installDist
+$ (cd Mutopia/build/install/Mutopia; tar cf - .) | (cd ..; tar xf -)
 $ ../bin/Mutopia
 Arguments must be: -d, -c, -f or -r followed by .ly file(s)
 ```
 
 If you are not familiar with unix shell commands, that line just packs
-up the `bin` and `lib` folders from gradle's build area (under
+up all folders from the installDist command (`bin` and `lib` from under
 `Mutopia/build/install/Mutopia`) and unloads them into the folder
 above `mpcore`. The `../lib` folder may be created in this process.
 
-Note that the `Mutopia` file is a script, built during the `gradle
-install` process, that will do the right thing with respect to finding
-the required libraries in the sibling `lib` folder.
+Note that the `bin/Mutopia` that gradle builds is a script, that will
+do the right thing with respect to finding the required libraries in
+the sibling `lib` folder. Either run the command directly or, more
+conveniently, add the bin folder to your PATH,
+
+```bash
+$ export PATH=$PATH:$HOME/MutopiaWeb/bin
+```
