@@ -682,9 +682,9 @@ sub INDEX_DE($) {
 
 __END__
 
-=head1 TITLE
+=head1 NAME
 
-Subroutines to help with generating HTML pages from html-in/* files.
+Mutopia_HTMLGen - routines to help with generating HTML pages
 
 =head1 DESCRIPTION
 
