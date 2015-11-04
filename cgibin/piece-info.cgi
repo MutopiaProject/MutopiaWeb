@@ -9,9 +9,11 @@ foreach $pair (@pairs) {
     $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack 'C', hex $1;/eg;
     $FORM{$name} = $value;
 }
+
 open CACHE, '../datafiles/musiccache.dat';
 $baseref = '../ftp/';
 chomp($cacheoffset = <CACHE>);
+
 $firstjump = 13 * $FORM{'id'} + 5;
 seek CACHE, $firstjump, 0;
 read CACHE, $secondjump, 7;
@@ -23,9 +25,11 @@ else {
     seek CACHE, $cacheoffset + $secondjump, 0;
 }
 chomp($id = <CACHE>);
+
 if ($problem == 0 and $id ne $FORM{'id'}) {
     $problem = 2;
 }
+
 chomp($midrif = <CACHE>);
 chomp($musicnm = <CACHE>);
 chomp($lyfile = <CACHE>);
@@ -57,6 +61,7 @@ chomp($lilypondversion = <CACHE>);
 chomp($collections = <CACHE>);
 chomp($printurl = <CACHE>);
 close CACHE;
+
 if ($problem == 0) {
     if ($source eq '') {
         $source = '<i>Not known</i>';
