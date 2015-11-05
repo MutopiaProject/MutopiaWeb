@@ -1,20 +1,27 @@
 #!/usr/bin/perl -wT
 
+use strict;
 use POSIX;
 
-@pairs = split(/\&/, $ENV{'QUERY_STRING'}, 0);
-foreach $pair (@pairs) {
-    ($name, $value) = split(/=/, $pair, 3);
+my @pairs = split(/\&/, $ENV{'QUERY_STRING'}, 0);
+my %FORM;
+foreach my $pair (@pairs) {
+    my ($name, $value) = split(/=/, $pair, 3);
     $value =~ tr/+/ /;
     $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack 'C', hex $1;/eg;
     $FORM{$name} = $value;
 }
 
+my $cacheoffset;
 open CACHE, '../datafiles/musiccache.dat';
-$baseref = '../ftp/';
 chomp($cacheoffset = <CACHE>);
 
-$firstjump = 13 * $FORM{'id'} + 5;
+my $baseref = '../ftp/';
+
+my $firstjump = 13 * $FORM{'id'} + 5;
+my $secondjump;
+my $problem;
+
 seek CACHE, $firstjump, 0;
 read CACHE, $secondjump, 7;
 if ($secondjump eq '*******' or $firstjump > $cacheoffset) {
@@ -24,42 +31,43 @@ else {
     $problem = 0;
     seek CACHE, $cacheoffset + $secondjump, 0;
 }
-chomp($id = <CACHE>);
+
+chomp(my $id = <CACHE>);
 
 if ($problem == 0 and $id ne $FORM{'id'}) {
     $problem = 2;
 }
 
-chomp($midrif = <CACHE>);
-chomp($musicnm = <CACHE>);
-chomp($lyfile = <CACHE>);
-chomp($midfile = <CACHE>);
-chomp($a4psfile = <CACHE>);
-chomp($a4pdffile = <CACHE>);
-chomp($letpsfile = <CACHE>);
-chomp($letpdffile = <CACHE>);
-chomp($pngfile = <CACHE>);
-chomp($pngheight = <CACHE>);
-chomp($pngwidth = <CACHE>);
-chomp($title = <CACHE>);
-chomp($composer = <CACHE>);
-chomp($opus = <CACHE>);
-chomp($lyricist = <CACHE>);
-chomp($for = <CACHE>);
-chomp($date = <CACHE>);
-chomp($style = <CACHE>);
-chomp($metre = <CACHE>);
-chomp($arranger = <CACHE>);
-chomp($source = <CACHE>);
-chomp($licence = <CACHE>);
-chomp($id = <CACHE>);
-chomp($maintainer = <CACHE>);
-chomp($maintaineremail = <CACHE>);
-chomp($maintainerweb = <CACHE>);
-chomp($moreinfo = <CACHE>);
-chomp($lilypondversion = <CACHE>);
-chomp($collections = <CACHE>);
-chomp($printurl = <CACHE>);
+chomp(my $midrif = <CACHE>);
+chomp(my $musicnm = <CACHE>);
+chomp(my $lyfile = <CACHE>);
+chomp(my $midfile = <CACHE>);
+chomp(my $a4psfile = <CACHE>);
+chomp(my $a4pdffile = <CACHE>);
+chomp(my $letpsfile = <CACHE>);
+chomp(my $letpdffile = <CACHE>);
+chomp(my $pngfile = <CACHE>);
+chomp(my $pngheight = <CACHE>);
+chomp(my $pngwidth = <CACHE>);
+chomp(my $title = <CACHE>);
+chomp(my $composer = <CACHE>);
+chomp(my $opus = <CACHE>);
+chomp(my $lyricist = <CACHE>);
+chomp(my $for = <CACHE>);
+chomp(my $date = <CACHE>);
+chomp(my $style = <CACHE>);
+chomp(my $metre = <CACHE>);
+chomp(my $arranger = <CACHE>);
+chomp(my $source = <CACHE>);
+chomp(my $licence = <CACHE>);
+chomp(   $id = <CACHE>);
+chomp(my $maintainer = <CACHE>);
+chomp(my $maintaineremail = <CACHE>);
+chomp(my $maintainerweb = <CACHE>);
+chomp(my $moreinfo = <CACHE>);
+chomp(my $lilypondversion = <CACHE>);
+chomp(my $collections = <CACHE>);
+chomp(my $printurl = <CACHE>);
 close CACHE;
 
 if ($problem == 0) {
@@ -69,7 +77,8 @@ if ($problem == 0) {
     if ($date eq '') {
         $date = '<i>Not known</i>';
     }
-    $ccmetadata = '';
+    my $licence = '';
+    my $ccmetadata = '';
     if ($licence eq 'Public Domain') {
         $licence = qq[<a href="../legal.html#publicdomain">Public Domain</a>\n &nbsp;&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/publicdomain/"><img src="../images/cc.primary.nrr.gif" alt="CC: No rights reserved" width="88" height="31" border="0" style="vertical-align: middle;" /></a>];
         $ccmetadata = qq[<link rel="meta" href="../cc-rdfs/pd.rdf" type="application/rdf+xml" />\n];
@@ -106,15 +115,18 @@ if ($problem == 0) {
         $licence = qq[<a href="../legal.html#cca">Creative Commons Attribution 4.0</a>\n &nbsp;&nbsp;&nbsp;<a href="http://creativecommons.org/licenses/by/4.0/"><img src="../images/cc.primary.srr.gif" alt="CC: Some rights reserved" width="88" height="31" border="0" style="vertical-align: middle;" /></a>];
         $ccmetadata = qq[<link rel="meta" href="../cc-rdfs/a4.rdf" type="application/rdf+xml" />\n];
     }
+    my $software;
     if ($lilypondversion eq '') {
         $software = '<i>Not known</i>';
     }
     else {
         $software = qq[<a href="http://www.lilypond.org">LilyPond</a>, version $lilypondversion];
     }
-    @collectionName;
-    @collectionKey;
-    for ($noOfCollections = 0; $collections eq ''; ++$noOfCollections) {
+    my @collectionName;
+    my @collectionKey;
+    my $collectionData;
+    my $noOfCollections;
+    for ($noOfCollections = 0; $collections ne ''; ++$noOfCollections) {
         if (index($collections, ',') == -1) {
             $collectionKey[$noOfCollections] = $collections;
             $collections = '';
@@ -128,29 +140,29 @@ if ($problem == 0) {
             chomp($collectionData = <COLLECTION>)
         } until $collectionData =~ /^$collectionKey[$noOfCollections]:/ or eof COLLECTION;
         close COLLECTION;
-        $startOfTitle = index($collectionData, ':') + 1;
-        $lengthOfTitle = index($collectionData, ':', $startOfTitle) - $startOfTitle;
+        my $startOfTitle = index($collectionData, ':') + 1;
+        my $lengthOfTitle = index($collectionData, ':', $startOfTitle) - $startOfTitle;
         $collectionName[$noOfCollections] = substr($collectionData, $startOfTitle, $lengthOfTitle);
     }
-    $printurlshop = '';
-    $printurlimg = '';
-    $printurlimgwidth = '';
-    $printurlimgheight = '';
-    $printurlurl = '';
+    my $printurlshop = '';
+    my $printurlimg = '';
+    my $printurlimgwidth = '';
+    my $printurlimgheight = '';
+    my $printurlurl = '';
     if ($printurl ne '') {
-        $startOfImg = index($printurl, ':') + 1;
-        $startOfWidth = index($printurl, ':', $startOfImg) + 1;
-        $startOfHeight = index($printurl, ':', $startOfWidth) + 1;
-        $startOfURL = index($printurl, ':', $startOfHeight) + 1;
-        $printurlshop = substr($printurl, 0, $startOfImg - 1);
-        $printurlimg = substr($printurl, $startOfImg, $startOfWidth - $startOfImg - 1);
-        $printurlimgwidth = substr($printurl, $startOfWidth, $startOfHeight - $startOfWidth - 1);
-        $printurlimgheight = substr($printurl, $startOfHeight, $startOfURL - $startOfHeight - 1);
-        $printurlurl = substr($printurl, $startOfURL);
+        my $startOfImg = index($printurl, ':') + 1;
+        my $startOfWidth = index($printurl, ':', $startOfImg) + 1;
+        my $startOfHeight = index($printurl, ':', $startOfWidth) + 1;
+        my $startOfURL = index($printurl, ':', $startOfHeight) + 1;
+        my $printurlshop = substr($printurl, 0, $startOfImg - 1);
+        my $printurlimg = substr($printurl, $startOfImg, $startOfWidth - $startOfImg - 1);
+        my $printurlimgwidth = substr($printurl, $startOfWidth, $startOfHeight - $startOfWidth - 1);
+        my $printurlimgheight = substr($printurl, $startOfHeight, $startOfURL - $startOfHeight - 1);
+        my $printurlurl = substr($printurl, $startOfURL);
     }
-    $upyear = substr($id, 8, 4);
-    $upmonth = substr($id, 13, 2);
-    $upday = substr($id, 16, 2);
+    my $upyear = substr($id, 8, 4);
+    my $upmonth = substr($id, 13, 2);
+    my $upday = substr($id, 16, 2);
     my(@month) = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
     my $month = $month[$upmonth - 1];
     print "Content-type:text/html\n\n";
@@ -249,7 +261,7 @@ if ($problem == 0) {
     print "<tr><td><b>Typeset using:</b> $software</td>\n";
     if ($noOfCollections > 0) {
         print '<td><b>Part of the following collections:</b> ';
-        for ($collection = 0; $collection < $noOfCollections; ++$collection) {
+        for (my $collection = 0; $collection < $noOfCollections; ++$collection) {
             print '<a href="make-table.cgi?collection=' . $collectionKey[$collection] . '&amp;preview=1">';
             print $collectionName[$collection] . '</a>';
             if ($collection < $noOfCollections - 1) {
@@ -259,7 +271,7 @@ if ($problem == 0) {
         print "</td></tr>\n";
     }
     else {
-        print "<td>\302\240</td></tr>\n";
+        print "<td>\302\240</td></tr>\n"; # FIXTHIS
     }
     print "</table>\n\n";
     print "<br /><br />\n\n";
@@ -305,14 +317,15 @@ if ($problem == 0) {
         print "<br /><br />\n\n";
     }
     if ($noOfCollections > 0) {
-        for ($collection = 0; $collection < $noOfCollections; ++$collection) {
-            if (-r '../collections/' . $collectionKey[$collection] . '/collection-info.dat') {
+        for (my $collection = 0; $collection < $noOfCollections; ++$collection) {
+            my $collectFile = '../collections/' . $collectionKey[$collection] . '/collection-info.dat';
+            if (-r $collectFile) {
                 print '<table align="center" border="1" width="90%" bgcolor="#e8ffe8" ';
                 print qq[cellpadding="5" cellspacing="0">\n<tr><td>];
                 print '<center><b>' . $collectionName[$collection] . '</b></center>';
-                open COLLECTIONDATA, '../collections/' . $collectionKey[$collection] . '/collection-info.dat';
+                open COLLECTIONDATA, $collectFile;
                 do {
-                    chomp($collectionLine = <COLLECTIONDATA>);
+                    chomp(my $collectionLine = <COLLECTIONDATA>);
                     print $collectionLine . "\n"
                 } until eof COLLECTIONDATA;
                 close COLLECTION;
