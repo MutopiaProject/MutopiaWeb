@@ -12,6 +12,8 @@ use Time::Local;
 use utf8;
 use vars qw(%RDF_DATA);
 
+our $VERSION = '0.02';
+
 my %RDF_DATA;
 my $OUTPUT_FILE;
 
@@ -680,9 +682,9 @@ sub INDEX_DE($) {
 
 __END__
 
-=head1 TITLE
+=head1 NAME
 
-Subroutines to help with generating HTML pages from html-in/* files.
+Mutopia_HTMLGen - routines to help with generating HTML pages
 
 =head1 DESCRIPTION
 

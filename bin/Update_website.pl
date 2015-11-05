@@ -6,15 +6,21 @@
 #           datafiles/searchcache.dat (used for searching/sorting),
 #  and updates index page (if required)
 
-use strict;	# Must declare variables with "my" or "use vars"
-use Mutopia_Archive; # subroutines for manipulating the archive
-use Mutopia_HTMLGen; # subroutines for generating HTML
+use strict;           # Must declare variables with "my" or "use vars"
+use File::Basename;
+use Mutopia_Archive;  # subroutines for manipulating the archive
+use Mutopia_HTMLGen;  # subroutines for generating HTML
 use vars qw(%RDFData %replacers);
 
-# Generate datafiles/*  ####################################################
+# Find the root of our data by assuming the script we are executing is
+# in a 'bin' folder which is a sibling to 'datafiles'. Allow an
+# environment variable WEBROOT to override this.
+my $webroot = dirname($0) . "/.." ;
+$webroot = ( exists $ENV{'WEBROOT'} ? $ENV{'WEBROOT'} : $webroot );
 
-my @files = getRDFFileList("ftp/");
-%RDFData = getAllRDFData("ftp/", @files);
+# Generate datafiles/*  ####################################################
+my @files = getRDFFileList("$webroot/ftp/");
+%RDFData = getAllRDFData("$webroot/ftp/", @files);
 
 makeCache();        # new format
 makeSearchCache();
@@ -86,8 +92,8 @@ sub getAllRDFData {
 # makes the cache file, containing all details of all pieces.
 #
 sub makeCache {
-    open (COLLECTIONS, '<:utf8', 'datafiles/collections.dat')
-        or die "cannot open datafiles/collections.dat: $!";
+    open (COLLECTIONS, '<:utf8', "$webroot/datafiles/collections.dat")
+        or die "cannot open $webroot/datafiles/collections.dat: $!";
     my @collections;
     my $noOfCollections;
     for ($noOfCollections = 0; !(eof COLLECTIONS); $noOfCollections++) {
@@ -95,8 +101,8 @@ sub makeCache {
     }
     close (COLLECTIONS);
 
-    open (PRINTURLS, '<:utf8', 'datafiles/printurls.dat')
-        or die "cannot open datafiles/printurls.dat: $!";
+    open (PRINTURLS, '<:utf8', "$webroot/datafiles/printurls.dat")
+        or die "cannot open $webroot/datafiles/printurls.dat: $!";
     my @printurls;
     my $noOfPrintUrls;
     for ($noOfPrintUrls = 0; !(eof PRINTURLS); $noOfPrintUrls++) {
@@ -104,8 +110,8 @@ sub makeCache {
     }
     close (PRINTURLS);
 
-    open TEMPCACHE, ">:utf8", "datafiles/tempmusiccache.dat"
-        or die "cannot open >datafiles/tempmusiccache.dat: $!";
+    open TEMPCACHE, ">:utf8", "$webroot/datafiles/tempmusiccache.dat"
+        or die "cannot open >$webroot/datafiles/tempmusiccache.dat: $!";
 
     for (sort {byFileName($a,$b)} keys %RDFData) {
         my ($opus, $name) = m|^(?:\./)?(.*)/([^/]+)/[^/]+.rdf$| or die "invalid piece: $_";
@@ -153,9 +159,9 @@ sub makeCache {
     # Also, offsets are padded up to ~10Mb (10000000). Again, if the cache gets
     #       bigger than this, things will break
 
-    open (TEMPCACHE, '<:utf8', 'datafiles/tempmusiccache.dat') or die "cannot open datafiles/tempmusiccache.dat";
-    open CACHE, ">:utf8", "datafiles/musiccache.dat"
-        or die "cannot open >datafiles/musiccache.dat: $!";
+    open (TEMPCACHE, '<:utf8', "$webroot/datafiles/tempmusiccache.dat") or die "cannot open $webroot/datafiles/tempmusiccache.dat";
+    open CACHE, ">:utf8", "$webroot/datafiles/musiccache.dat"
+        or die "cannot open >$webroot/datafiles/musiccache.dat: $!";
 
 	my @offsets;
 	my $piecenumber = 0;
@@ -211,7 +217,7 @@ sub makeCache {
 	print CACHE $totalheaderlength . "\n";
 	print CACHE "$_\n" for @sortedoffsets;
 
-	open (TEMPCACHE, '<:utf8', 'datafiles/tempmusiccache.dat');
+	open (TEMPCACHE, '<:utf8', "$webroot/datafiles/tempmusiccache.dat");
 
 	do {
         chomp(my $templine = <TEMPCACHE>);
@@ -228,8 +234,8 @@ sub makeCache {
 # makes the cache file, containing all details of all pieces.
 #
 sub makeSearchCache {
-    open TEMPSEARCHCACHE, ">:utf8", "datafiles/tempsearchcache.dat"
-        or die "cannot open >datafiles/tempsearchcache.dat: $!";
+    open TEMPSEARCHCACHE, ">:utf8", "$webroot/datafiles/tempsearchcache.dat"
+        or die "cannot open >$webroot/datafiles/tempsearchcache.dat: $!";
 
     for (keys %RDFData) {
 
@@ -249,9 +255,9 @@ sub makeSearchCache {
     }
     close(TEMPSEARCHCACHE);
 
-    open (TEMPSEARCHCACHE, '<:utf8', 'datafiles/tempsearchcache.dat');
-    open SEARCHCACHE, ">:utf8", "datafiles/searchcache.dat"
-        or die "cannot open >datafiles/searchcache.dat: $!";
+    open (TEMPSEARCHCACHE, '<:utf8', "$webroot/datafiles/tempsearchcache.dat");
+    open SEARCHCACHE, ">:utf8", "$webroot/datafiles/searchcache.dat"
+        or die "cannot open >$webroot/datafiles/searchcache.dat: $!";
 
     my @thedata = ();
     do {
