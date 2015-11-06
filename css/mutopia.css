@@ -42,3 +42,19 @@ table.browse_table td, table.browse_table th {
     padding: 4px 30px 4px 20px;
     vertical-align: top;
 }
+
+table.outer-table {
+    border-collapse: separate;
+    border-spacing: 0 2em;
+    text-align: center;
+    border: 0;
+    width: 100%;
+}
+table.result-table {
+    background-color: #fffee8;
+    text-align: left;
+    width: 100%;
+}
+table.result-table td, table.result-table th {
+    padding: .2em .5em;
+}
