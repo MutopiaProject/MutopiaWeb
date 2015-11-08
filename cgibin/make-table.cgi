@@ -21,7 +21,8 @@ my %FORM = HTMLcommon::queryArgs();
 #close FTPB;
 
 my $baseref = '../ftp/';
-my $matchCount = 0;
+my $EMPTY_CELL = "<td>&nbsp;</td>";
+my $matchCount = -1;
 
 HTMLcommon::startPage("Music Listing - "
                       . ($FORM{'preview'} ? "with" : "without")
@@ -49,18 +50,30 @@ if ($FORM{'recent'} and $FORM{'recent'} == 1) {
     }
 }
 
-my $EMPTY_CELL = "<td>&nbsp;</td>";
 print qq(<table class="outer-table">\n);
 
-open( CACHE, '<:utf8', "../datafiles/musiccache.dat" )
-    || die "$! - failed to open the music cache";
+if (!open( CACHE, '<:utf8', "../datafiles/musiccache.dat" )) {
+    print qq(<div class="alert alert-danger" role="alert">\n);
+    print qq(  <strong>Error:</strong> Failed to open the music cache.\nMessage is "$!".\n);
+    print "</div>\n";
+    last;
+}
 
+# Read the cache into local variables.
+$matchCount = 0;
 chomp(my $headerlength = <CACHE>);
 seek CACHE, $headerlength, 0;
 until (eof CACHE) {
     chomp(my $checkline = <CACHE>);
     if ($checkline ne '**********') {
-        print 'ERROR in the datafile - rebuild cache';
+        print qq(<div class="alert alert-danger" role="alert">\n);
+        print qq(  <strong>Error:</strong> Illegal format in the datafile - cache needs to be rebuilt.\n);
+        print "</div>\n";
+        close(CACHE);
+        # Modify the match count so the user doesn't get a second
+        # alert saying that no matches were found.
+        $matchCount = -1;
+        last;
     }
     chomp(my $idno = <CACHE>);
     chomp(my $midrif = <CACHE>);
@@ -319,8 +332,8 @@ until (eof CACHE) {
 
 close CACHE;
 
-if (!$matchCount) {
-    print qq(<div class="alert alert-information" role="alert">\n);
+if ($matchCount == 0) {
+    print qq(<div class="alert alert-info" role="alert">\n);
     print qq(  Sorry, no matches were found for your search criteria.\n);
     print "</div>\n";
 }
