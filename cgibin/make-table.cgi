@@ -1,40 +1,31 @@
 #!/usr/bin/perl -wT
-
 use strict;
 use POSIX;
-
-my @pairs = split(/\&/, $ENV{'QUERY_STRING'}, 0);
-my %FORM;
-foreach my $pair (@pairs) {
-    my ($name, $value) = split(/=/, $pair, 3);
-    $value =~ tr/+/ /;
-    $value =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack 'C', hex $1;/eg;
-    $FORM{$name} = $value;
+use utf8;
+# since we aren't sure what the environment is for the site, make sure
+# that our common module can be loaded.
+my $rundir;
+BEGIN {
+    $rundir = ( (-e './HTMLcommon.pm') ? '.' : './cgibin');
 }
+use lib "$rundir";
+use HTMLcommon;
+
+binmode(STDOUT, ":utf8");
+
+my %FORM = HTMLcommon::queryArgs();
 
 # not used?
 #open FTPB, '../ftpbase.dat';
 #chomp($ftpbase = <FTPB>);
 #close FTPB;
 
-open CACHE, '../datafiles/musiccache.dat';
-
 my $baseref = '../ftp/';
 my $matchCount = 0;
-print "Content-type:text/html\n\n";
-print qq[<?xml version="1.0" encoding="UTF-8"?>\n];
-print "<!DOCTYPE html\n";
-print qq[     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\n];
-print qq[    "DTD/xhtml1-transitional.dtd">\n];
-print qq[<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">\n\n];
-my $w_or_wout = ($FORM{'preview'} ? "with" : "without" );
-print qq[<head><title>Music Listing - $w_or_wout preview images</title>\n];
-print qq[<meta content="text/html; charset=utf-8"];
-print qq[http-equiv="Content-Type" />\n</head>\n\n];
-print qq[<body bgcolor="#ffffff">\n\n];
-print qq[<center><h2>Music Listing - $w_or_wout preview images</h2></center>\n\n];
-print qq[<table align="center" border="0" width="100%" ];
-print qq[cellpadding="0" cellspacing="25">\n];
+
+HTMLcommon::startPage("Music Listing - "
+                      . ($FORM{'preview'} ? "with" : "without")
+                      . " preview images");
 
 # Check if the user narrowed the search to recent history and whether
 # it was weeks or days.
@@ -57,6 +48,12 @@ if ($FORM{'recent'} and $FORM{'recent'} == 1) {
         }
     }
 }
+
+my $EMPTY_CELL = "<td>&nbsp;</td>";
+print qq(<table class="outer-table">\n);
+
+open( CACHE, '<:utf8', "../datafiles/musiccache.dat" )
+    || die "$! - failed to open the music cache";
 
 chomp(my $headerlength = <CACHE>);
 seek CACHE, $headerlength, 0;
@@ -97,13 +94,20 @@ until (eof CACHE) {
     chomp(my $collections = <CACHE>);
     chomp(my $printurl = <CACHE>);
 
-    if ($FORM{'Composer'}) {
-        next unless $midrif =~ m[^$FORM{'Composer'}/];
-    }
+    # Filter on composer, if present. Note that $midrif is actually
+    # the ftp filespec (e.g., "AguadoD/OP3"). The Composer in the form
+    # is given as our internal naming ("AguadoD") so only the first
+    # part of the string is matched.
+    next unless $FORM{'Composer'} ? $midrif =~ m[^$FORM{'Composer'}/] : 1;
+
     my $upyear = substr($id, 8, 4);
     my $upmonth = substr($id, 13, 2);
     my $upday = substr($id, 16, 2);
     my $update = mktime(59, 59, 23, $upday, $upmonth - 1, $upyear - 1900);
+
+    # filter based on time span
+    next unless ($update > $earliesttime);
+
     my $go = 1;
 
     if ($FORM{'searchingfor'}) {
@@ -177,34 +181,35 @@ until (eof CACHE) {
     next unless $go;
 
     # Apply remaining filters in the input form
-    next unless ($update > $earliesttime);
     next unless $FORM{'Instrument'} ? ($instrument =~ /$FORM{'Instrument'}/) : 1;
     next unless $FORM{'Style'} ? ($style eq $FORM{'Style'}) : 1;
     next unless $FORM{'id'} ? ($id =~ /-$FORM{'id'}$/) : 1;
     next unless $FORM{'collection'} ? ($collections =~ /(^|,)$FORM{'collection'}(,|$/) : 1;
-    
+
+    # A match if we got this far. All filtering is done.
     $matchCount++;
-    print qq[<tr><td>\n<table align="center" border="1" width="100%" ];
-    print qq[bgcolor="#fffee8" cellpadding="3" cellspacing="0">\n<tr>\n];
+
+    print qq(<tr><td>\n);       # start a row within the outer table
+    print qq(<table class="table-bordered result-table">\n);
+
+    # Add preview if requested. The image is presented as a table cell
+    # that spans all 4 columns
     if ($FORM{'preview'} && $FORM{'preview'} == 1) {
-        print '<td colspan="4" align="center" bgcolor="#ffffff">';
-        print qq[<img src="$baseref$midrif$musicnm/$pngfile" ];
-        print qq[height="$pngheight" width="$pngwidth" alt="Preview image" />];
-        print "</td></tr>\n<tr>\n";
+        print qq(<tr class="preview"><td colspan="4" align="center">);
+        print qq(<img src="$baseref$midrif$musicnm/$pngfile" );
+        print qq(height="$pngheight" width="$pngwidth" alt="Preview image" />);
+        print qq(</td></tr>\n);
     }
-    print "<td>$title</td>\n";
+    print "<tr>";
+    print qq(<td>$title</td>\n);
     if ($composer eq 'Anonymous' or $composer eq 'Traditional') {
-        print "<td>$composer</td>\n";
+        print qq(<td>$composer</td>\n);
     }
     else {
-        print "<td>by $composer</td>\n";
+        print qq(<td>by $composer</td>\n);
     }
-    if ($opus ne '') {
-        print "<td>$opus</td>\n";
-    }
-    else {
-        print "<td>&nbsp;</td>\n";
-    }
+    print ($opus ne '' ? qq(<td>$opus</td>\n) : "$EMPTY_CELL\n" );
+
     if ($lyricist eq 'n/a') {
         print "<td><i>n/a</i></td>\n";
     }
@@ -212,16 +217,12 @@ until (eof CACHE) {
         print "<td>$lyricist</td>\n";
     }
     else {
-        print "<td>&nbsp;</td>\n";
+        print "$EMPTY_CELL\n";
     }
     print "</tr><tr>\n";
     print "<td>for $instrument</td>\n";
-    if ($date ne '') {
-        print "<td>$date</td>\n";
-    }
-    else {
-        print "<td>&nbsp;</td>\n";
-    }
+
+    print ($date ne '' ? qq(<td>$date</td>\n) : "$EMPTY_CELL\n" );
     print "<td>$style</td>\n";
     if ($arranger eq 'n/a') {
         print "<td><i>n/a</i></td>\n";
@@ -230,12 +231,8 @@ until (eof CACHE) {
         print "<td>$arranger</td>\n";
     }
     print "</tr><tr>\n";
-    if ($source ne '') {
-        print "<td>$source</td>\n";
-    }
-    else {
-        print "<td>&nbsp;</td>\n";
-    }
+    print ($source ne '' ? qq(<td>$source</td>\n) : "$EMPTY_CELL\n");
+
     if ($copyright eq 'Public Domain') {
         print qq[<td><a href="../legal.html#publicdomain">Public Domain</a></td>\n];
     }
@@ -272,14 +269,14 @@ until (eof CACHE) {
         print "Creative Commons Attribution 4.0</a></td>\n";
     }
     else {
-        print "<td>&nbsp;</td>\n";
+        print "$EMPTY_CELL\n";
     }
     print '<td><a href="piece-info.cgi?';
     print qq[id=$idno">More Information</a></td>\n];
     print "<td>$upyear/$upmonth/$upday</td>\n";
     print "</tr><tr>\n";
     if ($lyfile =~ /\.zip$/) {
-        print '<td bgcolor="#cdeef4">Download: <a href="';
+        print '<td class="zipped">Download: <a href="';
         print qq[$baseref$midrif$musicnm/$lyfile">.ly files (zipped)</a></td>\n];
     }
     else {
@@ -287,58 +284,47 @@ until (eof CACHE) {
         print qq[$baseref$midrif$musicnm/$lyfile">.ly file</a></td>\n];
     }
     if ($midfile =~ /\.zip$/) {
-        print '<td bgcolor="#cdeef4"><a href="';
+        print '<td class="zipped"><a href="';
         print qq[$baseref$midrif$musicnm/$midfile">.mid files (zipped)</a></td>\n];
     }
     else {
         print '<td><a href="';
         print qq[$baseref$midrif$musicnm/$midfile">.mid file</a></td>\n];
     }
-    print '<td><a href="';
-    print qq[$baseref$midrif$musicnm/$pngfile">Preview image</a></td>\n];
+    print qq(<td><a href="$baseref$midrif$musicnm/$pngfile">Preview image</a></td>\n);
     print qq[<td><a href="ftp://ibiblio.org/pub/multimedia/mutopia/$midrif$musicnm/">Appropriate FTP area</a></td>\n</tr><tr>\n];
     if ($a4psfile =~ /\.zip$/) {
-        print '<td bgcolor="#cdeef4"><a href="';
-        print qq[$baseref$midrif$musicnm/$a4psfile">A4 .ps files (zipped)</a></td>\n];
-        print '<td bgcolor="#cdeef4"><a href="';
-        print qq[$baseref$midrif$musicnm/$a4pdffile">A4 .pdf files (zipped)</a></td>\n];
-        print '<td bgcolor="#cdeef4"><a href="';
-        print qq[$baseref$midrif$musicnm/$letpsfile">Letter .ps files (zipped)</a></td>\n];
-        print '<td bgcolor="#cdeef4"><a href="';
-        print qq[$baseref$midrif$musicnm/$letpdffile">Letter .pdf files (zipped)</a></td>\n];
+        print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$a4psfile">A4 .ps files (zipped)</a></td>\n);
+        print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$a4pdffile">A4 .pdf files (zipped)</a></td>\n);
+        print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$letpsfile">Letter .ps files (zipped)</a></td>\n);
+        print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$letpdffile">Letter .pdf files (zipped)</a></td>\n);
     }
     else {
         if ($a4pdffile =~ /\.gz$/) {
-            print '<td bgcolor="#f7dcdc"><a href="';
-            print qq[$baseref$midrif$musicnm/$a4psfile">A4 .ps file (gzipped)</a></td>\n];
-            print '<td bgcolor="#f7dcdc"><a href="';
-            print qq[$baseref$midrif$musicnm/$a4pdffile">A4 .pdf file (gzipped)</a></td>\n];
-            print '<td bgcolor="#f7dcdc"><a href="';
-            print qq[$baseref$midrif$musicnm/$letpsfile">Letter .ps file (gzipped)</a></td>\n];
-            print '<td bgcolor="#f7dcdc"><a href="';
-            print qq[$baseref$midrif$musicnm/$letpdffile">Letter .pdf file (gzipped)</a></td>\n];
+            print qq(<td class="gzipped"><a href="$baseref$midrif$musicnm/$a4psfile">A4 .ps file (gzipped)</a></td>\n);
+            print qq(<td class="gzipped"><a href="$baseref$midrif$musicnm/$a4pdffile">A4 .pdf file (gzipped)</a></td>\n);
+            print qq(<td class="gzipped"><a href="$baseref$midrif$musicnm/$letpsfile">Letter .ps file (gzipped)</a></td>\n);
+            print qq(<td class="gzipped"><a href="$baseref$midrif$musicnm/$letpdffile">Letter .pdf file (gzipped)</a></td>\n);
         }
         else {
-            print '<td><a href="';
-            print qq[$baseref$midrif$musicnm/$a4psfile">A4 .ps file (gzipped)</a></td>\n];
-            print '<td><a href="';
-            print qq[$baseref$midrif$musicnm/$a4pdffile">A4 .pdf file</a></td>\n];
-            print '<td><a href="';
-            print qq[$baseref$midrif$musicnm/$letpsfile">Letter .ps file (gzipped)</a></td>\n];
-            print '<td><a href="';
-            print qq[$baseref$midrif$musicnm/$letpdffile">Letter .pdf file</a></td>\n];
+            print qq(<td><a href="$baseref$midrif$musicnm/$a4psfile">A4 .ps file (gzipped)</a></td>\n);
+            print qq(<td><a href="$baseref$midrif$musicnm/$a4pdffile">A4 .pdf file</a></td>\n);
+            print qq(<td><a href="$baseref$midrif$musicnm/$letpsfile">Letter .ps file (gzipped)</a></td>\n);
+            print qq(<td><a href="$baseref$midrif$musicnm/$letpdffile">Letter .pdf file</a></td>\n);
         }
     }
-    print "</tr>\n</table>\n</tr></td>\n";
+    print qq(</tr>\n</table>\n); # inner cell
+    print qq(</tr></td>\n);      # outer table row element
 }
 
 close CACHE;
 
-print "</table>\n\n";
 if (!$matchCount) {
-    print "<p>Sorry, no matches were found for your search criteria.</p>\n\n";
+    print qq(<div class="alert alert-information" role="alert">\n);
+    print qq(  Sorry, no matches were found for your search criteria.\n);
+    print "</div>\n";
 }
-print "<hr /><br />\n";
-print qq[<center><p><a href="../advsearch.html">Return to the advanced search page</a><br /><br />\n];
-print qq[<a href="../index.html">Return to the Mutopia home page</a></p></center>\n];
-print "</body>\n</html>\n";
+
+print qq(</table>\n);           # outer-table
+
+HTMLcommon::finishPage();
