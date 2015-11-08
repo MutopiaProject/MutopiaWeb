@@ -12,7 +12,7 @@ body {
     background-color: #eee;
 }
 
-h2 {
+h2,h4 {
     text-align: center;
 }
 
@@ -57,4 +57,25 @@ table.result-table {
 }
 table.result-table td, table.result-table th {
     padding: .2em .5em;
+}
+table.result-table td.zipped {
+    background-color: #cdeef4;
+}
+table.result-table td.gzipped {
+    background-color: #f7dcdc;
+}
+table.result-table tr.preview {
+    background-color: #fff;
+}
+.more-info {
+    background-color: #e8e8ff;
+}
+table.maintainer {
+    background-color: #ffe8e8;
+}
+.preview-image p {
+    text-align: center;
+    background-color: #fff;
+    margin-top: 1em;
+    margin-bottom: 2em;
 }
