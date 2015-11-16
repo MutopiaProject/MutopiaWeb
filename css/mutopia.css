@@ -79,3 +79,10 @@ table.maintainer {
     margin-top: 1em;
     margin-bottom: 2em;
 }
+
+/* for advanced search*/
+.adv-search li {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    list-style: none;    
+}
