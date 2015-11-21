@@ -86,9 +86,9 @@ fi
 # Create RDF (using copy of header file if necessary)
 if [ -d "$BASE_NAME"-lys ]; then
    cp "$HEADER_FILE" "$BASE_NAME".ly
-   java Mutopia -r "$BASE_NAME".ly
+   Mutopia -r "$BASE_NAME".ly
    rm "$BASE_NAME".ly
 else
-   java Mutopia -r "$BASE_NAME".ly
+   Mutopia -r "$BASE_NAME".ly
 fi
 
