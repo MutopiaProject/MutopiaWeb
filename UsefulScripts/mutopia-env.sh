@@ -23,4 +23,9 @@ fi
 export LILYPOND_VERSION
 export LILYPOND_BIN=$LILYPOND_BASE/lilypond
 export CONVERT_LY_BIN=$LILYPOND_BASE/convert-ly
-export MUTOPIA_BASE=~/Mutopia
+
+export MUTOPIA_BASE=$HOME/Mutopia
+export MUTOPIA_WEB=$HOME/MutopiaWeb
+# paths were not added before ... but you want these
+# PATH=$PATH:$MUTOPIA_WEB/bin
+# PATH=$PATH:$MUTOPIA_WEB/UsefulScripts
