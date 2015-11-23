@@ -14,7 +14,7 @@
  *   $@ - File names to process
  */
 
-package mutopia.core;
+import mutopia.core.*;
 import java.io.*;
 import java.util.*;
 
