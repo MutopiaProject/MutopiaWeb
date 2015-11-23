@@ -22,8 +22,8 @@ project (':Mutopia') {
   dependencies {
     compile project(':core')
   }
-  mainClassName = 'mutopia.core.Mutopia'
+  mainClassName = 'Mutopia'
   manifest {
-    attributes 'Main-Class' : 'mutopia.core.Mutopia'
+    attributes 'Main-Class' : 'Mutopia'
   }
 }
