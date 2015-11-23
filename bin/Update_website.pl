@@ -16,7 +16,7 @@ use vars qw(%RDFData %replacers);
 # in a 'bin' folder which is a sibling to 'datafiles'. Allow an
 # environment variable WEBROOT to override this.
 my $webroot = dirname($0) . "/.." ;
-$webroot = ( exists $ENV{'WEBROOT'} ? $ENV{'WEBROOT'} : $webroot );
+$webroot = ( exists $ENV{'MUTOPIA_WEB'} ? $ENV{'MUTOPIA_WEB'} : $webroot );
 
 # Generate datafiles/*  ####################################################
 my @files = getRDFFileList("$webroot/ftp/");
