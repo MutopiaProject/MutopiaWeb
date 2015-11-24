@@ -20,7 +20,6 @@ use vars qw(%RDFData %replacers @rdfFiles);
 my $webroot = dirname($0) . "/.." ;
 $webroot = $ENV{'MUTOPIA_WEB'} || $webroot;
 $webroot =~ s|\\|/|g; # change MSDOS file separators
-print "Using $webroot as the webroot\n"; #DEBUG
 
 # Generate datafiles/*  ####################################################
 my @files = getRDFFileList("$webroot/ftp/");
@@ -125,7 +124,7 @@ sub makeCache {
 
     open TEMPCACHE, ">:utf8", "$webroot/datafiles/tempmusiccache.dat"
         or die "cannot open >$webroot/datafiles/tempmusiccache.dat: $!";
-	binmode TEMPCACHE; # Be sure we're writing Unix line endings (LF)
+	binmode(TEMPCACHE, ":raw:utf8"); # Be sure we're writing Unix line endings (LF)
 	
     for (sort {byFileName($a,$b)} keys %RDFData) {
         my ($opus, $name) = m|^(?:\./)?(.*)/([^/]+)/[^/]+.rdf$| or die "invalid piece: $_";
@@ -179,7 +178,7 @@ sub makeCache {
 		or die "cannot open $webroot/datafiles/tempmusiccache.dat";
     open CACHE, ">:utf8", "$webroot/datafiles/musiccache.dat"
         or die "cannot open >$webroot/datafiles/musiccache.dat: $!";
-	binmode CACHE; # Write with Unix line endings
+	binmode(CACHE, ":raw:utf8"); # Be sure we're writing Unix line endings (LF)
 	
 	my @offsets;
 	my $piecenumber = 0;
