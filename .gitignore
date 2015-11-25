@@ -9,8 +9,3 @@ ftp/
 #  lib may be created during installs but should not be committed
 lib/
 man/
-
-# Datafiles may be created and modified by Update_website.pl, but 
-# they do not have to be committed
-datafiles/
-tmp/
