@@ -8,8 +8,14 @@
 
 package Mutopia_Archive;
 use strict;
+use Carp; # croak() - like die() but error appears in the caller
 
 our $VERSION = '0.02';
+
+# Files must be opened from webroot
+my $webroot = $ENV{'MUTOPIA_WEB'} 
+	or croak "MUTOPIA_WEB environment variable must be set\n";
+$webroot =~ s|\\|/|g; # change MSDOS file separators
 
 # readRDFFile($filename)
 # reads an RDF file, and returns a data structure.
@@ -24,7 +30,7 @@ sub readRDFFile {
 	# use the XPath object to find relevant nodes in XML tree
 	my @nodes = $xp->find("/rdf:RDF/rdf:Description/*")->get_nodelist();
 
-    die "Can't find /rdf:RDF/rdf:Description/* nodes" if @nodes == 0;
+    croak "Can't find /rdf:RDF/rdf:Description/* nodes" if @nodes == 0;
     
     # read data from each relevant node, putting it into a hash
 	my %data = ();
@@ -33,7 +39,7 @@ sub readRDFFile {
 	    $value =~ s/\s+/ /gs;  # normalise whitespace
 		my $fieldname = $node->getName();
 		$fieldname =~ s/^mp://
-            or die "fieldname breaks namespace kludge: $fieldname";
+            or croak "fieldname breaks namespace kludge: $fieldname";
 		$data{ $fieldname } = $value;
 	}
 
@@ -46,7 +52,7 @@ sub readRDFFile {
 #
 sub getData {
     my $file = shift;
-    open (FILE, '<:utf8', $file) or die "cannot open $file: $!";
+    open (FILE, '<:utf8', $file) or croak "cannot open $file: $!";
     return map { chomp; $_ } <FILE>;
 }
 
@@ -61,7 +67,7 @@ sub RDFtoCACHE {
 	# version on 20/Jun/2003 (while waiting for Harry Potter 5...)
 	# Beware of old scripts! [Chris]
 	
-	my %comp  = getData("datafiles/composers.dat");
+	my %comp  = getData("$webroot/datafiles/composers.dat");
 	my @cachedata = ();
 	push @cachedata, $rdf{lyFile};
 	push @cachedata, $rdf{midFile};
@@ -103,7 +109,7 @@ sub RDFtoCACHE {
 sub RDFtoSEARCHCACHE {
 	my %rdf = @_;
 
-    my %comp  = getData("datafiles/composers.dat");
+    my %comp  = getData("$webroot/datafiles/composers.dat");
 	my @searchcachedata = ();
 	push @searchcachedata, "title:" . $rdf{title} . ":";
 

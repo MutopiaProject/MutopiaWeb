@@ -7,16 +7,19 @@
 #  and updates index page (if required)
 
 use strict;           # Must declare variables with "my" or "use vars"
-use File::Basename;
+use File::Basename;   # dirname() 
+use File::Find;       # find()
+use Cwd;              # getcwd()
 use Mutopia_Archive;  # subroutines for manipulating the archive
 use Mutopia_HTMLGen;  # subroutines for generating HTML
-use vars qw(%RDFData %replacers);
+use vars qw(%RDFData %replacers @rdfFiles);
 
 # Find the root of our data by assuming the script we are executing is
 # in a 'bin' folder which is a sibling to 'datafiles'. Allow an
-# environment variable WEBROOT to override this.
+# environment variable MUTOPIA_WEB to override this.
 my $webroot = dirname($0) . "/.." ;
-$webroot = ( exists $ENV{'MUTOPIA_WEB'} ? $ENV{'MUTOPIA_WEB'} : $webroot );
+$webroot = $ENV{'MUTOPIA_WEB'} || $webroot;
+$webroot =~ s|\\|/|g; # change MSDOS file separators
 
 # Generate datafiles/*  ####################################################
 my @files = getRDFFileList("$webroot/ftp/");
@@ -33,13 +36,19 @@ Mutopia_HTMLGen::makeHTML(\%RDFData);
 #
 sub getRDFFileList {
     my $basedir = shift;
-    chomp (my $olddir = `pwd`);
-    chdir $basedir or die "Cannot chdir to $basedir: $!";
-    my @files = sort {byFileName($a,$b)} `find . -name "*.rdf"`; # XXX File::Find
+	find(\&wanted, $basedir); # side effect, adds to @rdfFiles
+    my @files = sort {byFileName($a,$b)} @rdfFiles;
     s/\s*//g for @files;
     die "Can't find any *.rdf files below $basedir" unless @files;
-    chdir $olddir or die "Cannot return to directory $olddir: $!";
     return @files;
+}
+
+# Used by find(), equivalent to `find . -name "*.rdf"`
+# Uses global @rdfFiles
+#
+sub wanted {
+    /^.*\.rdf\z/s
+    && (push @rdfFiles, $File::Find::name);
 }
 
 # byFileName($a, $b)
@@ -76,7 +85,7 @@ sub byFileName($$) {
 sub getAllRDFData {
     my ($basedir, @files) = @_;
     my %data;
-    chomp(my $olddir = `pwd`);
+    my $olddir = getcwd();
     chdir $basedir or die "Cannot chdir to $basedir: $!";
     for my $file (@files) {
         $file =~ m|^(.*)/([^/]+)$| or die "bad filename: $file";
@@ -109,10 +118,14 @@ sub makeCache {
         chomp($printurls[$noOfPrintUrls] = <PRINTURLS>);
     }
     close (PRINTURLS);
+	
+	# Use Unix text record endings or seek will be off in Windows
+	local $/ = "\n";
 
     open TEMPCACHE, ">:utf8", "$webroot/datafiles/tempmusiccache.dat"
         or die "cannot open >$webroot/datafiles/tempmusiccache.dat: $!";
-
+	binmode(TEMPCACHE, ":raw:utf8"); # Be sure we're writing Unix line endings (LF)
+	
     for (sort {byFileName($a,$b)} keys %RDFData) {
         my ($opus, $name) = m|^(?:\./)?(.*)/([^/]+)/[^/]+.rdf$| or die "invalid piece: $_";
         my @data = Mutopia_Archive::RDFtoCACHE %{ $RDFData{$_} };
@@ -159,10 +172,14 @@ sub makeCache {
     # Also, offsets are padded up to ~10Mb (10000000). Again, if the cache gets
     #       bigger than this, things will break
 
-    open (TEMPCACHE, '<:utf8', "$webroot/datafiles/tempmusiccache.dat") or die "cannot open $webroot/datafiles/tempmusiccache.dat";
+	local $/ = "\n"; # Read text with Unix line endings
+	
+    open (TEMPCACHE, '<:utf8', "$webroot/datafiles/tempmusiccache.dat") 
+		or die "cannot open $webroot/datafiles/tempmusiccache.dat";
     open CACHE, ">:utf8", "$webroot/datafiles/musiccache.dat"
         or die "cannot open >$webroot/datafiles/musiccache.dat: $!";
-
+	binmode(CACHE, ":raw:utf8"); # Be sure we're writing Unix line endings (LF)
+	
 	my @offsets;
 	my $piecenumber = 0;
 
@@ -227,7 +244,8 @@ sub makeCache {
 	close(TEMPCACHE);
 	close(CACHE);
 
-	unlink "datafiles/tempmusiccache.dat";
+	unlink "$webroot/datafiles/tempmusiccache.dat"
+			or warn "Cannot delete $webroot/datafiles/tempmusiccache.dat";
 }
 
 # makeSearchCache()
@@ -271,5 +289,6 @@ sub makeSearchCache {
     print SEARCHCACHE "$_\n" for @sorteddata;
     close (SEARCHCACHE);
 
-    unlink "datafiles/tempsearchcache.dat";
+    unlink "$webroot/datafiles/tempsearchcache.dat"
+			or warn "Cannot delete $webroot/datafiles/tempsearchcache.dat";
 }
