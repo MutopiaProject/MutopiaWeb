@@ -3,9 +3,13 @@ allprojects {
   apply plugin: 'java'
   repositories {
     mavenCentral()
+	maven {
+        url "https://repository.apache.org/content/repositories/snapshots/"
+    }
   }
   dependencies {
     testCompile "junit:junit:4.+"
+	compile "org.apache.commons:commons-imaging:1.0-SNAPSHOT"
   }
 }  
 
