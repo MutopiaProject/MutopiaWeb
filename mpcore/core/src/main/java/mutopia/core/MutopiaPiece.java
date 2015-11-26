@@ -11,6 +11,10 @@ import java.beans.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.awt.Dimension;
+
+import org.apache.commons.imaging.ImageParser;
+import org.apache.commons.imaging.ImageReadException;
 
 public class MutopiaPiece
 {
@@ -117,21 +121,12 @@ public class MutopiaPiece
       lilyVersion = getLilyVersion(lilyCommandLine);
 
       String previewFilename = filenameBaseWithDir + "-preview.png";
-      if (new File(previewFilename).exists())
+	  File previewFile = new File(previewFilename);
+      if (previewFile.exists())
       {
-         Process imgProcess = Runtime.getRuntime().exec("file " + previewFilename);
-         try { imgProcess.waitFor(); } catch (Exception ex) {}
-         BufferedReader imgInput = new BufferedReader(new InputStreamReader(imgProcess.getInputStream()));
-         String imgString = imgInput.readLine();
-         imgInput.close();
-
-         int widthStart = imgString.indexOf("image data, ") + 12;
-         int widthEnd = imgString.indexOf(" ", widthStart);
-         previewWidth = new Integer(imgString.substring(widthStart, widthEnd));
-
-         int heightStart = widthEnd + 3;
-         int heightEnd = imgString.indexOf(",", heightStart);
-         previewHeight = new Integer(imgString.substring(heightStart, heightEnd));
+         Dimension dim = getPngSize(previewFile);
+         previewWidth = new Integer( (int) Math.round(dim.getWidth()) );
+         previewHeight = new Integer( (int) Math.round(dim.getHeight()) );
       }
    }
 
@@ -235,6 +230,24 @@ public class MutopiaPiece
       }
 
       return returnValue;
+   }
+   
+   // Return the deminsions of a PNG image
+   private Dimension getPngSize(File file) {
+	   Dimension dim = null;
+	   
+	   for (ImageParser parser : ImageParser.getAllImageParsers()) {
+			if (".png".equalsIgnoreCase(parser.getDefaultExtension())) {
+    			try {
+    				dim = parser.getImageSize(file);
+    			} catch (ImageReadException | IOException e) {
+    				e.printStackTrace();
+    			}
+    			break;
+			}
+		}
+		
+		return dim;
    }
 
    // Public getters
