@@ -11,7 +11,6 @@ use POSIX qw(strftime);
 use Time::Local;
 use Carp; # croak() = like die(), but the error appears in the caller
 use Cwd;  # getcwd(), like `pwd`
-use File::Path qw(make_path remove_tree);
 use utf8;
 use vars qw(%RDF_DATA);
 
@@ -31,10 +30,6 @@ $webroot =~ s|\\|/|g; # Change MSDOS file separators
 sub makeHTML($) {
     my $rdf_ref = shift;
 	
-	# Clear and create an htdocs folder in $webroot for the HTML files
-	remove_tree("$webroot/htdocs");
-	make_path("$webroot/htdocs");
-
     %RDF_DATA = %$rdf_ref;
 	my $starting_dir = getcwd();
     chdir "$webroot/html-in" or croak "cannot chdir to html-in: $!";
@@ -59,8 +54,8 @@ ________EOM
 
         replace_placeholders(\$_);
 
-        open OUT, ">:utf8", "$webroot/htdocs/$OUTPUT_FILE" 
-				or croak "cannot open >$webroot/htdocs/$OUTPUT_FILE: $!";
+        open OUT, ">:utf8", "$webroot/$OUTPUT_FILE" 
+				or croak "cannot open >$webroot/$OUTPUT_FILE: $!";
         print OUT $_;
         close OUT;
 
@@ -82,8 +77,8 @@ ________EOM
 
         replace_placeholders(\$_);
 
-        open OUT, ">:utf8", "$webroot/htdocs/$OUTPUT_FILE" 
-				or croak "cannot open >$webroot/htdocs/$OUTPUT_FILE: $!";
+        open OUT, ">:utf8", "$webroot/$OUTPUT_FILE" 
+				or croak "cannot open >$webroot/$OUTPUT_FILE: $!";
         print OUT $_;
         close OUT;
 
