@@ -1,0 +1,4 @@
+# Ignore Eclipse project related files
+/bin/
+.classpath
+.project

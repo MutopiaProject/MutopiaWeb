@@ -1,10 +1,3 @@
-/*
- * Filename:         MutopiaPiece.java
- * Original author:  Chris Sawer
- *
- * Description:
- *   Class to store information about a Mutopia piece.
- */
 package mutopia.core;
 
 import java.beans.*;
@@ -16,6 +9,11 @@ import java.awt.Dimension;
 import org.apache.commons.imaging.ImageParser;
 import org.apache.commons.imaging.ImageReadException;
 
+/**
+ * Class to store information about a Mutopia piece.
+ * 
+ * @author Chris Sawer
+ */
 public class MutopiaPiece
 {
    private String lyFilename = null;
@@ -48,6 +46,12 @@ public class MutopiaPiece
    // Map from (eg.) "title" -> this.title property
    private Map<String, PropertyDescriptor> piecePropertyMap;
 
+   /**
+    * Creates a new MutopiaPiece object.  Populates {@code piecePropertyMap}, used to
+    * set fields dynamically.
+    * 
+    * @param lyFilename the name of the LilyPond file
+    */
    public MutopiaPiece(String lyFilename)
    {
       this.lyFilename = lyFilename;
@@ -65,6 +69,13 @@ public class MutopiaPiece
       catch (IntrospectionException ex) { System.err.println("IntrospectionException caught: " + ex); }
    }
 
+   /**
+    * Set a field in this object based on a field name and value.  Field names that start with
+    * "mutopia" will never have their values overwritten by a field name that does not.
+    * 
+    * @param field the field name to set
+    * @param value the value to set this field to
+    */
    public void populateField(String field, String value)
    {
       if (piecePropertyMap.keySet().contains(field) ||
@@ -108,6 +119,20 @@ public class MutopiaPiece
       }
    }
 
+   /**
+    * Sets several values based on the LilyPond file name and executable. 
+    * <ul>
+    * <li>{@code filenameBase} is the file name without directory or extension</li>
+    * <li>{@code multipleLyFiles}, {@code multipleMidFiles}, and
+    *     {@code multiplePdfFiles} are booleans set to true if there are ZIP files for .ly files,
+    *     .mid files, and .pdf file respectively</li>
+    * <li>{@code lilyVersion} is the LilyPond version</li> 
+    * <li>{@code previewWidth} and {@code previewHeight} are the dimensions of the preview PNG file</li>
+    * </ul>
+    * 
+    * @param lilyCommandLine the LilyPond executable, used to get the version
+    * @throws IOException from {@link #getLilyVersion()}
+    */
    public void deriveCompileStuff(String lilyCommandLine) throws IOException
    {
       String filenameBaseWithDir = lyFilename.substring(0, lyFilename.length() - 3);
@@ -130,6 +155,13 @@ public class MutopiaPiece
       }
    }
 
+   /**
+    * Parses the LilyPond version number from the executable's output.
+    * 
+    * @param lilyCommandLine the LilyPond executable
+    * @return the LilyPond version
+    * @throws IOException if it has problems executing LilyPond
+    */
    public static String getLilyVersion(String lilyCommandLine) throws IOException
    {
       Process lilyProcess = Runtime.getRuntime().exec(lilyCommandLine + " -version");
@@ -140,6 +172,12 @@ public class MutopiaPiece
       return longLilyVersion.substring(longLilyVersion.lastIndexOf(' ') + 1);
    }
 
+   /**
+    * Checks whether mandatory fields have been set.
+    *  
+    * @param checkFooter true if footer value is mandatory
+    * @return true if all mandatory fields are set, false otherwise
+    */
    public boolean checkFieldConsistency(boolean checkFooter)
    {
       boolean returnValue = true;
@@ -211,6 +249,11 @@ public class MutopiaPiece
       return returnValue;
    }
 
+   /**
+    * Checks whether mandatory fields from {@link #deriveCompileStuff(String)} have been set.
+    * 
+    * @return true only if all mandatory fields are set, false otherwise
+    */
    public boolean checkCompileConsistency()
    {
       boolean returnValue = true;
@@ -232,7 +275,7 @@ public class MutopiaPiece
       return returnValue;
    }
    
-   // Return the deminsions of a PNG image
+   // Return the dimensions of a PNG image
    private Dimension getPngSize(File file) {
 	   Dimension dim = null;
 	   
@@ -476,5 +519,11 @@ public class MutopiaPiece
    public String getMaintainerWeb()
    {
       return maintainerWeb;
+   }
+   
+   // For testing
+   public Map<String, PropertyDescriptor> getPiecePropertyMap() 
+   {
+	   return piecePropertyMap;
    }
 }
