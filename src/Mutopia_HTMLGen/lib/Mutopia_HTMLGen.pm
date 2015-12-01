@@ -107,9 +107,11 @@ sub replace_placeholders($) {
 
 
 ###################################################################
-# Subroutines to generate useful fragments of HTML.  The variable
-# %RDF_DATA contains the collection data, and $OUTPUT_FILE contains
-# the name of the file currently being outputted to.
+# Subroutines to generate useful fragments of HTML.  These are
+# called during the eval in the replace_placeholders($) subroutine
+# above.  The variable %RDF_DATA contains the collection data, and 
+# $OUTPUT_FILE contains the name of the file currently being 
+# outputted to.
 ###################################################################
 
 
