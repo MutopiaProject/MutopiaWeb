@@ -1,3 +1,5 @@
+package mutopia.core;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 import mutopia.core.LicenseMap;
@@ -30,14 +32,8 @@ public class CCMapTest {
         assertNotSame(cc_a, cc_b);
     }
 
-    @Test
+    @Test(expected=RuntimeException.class)
     public void testMapException() {
-        try {
-            String cc = LicenseMap.getInstance().getCopyright("Goof Domain");
-            fail("expected RuntimeException");
-        }
-        catch(RuntimeException e) {
-            // caught unchecked exception
-        }
-    }
+    	LicenseMap.getInstance().getCopyright("Goof Domain");
+     }
 }
