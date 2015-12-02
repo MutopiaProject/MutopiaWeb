@@ -7,8 +7,14 @@
  */
 
 package mutopia.core;
+
 import java.io.*;
 import java.util.*;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /** Container class for access to various maps.
  *
@@ -41,19 +47,23 @@ public class MutopiaMaps
      *  the description associated with the author. This information
      *  is read from the <code>datafiles/composers.dat</code> file.
      */
-   public static Map<String, String> composerMap = new HashMap<String, String>();
+    public static Map<String, String> composerMap;
 
-    /** Map of valid styles.
-     *
-     *  Read from the <code>datafiles/styles.dat</code> file.
-     */
-   public static Map<String, String> styleMap = new HashMap<String, String>();
+    /** Map of valid styles. */
+    public static Map<String, String> styleMap;
 
    static
    {
       initialiseLicenceMap();
-      readDatFileIntoMap("composers.dat", composerMap);
-      readDatFileIntoMap("styles.dat", styleMap);
+
+      // FIXME: Should just throw the exception.
+      try {
+          composerMap = readDataFile("composers.dat");
+          styleMap = readDataFile("styles.dat");
+      }
+      catch (IOException ioe) {
+          System.err.println(ioe.getMessage());
+      }
    }
 
    private static void initialiseLicenceMap()
@@ -120,49 +130,67 @@ public class MutopiaMaps
       }
    }
 
-   private static void readDatFileIntoMap(String datFile, Map<String, String> map)
-   {
-      // Get directory
-      String mutopiaDir = System.getenv("MUTOPIA_BASE");
-      if (mutopiaDir == null)
-      {
-         throw new RuntimeException("MUTOPIA_BASE not set");
-      }
-      String filename = mutopiaDir + "/datafiles/" + datFile;
+    /** Read a pair file into a map.
+     *  Pair files are simply files that contain data in pairs,
+     *  typical of a flattened hash map. This routine generically
+     *  reads the file and returns a map of the key:value pairs.
+     *
+     *  @param inPath                a Path pointing to the actual file
+     *  @return                      Map containing hashed
+     *                               representation of file
+     *  @throws RuntimeException     on file format error, probably a
+     *                               mal-formed file. Files should
+     *                               contain an even number of lines.
+     *  @throws IOException          on read failure
+     */
+    public static Map<String, String> readPairFile(Path inPath)
+        throws RuntimeException, IOException
+    {
+        Map<String, String> pairMap = new HashMap<String, String>();
 
-      try
-      {
-         // Open file
-         BufferedReader dataFile = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
+        BufferedReader dataFile = Files.newBufferedReader(inPath, StandardCharsets.UTF_8);
 
-         // Read key/value pairs
-         String key = dataFile.readLine();
-         String value = dataFile.readLine();
-         while (key != null) // key == null at end of file
-         {
+        // Read key/value pairs
+        String key = dataFile.readLine();
+        String value = dataFile.readLine();
+        while (key != null) { // key == null at end of file
             // Check value and put into map
-            if (value != null)
-            {
-               map.put(key, value);
+            if (value != null) {
+                pairMap.put(key, value);
             }
-            else
-            {
-               System.err.println("Inconsistency in data file: " + filename);
+            else {
+                throw new RuntimeException("Inconsistency in data file: " + inPath);
             }
 
             key = dataFile.readLine();
             value = dataFile.readLine();
-         }
+        }
 
-         dataFile.close();
-      }
-      catch (FileNotFoundException ex)
-      {
-         System.err.println("Data file " + filename + " not found");
-      }
-      catch (IOException ex)
-      {
-         System.err.println(ex);
-      }
-   }
+        dataFile.close();
+        return pairMap;
+    }
+
+    /** Reads a Mutopia datafile into a map.
+     *  Mutopia data files are simply pair files. This method builds a
+     *  full path to the location of the Mutopia datasets by
+     *  translating the MUTOPIA_BASE environment variable.
+     *
+     *  @param datFile               the name of the input file
+     *  @return Map                  containing hashed representation of file
+     *  @throws RuntimeException     on file format error
+     *  @throws IOException          from readPairFile(...)
+     */
+    public static Map<String, String> readDataFile(String datFile)
+        throws RuntimeException, IOException
+    {
+        // Get directory
+        String mutopiaDir = System.getenv("MUTOPIA_BASE");
+        if (mutopiaDir == null) {
+            throw new RuntimeException("MUTOPIA_BASE not set");
+        }
+
+        Path path = FileSystems.getDefault().getPath(mutopiaDir, "datafiles", datFile);
+        return MutopiaMaps.readPairFile(path);
+    }
+
 }

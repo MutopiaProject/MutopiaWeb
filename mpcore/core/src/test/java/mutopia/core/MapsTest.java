@@ -1,9 +1,19 @@
 package mutopia.core;
 
 import org.junit.Test;
+import org.junit.Rule;
 import static org.junit.Assert.*;
+import org.junit.rules.ExpectedException;
+
 import mutopia.core.MutopiaMaps;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
+
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 
 /* Test LicenseMap
@@ -22,9 +32,8 @@ public class MapsTest {
         // getting one from the end of the file is a reasonable test.
         assertTrue(MutopiaMaps.composerMap.get("ZanoniM").indexOf("Zanoni") > 0);
 
-        // Style "maps" are really hashes, so we don't care about this test:
-        // assertTrue("Classical".equals(MutopiaMaps.styleMap["Classical"]));
-        // We care more about this,
+        // Style "maps" are really hashes, so we don't care about values of styles.
+        // We mostly care that the key exists:
         assertTrue(MutopiaMaps.styleMap.containsKey("Classical"));
 
         // At a minimum all license maps should have this key.
@@ -38,5 +47,27 @@ public class MapsTest {
         // Lookup final keys in both maps
         assertEquals("Traditional", MutopiaMaps.composerMap.get("Traditional"));
         assertEquals("Technique", MutopiaMaps.styleMap.get("Technique"));
+    }
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void throwsOnBadFilename() throws IOException
+    {
+        Path p = FileSystems.getDefault().getPath("src", "nofile.dat");
+        thrown.expect(IOException.class);
+        Map<String, String> m = MutopiaMaps.readPairFile(p);
+    }
+
+    @Test(expected=RuntimeException.class)
+    public void throwsOnBadDataInput() {
+        Path p = FileSystems.getDefault().getPath("src", "test", "resources", "badpairs.dat");
+        try {
+            Map<String, String> m = MutopiaMaps.readPairFile(p);
+        }
+        catch (IOException ioe) {
+            fail("Unexpected IO exception" + ioe.getMessage());
+        }
     }
 }
