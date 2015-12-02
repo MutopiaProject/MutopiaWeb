@@ -13,28 +13,33 @@
         <div class="row">
           <div class="col-sm-3">
             <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" width="260" height="68" />
-          </div>
-          <div class="col-sm-4 col-sm-offset-1 text-center">
-            <b>All music in the Mutopia Project is free to download, print out, perform and distribute.<br />
-              [[ NUMBER_OF_PIECES() ]] pieces of music are now available.</b>
-          </div>
-          <div class="col-sm-4 text-center">
-            Save our bandwidth - use a mirror!<br />
-            <a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
-            <a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a>
+		  </div>
+		  <div class="col-sm-4 col-sm-offset-1 text-center">
+			<b>All music in the Mutopia Project is free to download, print out, perform and distribute.<br />
+			  [[ NUMBER_OF_PIECES() ]] pieces of music are now available.</b>
+		  </div>
+		  <div class="col-sm-4 text-center">
+			Save our bandwidth - use a mirror!<br />
+			<a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
+			<a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a>
           </div>
         </div>
       </div>
     </div>
 	
-	<h2>Latest Additions</h2>
+	<div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+			<h2>Latest Additions</h2>
+			<p>The last twenty-five pieces added to the archive are:</p>
 
-	<p>The last twenty-five pieces added to the archive are:</p>
-
-	<p>
-	[[ LATEST_ADDITIONS(25) ]]
-	</p>
-
+			<p>
+			[[ LATEST_ADDITIONS(25) ]]
+			</p>
+		</div>
+      </div> <!-- row -->
+    </div> <!-- .container -->
+	
 	[[ INCLUDE("footer.html-include") ]]
 </body>
 </html>
