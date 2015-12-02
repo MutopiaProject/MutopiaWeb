@@ -301,6 +301,7 @@ sub LATEST_ADDITIONS($) {
     my $html = "";
     my $last_piece = (shift) - 1;
     for my $piece(@recent[0 .. $last_piece]) {
+		croak "Need at least " . ($last_piece + 1) . " pieces in ftp folder" unless $piece;
         my($date, $id) = $piece->{id} =~ m|-(\d+/\d+/\d+)-(\d+)$|
                 or croak "invalid id: " . $piece->{id};
 
