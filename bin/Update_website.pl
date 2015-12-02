@@ -44,11 +44,14 @@ sub getRDFFileList {
 }
 
 # Used by find(), equivalent to `find . -name "*.rdf"`
-# Uses global @rdfFiles
+# $_ is the file name and extension
+# Sets global @rdfFiles as a side effect
 #
 sub wanted {
-    /^.*\.rdf\z/s
-    && (push @rdfFiles, $File::Find::name);
+    if ( /^.*\.rdf\z/s ) {
+		(my $file = $File::Find::name) =~ s|\\|/|g; # change MSDOS file separators
+		push @rdfFiles, $file;
+	}
 }
 
 # byFileName($a, $b)
@@ -127,7 +130,20 @@ sub makeCache {
 	binmode(TEMPCACHE, ":raw:utf8"); # Be sure we're writing Unix line endings (LF)
 	
     for (sort {byFileName($a,$b)} keys %RDFData) {
-        my ($opus, $name) = m|^(?:\./)?(.*)/([^/]+)/[^/]+.rdf$| or die "invalid piece: $_";
+	
+		# Parse Opus and Piece Name from path
+		my $opus;
+		my $name;
+		if ( m|^(?:[A-Z]:)?\.?(?:/[^/]+)*/ftp/(.*)/([^/]+)/[^/]+.rdf$| ) {
+			$opus = $1;
+			$name = $2;
+		} elsif ( m|^(?:\./)?(.*)/([^/]+)/[^/]+.rdf$| ) {
+			$opus = $1;
+			$name = $2;
+		} else {
+			die "invalid piece: $_";
+		}
+		
         my @data = Mutopia_Archive::RDFtoCACHE %{ $RDFData{$_} };
         my $allCollections = "";
         my $printURL = "";
