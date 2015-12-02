@@ -1,19 +1,16 @@
-/*
- * Filename:         MutopiaRDF.java
- * Original author:  Chris Sawer
- *
- * Description:
- *   Class to generate an RDF file from a MutopiaPiece object.
- */
-
 package mutopia.core;
 import java.io.*;
-import javax.xml.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
+/**
+ * Class to generate an RDF file from a MutopiaPiece object.
+ * 
+ * @author Chris Sawer
+ */
 public class MutopiaRDF
 {
+   // Escape special XML characters in inputString  
    private static String xmlIfy(String inputString)
    {
       // Turn URLs into <a href>s*/
@@ -37,6 +34,7 @@ public class MutopiaRDF
       return inputString;
    }
 
+   // Escape special HTML characters in inputString  
    private static String htmlIfy(String inputString)
    {
       // Replace & < > by escaped versions
@@ -47,6 +45,7 @@ public class MutopiaRDF
       return inputString;
    }
 
+   // Write str and new line to file
    private static void writeln(BufferedWriter wr, String str) throws IOException
    {
       wr.write(str);
@@ -54,6 +53,14 @@ public class MutopiaRDF
    }
 
    // Should already have called check consistency methods on the piece
+   /**
+    * Write RDF data from {@code piece} to {@code wr}.  Expects that {@code piece} 
+    * has called {@link MutopiaPiece#checkFieldConsistency(boolean)}.
+    *
+    * @param piece the MutopiaPiece with the data
+    * @param wr the BufferedWriter to write to
+    * @throws IOException if write operation fails
+    */
    public static void outputRDF(MutopiaPiece piece, BufferedWriter wr) throws IOException
    {
       writeln(wr, "<?xml version=\"1.0\"?>");
@@ -98,12 +105,19 @@ public class MutopiaRDF
       writeln(wr, "</rdf:RDF>");
    }
 
+   // Get text string from element and descendant.  Returns null if not found
    private static String getText(Element mainElement, String descendant)
    {
       Node textElement = mainElement.getElementsByTagName(descendant).item(0).getFirstChild();
       return (textElement == null) ? null : textElement.getNodeValue();
    }
 
+   /**
+    * Return a {@link MutopiaPiece} with fields set with data from RDF file.
+    * 
+    * @param lyFilename the RDF file name
+    * @return a MutopiaPiece with data set
+    */
    public static MutopiaPiece inputRDF(String lyFilename)
    {
       MutopiaPiece piece = new MutopiaPiece(lyFilename);
