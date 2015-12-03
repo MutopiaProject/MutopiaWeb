@@ -111,7 +111,7 @@ public class LicenseMap implements CCGenerator {
         "    \"Typeset using \" \\with-url #\"http://www.lilypond.org\" \"LilyPond \" "
     };
     private static String[] ccMid = new String[] {
-        "    \" by \" \\maintainer \" \" \\char ##x2014 \" \" \\footer}",
+        "    \"by \" \\maintainer \" \" \\char ##x2014 \" \" \\footer}",
         "    \\concat {",
         "      \\concat {",
         "        \\abs-fontsize #8 { "
