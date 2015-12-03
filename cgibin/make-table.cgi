@@ -23,7 +23,6 @@ my %FORM = HTMLcommon::queryArgs();
 my $baseref = '../ftp/';
 my $EMPTY_CELL = "<td>&nbsp;</td>";
 my $matchCount = -1;
-my $server_name = $ENV{'HTTP_HOST'} || $ENV{'SERVER_NAME'} || 'mutopia.org';
 
 HTMLcommon::startPage("Music Listing - "
                       . ($FORM{'preview'} ? "with" : "without")
@@ -306,7 +305,7 @@ until (eof CACHE) {
         print qq[$baseref$midrif$musicnm/$midfile">.mid file</a></td>\n];
     }
     print qq(<td><a href="$baseref$midrif$musicnm/$pngfile">Preview image</a></td>\n);
-    print qq[<td><a href="http://$server_name/ftp/$midrif$musicnm/">Appropriate FTP area</a></td>\n</tr><tr>\n];
+    print qq[<td><a href="$baseref$midrif$musicnm/">Appropriate FTP area</a></td>\n</tr><tr>\n];
     if ($a4psfile =~ /\.zip$/) {
         print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$a4psfile">A4 .ps files (zipped)</a></td>\n);
         print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$a4pdffile">A4 .pdf files (zipped)</a></td>\n);
