@@ -5,6 +5,7 @@
 
 use strict;
 use warnings;
+use File::Path qw(remove_tree);
 use File::Copy::Recursive qw(rcopy);
 
 my $webroot = $ENV{'MUTOPIA_WEB'} || "..";
@@ -14,19 +15,19 @@ $docroot =~ s|\\|/|g;
 
 print "Mutopia root: $webroot\n";
 print "Document root: $docroot\n";
-print "\nIs this correct? (y,n): ";
+print "\nDocument root will be deleted.  Continue? (y,n): ";
 my $ans = <STDIN>;
 exit if $ans =~ /^n/i;
 
+remove_tree($docroot) or die "Cannot delete $docroot, $!\n";
 chdir $webroot or die "Cannot change to directory $webroot, $!\n";
-
 my @files = qw(
     cgibin/                                     
     robots.txt                                  
     latestadditions.rss                         
     datafiles/                                  
     images/                                     
-    bootstrap-3.3.5-dist/                       
+    bootstrap/                       
     css/   
 	ftp/
 );
