@@ -10,7 +10,7 @@ import java.util.Map;
 import org.junit.Test;
 
 public class MutopiaPieceTest {
-	private static final String LILYPOND_VERSION = "2.19.31";
+	private static final String VERSION_RE = "^\\d+\\.\\d+\\.\\d+$";
 
 	@Test
 	public void testMutopiaPiece() {
@@ -40,7 +40,7 @@ public class MutopiaPieceTest {
 		assertFalse(mp.getMultipleLyFiles());
 		assertTrue(mp.getMultipleMidFiles());
 		assertFalse(mp.getMultiplePdfFiles());
-		assertEquals(LILYPOND_VERSION, mp.getLilyVersion());
+		assertTrue(mp.getLilyVersion().matches(VERSION_RE));
 		assertEquals(new Integer(281), mp.getPreviewHeight()); 
 		assertEquals(new Integer(483), mp.getPreviewWidth()); 
 	}
@@ -60,7 +60,7 @@ public class MutopiaPieceTest {
 			fail(e.getMessage());
 		}
 		
-		assertEquals(LILYPOND_VERSION, version);
+		assertTrue(version.matches(VERSION_RE)); 
 	}
 
 	@Test
