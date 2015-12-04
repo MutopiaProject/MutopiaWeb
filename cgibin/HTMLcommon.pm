@@ -10,6 +10,8 @@ use utf8;
 
 our $VERSION = '0.01';
 
+our $FTPBASE = 'http://www.mutopiaproject.org/ftp/';
+
 # This code was in-line and identical in both modules, so moved here
 # as a function. Returns the QUERY_STRING as an associative array.
 sub queryArgs {
