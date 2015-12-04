@@ -20,7 +20,8 @@ my %FORM = HTMLcommon::queryArgs();
 #chomp($ftpbase = <FTPB>);
 #close FTPB;
 
-my $baseref = '../ftp/';
+my $baseref = $HTMLcommon::FTPBASE;
+
 my $EMPTY_CELL = "<td>&nbsp;</td>";
 my $matchCount = -1;
 

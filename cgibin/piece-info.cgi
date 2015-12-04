@@ -27,7 +27,7 @@ open( CACHE, '<:utf8', "../datafiles/musiccache.dat" )
 
 chomp($cacheoffset = <CACHE>);
 
-my $baseref = '../ftp/';
+my $baseref = $HTMLcommon::FTPBASE;
 
 my $firstjump = 13 * $FORM{'id'} + 5;
 my $secondjump;
