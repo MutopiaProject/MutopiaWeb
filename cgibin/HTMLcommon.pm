@@ -10,6 +10,8 @@ use utf8;
 
 our $VERSION = '0.01';
 
+our $FTPBASE = 'http://www.mutopiaproject.org/ftp/';
+
 # Maximum page length for pagination
 our $PAGE_MAX = 10;
 
