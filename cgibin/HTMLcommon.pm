@@ -10,6 +10,9 @@ use utf8;
 
 our $VERSION = '0.01';
 
+# Maximum page length for pagination
+our $PAGE_MAX = 10;
+
 # This code was in-line and identical in both modules, so moved here
 # as a function. Returns the QUERY_STRING as an associative array.
 sub queryArgs {
