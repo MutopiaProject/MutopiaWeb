@@ -62,9 +62,12 @@ if (!open( CACHE, '<:utf8', "../datafiles/musiccache.dat" )) {
 
 # Read the cache into local variables.
 $matchCount = 0;
+my $pageMax = $HTMLcommon::PAGE_MAX;
+my $pageCount = 0;
+my $startAt = $FORM{'startat'} || 0;
 chomp(my $headerlength = <CACHE>);
 seek CACHE, $headerlength, 0;
-until (eof CACHE) {
+until (eof CACHE || $pageCount >= $startAt + $pageMax) {
     chomp(my $checkline = <CACHE>);
     if ($checkline ne '**********') {
         print qq(<div class="alert alert-danger" role="alert">\n);
@@ -200,7 +203,11 @@ until (eof CACHE) {
     next unless $FORM{'id'} ? ($id =~ /-$FORM{'id'}$/) : 1;
     next unless $FORM{'collection'} ? ($collections =~ /(^|,)$FORM{'collection'}(,|$/) : 1;
 
-    # A match if we got this far. All filtering is done.
+	# All filtering is done, but we may need to skip for pagination
+	$pageCount++;
+	next if $pageCount <= $startAt;
+	
+    # A match if we got this far. 
     $matchCount++;
 
     print qq(<tr><td>\n);       # start a row within the outer table
@@ -331,8 +338,6 @@ until (eof CACHE) {
     print qq(</tr></td>\n);      # outer table row element
 }
 
-close CACHE;
-
 if ($matchCount == 0) {
     print qq(<div class="alert alert-info" role="alert">\n);
     print qq(  Sorry, no matches were found for your search criteria.\n);
@@ -340,5 +345,10 @@ if ($matchCount == 0) {
 }
 
 print qq(</table>\n);           # outer-table
+
+print qq(<a href="make-table.cgi?startat=$pageCount&searchingfor=$FORM{'searchingfor'}">Next $pageMax</a>) 
+		unless eof CACHE;
+
+close CACHE;
 
 HTMLcommon::finishPage();
