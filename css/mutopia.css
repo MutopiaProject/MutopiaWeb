@@ -86,3 +86,20 @@ table.maintainer {
     margin-bottom: 6px;
     list-style: none;
 }
+
+#advanced-search {
+	display: none;
+}
+
+@media screen and (max-width: 768px) {
+	#logo-div {
+		text-align: center;
+		margin-bottom: 15px;
+	}
+	#advanced-search {
+		display: inline;
+	}
+	#free-for-everyone {
+		font-size: 24px;
+	}
+}
