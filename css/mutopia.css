@@ -12,6 +12,11 @@ body {
     background-color: #eee;
 }
 
+.logo img {
+    width: 262;
+    height: 72;
+}
+
 h2,h4 {
     text-align: center;
 }
