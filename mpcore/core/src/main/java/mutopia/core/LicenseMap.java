@@ -1,5 +1,8 @@
 package mutopia.core;
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Set;
 
 /**
  * LicenseMap is a singleton for creating license strings for mutopia pieces.
@@ -7,40 +10,40 @@ import java.util.*;
  * This is implemented such that the map is built on instantiation of
  * the singleton object. Copyright strings are generated when
  * requested from the {@link #getCopyright(String) getCopyright} method.</p>
- * <pre><code>
+ * <pre>{@code
  *   if (LicenseMap.getInstance().hasCopyright("Public Domain")) {
  *       String cc = LicenseMap.getInstance().getCopyright("Public Domain");
  *       // ... do something with public domain copyright string
  *   }
- * </code></pre>
+ * }</pre>
  * <p><strong>Background:</strong> MutopiaProject pieces have a
  * copyright line at the bottom of the first page of music. This is
  * achieved in LilyPond with a string of formatted text assigned to
- * the <code>copyright</code> field in the header of the piece. The
- * #LicenseMap code attemps to make copyright edits easier by
+ * the {@code copyright} field in the header of the piece.
+ * {@code LicenseMap} attempts to make copyright edits easier by
  * providing a formatted template that is processed into the more
  * complicated copyright string.</p>
  *
  * <p>Privately within this class are defined string arrays
- * (<code>ccPre</code>, <code>ccMid</code>, <code>ccPost</code>) to
+ * ({@code ccPre}, {@code ccMid}, {@code ccPost}) to
  * hold the templates for creating a copyright string targeted for the
  * headers of MutopiaProject pieces. This is typically used at the
  * bottom of the first page of sheet music. These are formatted to be
  * relatively easy to read and edit but are processed by the fetch
  * routine so that leading indent space is trimmed off.
  * <ul>
- * <li><code>ccPre</code> contains the boilerplate intro, the stacked
+ * <li>{@code ccPre} contains the boilerplate intro, the stacked
  *       Mutopia/Project and vertical bar followed by a beginning line
  *       of text that remains the same with all licenses.
  *
  *       Public domain licenses do not have a copyright date, all
  *       others have a date inserted here.</li>
  *
- * <li><code>ccMid</code> contains the middle section that finished
+ * <li>{@code ccMid} contains the middle section that finished
  *       the maintiner info and Mutopia ID. There may be slightly
  *       different wording following this section if public domain.</li>
  *
- * <li><code>ccPost</code> is the final closing section with the
+ * <li>{@code ccPost} is the final closing section with the
  *       copyright and closing elements of the markup.</li>
  * </ul>
  *

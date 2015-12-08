@@ -11,3 +11,6 @@ gradle-app.setting
 
 # Ignore eclipse project file
 .project
+
+# Ignore idea project file
+.idea
