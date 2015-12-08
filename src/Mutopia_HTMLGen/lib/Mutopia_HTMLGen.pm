@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -wT
 #
 # Mutopia_HTMLGen.pm
 # Subroutines to help with generating HTML pages from html-in/* files.
@@ -139,22 +139,52 @@ sub BROWSE_BY_COMPOSER {
 }
 
 
-sub BROWSE_BY_INSTRUMENT {
-    my %insts = Mutopia_Archive::getData("$webroot/datafiles/instruments.dat");
+sub TOP_COMPOSERS($) {
+    my $maxNumber = shift;
+    my $count = 0;
+    my %comps = Mutopia_Archive::getData("$webroot/datafiles/composers.dat");
     my $html = "";
-    for my $k (sort {Mutopia_Archive::byInstrument($a,$b)} keys %insts) {
-
-		# How many pieces for this instrument?
+    for my $k (sort {Mutopia_Archive::byComposer($a,$b)} keys %comps) {
+        last if $count > $maxNumber;
+        
+        # How many pieces by this composer?
 		open (SEARCHCACHE, '<:utf8', "$webroot/datafiles/searchcache.dat")
 			or croak "cannot open $webroot/datafiles/searchcache.dat: $!";
 		my $noofpieces = 0;
 		my $finish = 0;
 		do {
 			chomp(my $templine = <SEARCHCACHE>);
-			if ( ($templine =~ /^instruments:/) &&
-				 ( $templine =~ /$k/ )) { $noofpieces++ }
-				if (($k eq "Harp") and ($templine =~ /Harpsichord/)) { $noofpieces-- }
-			if ($templine =~ /^licence/) { $finish = 1 }
+			if ($templine =~ /^composerK:$k/) { $noofpieces++ }
+			if ($templine =~ /^date/) { $finish = 1 }
+		} until (($finish == 1) || (eof SEARCHCACHE));
+        close(SEARCHCACHE);
+        
+        $comps{$k} =~ /^([^(]+)\s*\(/; # Strip off date
+        my $compName = $1;
+        $html .= "<p><a href='cgibin/make-table.cgi?Composer=$k'>";
+        $html .= $compName . "</a> [$noofpieces]</p>\n";
+        $count++;
+    }
+    return $html;
+}
+
+
+sub BROWSE_BY_INSTRUMENT {
+    my %insts = Mutopia_Archive::getData("$webroot/datafiles/instruments.dat");
+    my $html = "";
+    for my $k (sort {Mutopia_Archive::byInstrument($a,$b)} keys %insts) {
+
+        # How many pieces for this instrument?
+        open (SEARCHCACHE, '<:utf8', "$webroot/datafiles/searchcache.dat")
+                or croak "cannot open $webroot/datafiles/searchcache.dat: $!";
+        my $noofpieces = 0;
+        my $finish = 0;
+        do {
+            chomp(my $templine = <SEARCHCACHE>);
+            if ( ($templine =~ /^instruments:/) &&
+               ( $templine =~ /$k/ )) { $noofpieces++ }
+            if (($k eq "Harp") and ($templine =~ /Harpsichord/)) { $noofpieces-- }
+            if ($templine =~ /^licence/) { $finish = 1 }
         } until (($finish == 1) || (eof SEARCHCACHE));
         close(SEARCHCACHE);
 
@@ -165,25 +195,83 @@ sub BROWSE_BY_INSTRUMENT {
 }
 
 
+sub TOP_INSTRUMENTS($) {
+    my $maxNumber = shift;
+    my $count = 0;
+    my %insts = Mutopia_Archive::getData("$webroot/datafiles/instruments.dat");
+    my $html = "";
+    for my $k (sort {Mutopia_Archive::byInstrument($a,$b)} keys %insts) {
+        last if $count > $maxNumber;
+            
+        # How many pieces for this instrument?
+        open (SEARCHCACHE, '<:utf8', "$webroot/datafiles/searchcache.dat")
+                or croak "cannot open $webroot/datafiles/searchcache.dat: $!";
+        my $noofpieces = 0;
+        my $finish = 0;
+        do {
+            chomp(my $templine = <SEARCHCACHE>);
+            if ( ($templine =~ /^instruments:/) &&
+               ( $templine =~ /$k/ )) { $noofpieces++ }
+            if (($k eq "Harp") and ($templine =~ /Harpsichord/)) { $noofpieces-- }
+            if ($templine =~ /^licence/) { $finish = 1 }
+        } until (($finish == 1) || (eof SEARCHCACHE));
+        close(SEARCHCACHE);
+
+        $html .= "<p><a href='cgibin/make-table.cgi?Instrument=$k'>";
+        $html .= $insts{$k} . "</a> [$noofpieces]</p>\n";
+        $count++;
+    }
+    return $html;
+}
+
+
 sub BROWSE_BY_STYLE {
     my %styles = Mutopia_Archive::getData("$webroot/datafiles/styles.dat");
     my $html = "";
     for my $k (sort keys %styles) {
 
-		# How many pieces in this style?
-		open (SEARCHCACHE, '<:utf8', "$webroot/datafiles/searchcache.dat")
-				or croak "cannot open $webroot/datafiles/searchcache.dat: $!";
-		my $noofpieces = 0;
-		my $finish = 0;
-		do {
-			chomp(my $templine = <SEARCHCACHE>);
-			if ($templine =~ /^style:$styles{$k}/) { $noofpieces++ }
-			if ($templine =~ /^title/) { $finish = 1 }
+        # How many pieces in this style?
+        open (SEARCHCACHE, '<:utf8', "$webroot/datafiles/searchcache.dat")
+                or croak "cannot open $webroot/datafiles/searchcache.dat: $!";
+        my $noofpieces = 0;
+        my $finish = 0;
+        do {
+            chomp(my $templine = <SEARCHCACHE>);
+            if ($templine =~ /^style:$styles{$k}/) { $noofpieces++ }
+            if ($templine =~ /^title/) { $finish = 1 }
         } until (($finish == 1) || (eof SEARCHCACHE));
         close(SEARCHCACHE);
 
         $html .= "<a href='cgibin/make-table.cgi?Style=$k'>";
         $html .= $styles{$k} . "</a> [$noofpieces]<br />\n";
+    }
+    return $html;
+}
+
+
+sub TOP_STYLES($) {
+    my $maxNumber = shift;
+    my $count = 0;
+    my %styles = Mutopia_Archive::getData("$webroot/datafiles/styles.dat");
+    my $html = "";
+    for my $k (sort keys %styles) {
+        last if $count > $maxNumber;
+        
+        # How many pieces in this style?
+        open (SEARCHCACHE, '<:utf8', "$webroot/datafiles/searchcache.dat")
+                or croak "cannot open $webroot/datafiles/searchcache.dat: $!";
+        my $noofpieces = 0;
+        my $finish = 0;
+        do {
+            chomp(my $templine = <SEARCHCACHE>);
+            if ($templine =~ /^style:$styles{$k}/) { $noofpieces++ }
+            if ($templine =~ /^title/) { $finish = 1 }
+        } until (($finish == 1) || (eof SEARCHCACHE));
+        close(SEARCHCACHE);
+
+        $html .= "<p><a href='cgibin/make-table.cgi?Style=$k'>";
+        $html .= $styles{$k} . "</a> [$noofpieces]</p>\n";
+        $count++
     }
     return $html;
 }
@@ -207,6 +295,33 @@ sub BROWSE_COLLECTIONS {
     } until (eof COLLECTIONS);
 
     $html .= "</ul>\n";
+    close (COLLECTIONS);
+
+    return $html;
+}
+
+
+sub TOP_COLLECTIONS($) {
+    my $maxNumber = shift;
+    my $count = 0;
+    my $lineread;
+    my $colname;
+    my $coldesc;
+    my $html = "";
+
+    open (COLLECTIONS, '<:utf8', "$webroot/datafiles/collections.dat")
+            or croak "cannot open $webroot/datafiles/collections.dat: $!";
+    until (eof COLLECTIONS || $count > $maxNumber) {
+        chomp($lineread = <COLLECTIONS>);
+        $lineread =~ /^(\w+):([\w\W]+):/;
+        $colname = $1;
+        $coldesc = $2;
+
+        $html .= "<p><a href=\"cgibin/make-table.cgi?collection=";
+        $html .= $colname . "&amp;preview=1\">" . $coldesc . "</a></p>\n";
+        $count++;
+    } 
+
     close (COLLECTIONS);
 
     return $html;
@@ -305,7 +420,7 @@ sub LATEST_ADDITIONS($) {
         my($date, $id) = $piece->{id} =~ m|-(\d+/\d+/\d+)-(\d+)$|
                 or croak "invalid id: " . $piece->{id};
 
-        $html .= "<b>$date</b> - ";
+        $html .= "<p><b>$date</b> - ";
         $html .= "<a href='cgibin/piece-info.cgi?id=$id'>";
         $html .= $piece->{title} . ", ";
         if ($piece->{composer} !~ /^(Anonymous|Traditional)$/) {
@@ -313,7 +428,7 @@ sub LATEST_ADDITIONS($) {
         }
         $html .= $piece->{composer};
         $html .= " - " . $piece->{opus} . " for " . $piece->{for};
-        $html .= "</a><br />\n";
+        $html .= "</a></p>\n";
     }
     return $html;
 }
