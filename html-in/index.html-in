@@ -15,8 +15,8 @@
     <div class="jumbotron">
       <div class="container">
         <div class="row">
-          <div class="col-sm-6 text-left">
-            <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" width="262" height="73" />
+          <div class="col-sm-6 text-left logo">
+            <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" />
           </div>
           <div class="col-sm-6 text-right">
             <form class="form-inline" action="cgibin/make-table.cgi" method="get">
