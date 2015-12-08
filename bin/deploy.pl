@@ -17,7 +17,7 @@ print "Mutopia root: $webroot\n";
 print "Document root: $docroot\n";
 print "\nDocument root will be deleted.  Continue? (y,n): ";
 my $ans = <STDIN>;
-exit if $ans =~ /^n/i;
+exit if $ans !~ /^y/i;
 
 remove_tree($docroot) or die "Cannot delete $docroot, $!\n";
 chdir $webroot or die "Cannot change to directory $webroot, $!\n";
