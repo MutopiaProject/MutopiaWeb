@@ -1,0 +1,21 @@
+    <!-- Logo and search -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 text-left logo">
+            <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" />
+          </div>
+          <div class="col-sm-6 text-right">
+            <form class="form-inline" action="cgibin/make-table.cgi" method="get">
+              <div class="form-group">
+                <input class="form-control" type="text" name="searchingfor">
+                <button type="submit" value="Search" class="btn btn-default">Search</button>
+                <p style="padding-top:10px; margin-bottom:0px; font-size:1em; font-weight:normal;">
+                  <a href="advsearch.html">Advanced Search</a>
+                </p>
+              </div>
+            </form>
+          </div>            
+        </div>
+      </div>
+    </div>

@@ -9,8 +9,9 @@ body {
     padding-bottom: 20px;
     margin-bottom: 20px;
     color: inherit;
-    background-color: #eee;
+    background: transparent url("../images/bg-darker.jpg") repeat scroll 30% -15%;
 }
+
 
 .logo img {
     width: 262;
@@ -96,15 +97,31 @@ table.maintainer {
 	display: none;
 }
 
-@media screen and (max-width: 768px) {
-	#logo-div {
-		text-align: center;
-		margin-bottom: 15px;
-	}
-	#advanced-search {
-		display: inline;
-	}
-	#free-for-everyone {
-		font-size: 24px;
-	}
+#searchcol {
+    text-align: right;
+}
+#searchbox {
+    width: 70%;
+    margin-left: 30%;
+}
+
+@media screen and (max-width: 767px) {
+    #logo-div {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    #searchcol {
+        text-align: center;
+        margin-top: 40px;
+    }
+    #searchbox {
+        width: 100%;
+        margin-left: 0%;
+    }
+    #advanced-search {
+        display: inline;
+    }
+    #free-for-everyone {
+        font-size: 24px;
+    }
 }

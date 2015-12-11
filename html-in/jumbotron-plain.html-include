@@ -1,0 +1,10 @@
+    <!-- Logo and search -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 text-left logo">
+            <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" />
+          </div>
+        </div>
+      </div>
+    </div>
