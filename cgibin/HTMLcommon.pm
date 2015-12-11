@@ -89,24 +89,27 @@ sub startPage {
     </div>
   </nav>
 
-  <div class="jumbotron">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-3">
-          <img src="../images/mutopia-logo.svg" alt="Mutopia Project Logo" width="260" height="68" />
-        </div>
-        <div class="col-sm-4 col-sm-offset-1 text-center">
-          <b>All music in the Mutopia Project is free to download, print out, perform and distribute.<br />
-            25 pieces of music are now available.</b>
-        </div>
-        <div class="col-sm-4 text-center">
-          Save our bandwidth - use a mirror!<br />
-          <a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
-          <a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a>
+    <!-- Logo and search -->
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 text-left logo">
+            <img src="../images/mutopia-logo.svg" alt="Mutopia Project Logo" />
+          </div>
+          <div class="col-sm-6 text-right">
+            <form class="form-inline" action="cgibin/make-table.cgi" method="get">
+              <div class="form-group">
+                <input class="form-control" type="text" name="searchingfor">
+                <button type="submit" value="Search" class="btn btn-default">Search</button>
+                <p style="padding-top:10px; margin-bottom:0px; font-size:1em; font-weight:normal;">
+                  <a href="advsearch.html">Advanced Search</a>
+                </p>
+              </div>
+            </form>
+          </div>            
         </div>
       </div>
     </div>
-  </div>
 
   <div class="container">
     <div class="row">
