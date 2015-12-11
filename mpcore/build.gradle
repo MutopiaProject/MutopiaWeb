@@ -1,6 +1,8 @@
 // Build file for core mutopia library
 allprojects {
   apply plugin: 'java'
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
   repositories {
     mavenCentral()
 	maven {
@@ -29,5 +31,49 @@ project (':Mutopia') {
   mainClassName = 'Mutopia'
   manifest {
     attributes 'Main-Class' : 'Mutopia'
+  }
+}
+
+project (':mudb') {
+  group = 'mutopia.mudb'
+  version = '0.2'
+  dependencies {
+    compile project(':core')
+    compile "org.apache.commons:commons-lang3:3.4"
+    compile 'org.apache.jena:jena-core:3.0.0'
+    compile 'org.xerial:sqlite-jdbc:3.8.11.2'
+    testCompile "junit:junit:4.+"
+  }
+  sourceSets {
+    main {
+      resources {
+        srcDir 'src/main/resources'
+      }
+    }
+    test {
+      resources {
+        srcDir 'src/test/resources'
+      }
+    }
+  }
+  jar {
+    baseName = 'mutopia-mudb'
+  }
+}
+
+project (':mutool') {
+  apply plugin: 'application'
+  version = '0.2'
+  mainClassName = 'MuTool'
+  manifest {
+    attributes 'Main-Class' : 'MuTool'
+  }
+  dependencies {
+    compile project(':core')
+    compile project(':mudb')
+    compile "org.apache.commons:commons-lang3:3.4"
+    compile 'org.apache.jena:jena-core:3.0.0'
+    compile 'org.freemarker:freemarker:2.3.23'
+    compile 'net.sf.jopt-simple:jopt-simple:4.8'
   }
 }
