@@ -1,0 +1,5 @@
+CREATE TABLE muLicense (
+    _id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    url TEXT
+);

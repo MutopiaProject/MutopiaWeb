@@ -1,1 +1,1 @@
-include ':core', ':Mutopia'
+include ':core', ':Mutopia', ':mudb', ':mutool'
