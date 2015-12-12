@@ -21,9 +21,12 @@ my $webroot = dirname($0) . "/.." ;
 $webroot = $ENV{'MUTOPIA_WEB'} || $webroot;
 $webroot =~ s|\\|/|g; # change MSDOS file separators
 
+# we want to read rdfs from the "real" ftp location if possible
+my $muroot = $ENV{'MUTOPIA_BASE'} || $webroot;
+
 # Generate datafiles/*  ####################################################
-my @files = getRDFFileList("$webroot/ftp/");
-%RDFData = getAllRDFData("$webroot/ftp/", @files);
+my @files = getRDFFileList("$muroot/ftp/");
+%RDFData = getAllRDFData("$muroot/ftp/", @files);
 
 makeCache();        # new format
 makeSearchCache();
@@ -104,8 +107,8 @@ sub getAllRDFData {
 # makes the cache file, containing all details of all pieces.
 #
 sub makeCache {
-    open (COLLECTIONS, '<:utf8', "$webroot/datafiles/collections.dat")
-        or die "cannot open $webroot/datafiles/collections.dat: $!";
+    open (COLLECTIONS, '<:utf8', "$muroot/datafiles/collections.dat")
+        or die "cannot open $muroot/datafiles/collections.dat: $!";
     my @collections;
     my $noOfCollections;
     for ($noOfCollections = 0; !(eof COLLECTIONS); $noOfCollections++) {
@@ -113,8 +116,8 @@ sub makeCache {
     }
     close (COLLECTIONS);
 
-    open (PRINTURLS, '<:utf8', "$webroot/datafiles/printurls.dat")
-        or die "cannot open $webroot/datafiles/printurls.dat: $!";
+    open (PRINTURLS, '<:utf8', "$muroot/datafiles/printurls.dat")
+        or die "cannot open $muroot/datafiles/printurls.dat: $!";
     my @printurls;
     my $noOfPrintUrls;
     for ($noOfPrintUrls = 0; !(eof PRINTURLS); $noOfPrintUrls++) {
