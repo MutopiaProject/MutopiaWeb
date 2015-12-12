@@ -23,6 +23,7 @@ $webroot =~ s|\\|/|g; # change MSDOS file separators
 
 # we want to read rdfs from the "real" ftp location if possible
 my $muroot = $ENV{'MUTOPIA_BASE'} || $webroot;
+$muroot =~ s|\\|/|g; # change MSDOS file separators
 
 # Generate datafiles/*  ####################################################
 my @files = getRDFFileList("$muroot/ftp/");
