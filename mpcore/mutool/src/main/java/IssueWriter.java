@@ -30,11 +30,11 @@ class IssueWriter {
         Logger log = LoggerFactory.getLogger(IssueWriter.class);
         t_config = new Configuration(Configuration.VERSION_2_3_23);
         try {
-            t_config.setDirectoryForTemplateLoading(new File("./mutool/templates"));
             t_config.setDefaultEncoding("UTF-8");
             t_config.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+            t_config.setDirectoryForTemplateLoading(new File("src/resources"));
         } catch (IOException ioe) {
-            log.warn("During template config: ", ioe.getMessage());
+            log.warn("At configuration: {}", ioe.getMessage());
             // ignore checked exception
         }
     }
@@ -52,8 +52,6 @@ class IssueWriter {
      */
     @SuppressWarnings("unchecked")
     class IssueDetail {
-        static final String Q_BASE_DETAIL = "SELECT _id, title, composer FROM ";
-        static final String Q_RDF_DETAIL = "SELECT rdfspec from muRDFMap where piece_id=?";
         private final Map root = new HashMap();
 
         public IssueDetail(int p_id, String p_title, String p_composer) {
@@ -86,7 +84,6 @@ class IssueWriter {
             Template t = t_config.getTemplate("issue.ftl");
             Writer out = new OutputStreamWriter(System.out);
             t.process(issue.getRoot(), out);
-            //            out.close();
         } catch (TemplateNotFoundException | TemplateException tnf) {
             log.warn(tnf.getMessage());
             // ignore checked exception
@@ -96,19 +93,23 @@ class IssueWriter {
         }
     }
 
-    public void viewIssues(Connection conn, String viewName) throws SQLException {
+    public void viewIssues(Connection conn,
+                           String viewName) throws SQLException {
         // from muPiece: title, composer, _id
         // from muRDFMap: rdfspec (with rdf filename stripped)
+        Logger log = LoggerFactory.getLogger(IssueWriter.class);
+        final String Q_BASE_DETAIL = "SELECT _id, title, composer FROM ";
+        final String Q_RDF_DETAIL = "SELECT rdfspec from muRDFMap where piece_id=?";
         LinkedList<IssueDetail> issues = new LinkedList<>();
         Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(IssueDetail.Q_BASE_DETAIL + viewName);
+        ResultSet rs = st.executeQuery(Q_BASE_DETAIL + viewName);
         while (rs.next()) {
             issues.add(new IssueDetail(rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3)));
         }
         // Add the repo strings and write out the issue
-        PreparedStatement pst = conn.prepareStatement(IssueDetail.Q_RDF_DETAIL);
+        PreparedStatement pst = conn.prepareStatement(Q_RDF_DETAIL);
         for (IssueDetail issue : issues) {
             pst.clearParameters();
             pst.setString(1, issue.get("id"));
