@@ -41,7 +41,12 @@ public class RDFGuesser extends SimpleFileVisitor<Path> {
     private Set<String> rdfSet;
     private Map<String,String> anomalie_map;
 
-    RDFGuesser(Path p_top, boolean useAnomalieMap) {
+    /** Construct an RDFGuesser.
+     *  @param p_top - The path to the top of the folder hierarchy to search.
+     *  @param useAnomalieMap - true to adjust guesses with a map of
+     *         discovered anomalies, false to skip those checks.
+     */
+    public RDFGuesser(Path p_top, boolean useAnomalieMap) {
         top = p_top;
         rdfSet = new HashSet<String>();
         anomalies = 0;
@@ -61,8 +66,7 @@ public class RDFGuesser extends SimpleFileVisitor<Path> {
      *  The heuristic for finding the RDF's in the ftp hierarchy is
      *  not perfect and requires a few tweaks. These map the failures
      *  to the precise path needed for later lookup.
-     *
-     *  Stuff happens.
+     *  <p>Stuff happens.</p>
      */
     private Map<String,String> makeAnomalieMap() {
         Map<String,String> map = new HashMap<String,String>();
