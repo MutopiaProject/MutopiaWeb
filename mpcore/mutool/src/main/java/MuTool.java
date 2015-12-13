@@ -1,10 +1,12 @@
 import mutopia.mudb.*;
+import mutopia.core.RDFGuesser;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import joptsimple.OptionParser;
@@ -12,6 +14,10 @@ import joptsimple.OptionSet;
 import joptsimple.OptionException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.FileSystems;
+import java.util.Iterator;
 
 /** A utility application for the mudb library
  *
@@ -96,20 +102,77 @@ class MuTool {
         }
     }
 
+    /**
+     * Check the RDF guessing algorithm.
+     * <p>When writing the {@link #mutopia.core.RDFGuesser() RDF guesser}
+     * I noticed that there were several anomalies and I compensated
+     * for them in the builder itself so I could continue to build the
+     * database from scratch. This is simply a check against any
+     * improvement in that file naming. The scan is requested without
+     * the use of the anomalie fix and then each possible RDF file
+     * name is checked against a good database.</p>
+     * <p>
+     * Caveat: It requires a good database. In previous DB iterations
+     * these errant rows were corrected manually.</p>
+     */
+    private void rdfCheck(Connection conn) throws SQLException, IOException {
+        Logger log = LoggerFactory.getLogger(MuTool.class);
+        String mtop = MuConfig.getInstance().getProperty("mutopia.base");
+        if (mtop == null) {
+            System.out.println("Need MUTOPIA_BASE set to continue");
+            return;
+        }
+        else {
+            log.info("Using {} for search", mtop);
+        }
 
-    //
-    // MAIN - Setup application and run based on arguments
-    //
+        // Do a find from the top of our hierarchy, building possible
+        // RDF file specs as we go.
+        Path p = FileSystems.getDefault().getPath(mtop, "ftp");
+        RDFGuesser sb = new RDFGuesser(p, false);
+        Files.walkFileTree(p, sb);
+
+        log.info("FTP archive scanned, {} anomalies were fixed.", sb.getAnomalies());
+
+        // A prepared statement we can use throughout the iteration
+        PreparedStatement pst =
+            conn.prepareStatement("SELECT _id FROM muRDFMap WHERE rdfspec=?");
+
+        // Iterate the rdf set, counting and printing out missed rdf guesses
+        int misses = 0;
+        int count = 0;
+        for (Iterator<String> i = sb.iterator(); i.hasNext(); ) {
+            count += 1;
+            String rdfPath = i.next();
+            pst.clearParameters();
+            pst.setString(1, rdfPath);
+            ResultSet rs = pst.executeQuery();
+            if (!rs.next()) {
+                misses += 1;
+                System.out.println("  " + rdfPath);
+            }
+        }
+
+        if (misses > 0) {
+            System.out.println("You have " + misses + " out of " + count + " pieces mis-named.");
+        }
+    }
+
+
+    /**
+     *  MAIN
+     */
     public static void main(String[] args) throws Exception {
         OptionParser parser = new OptionParser();
         parser.accepts("issues-for", "Create input for a GITHUB issue from a view")
             .withRequiredArg()
             .describedAs("view for input");
-        parser.accepts("list-rdf", "List RDF files to scan for updates");
-        parser.accepts("update-rdf", "Process RDF files to scan for updates");
-        parser.accepts("instruments", "Process raw instruments into instrument-piece mappings");
+        parser.accepts("check-rdf",       "Check RDF scanner against the database");
+        parser.accepts("list-rdf",        "List RDF files to scan for updates");
+        parser.accepts("update-rdf",      "Process RDF files to scan for updates");
+        parser.accepts("instruments",     "Process raw instruments into instrument-piece mappings");
         parser.accepts("list-properties", "List application properties");
-        parser.accepts("help", "this help message");
+        parser.accepts("help",            "this help message");
 
         OptionSet options;
         try {
@@ -132,7 +195,10 @@ class MuTool {
         }
         else {
             Connection conn = MuDB.getInstance().getConnection();
-            if (options.has("list-rdf")) {
+            if (options.has("check-rdf")) {
+                mu.rdfCheck(conn);
+            }
+            else if (options.has("list-rdf")) {
                 mu.listRDF(conn);
             }
             else if (options.has("update-rdf")) {
