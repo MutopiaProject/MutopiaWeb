@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+/** Define and populate the {@code RawInstrumentMap} table. */
 public class RawInstrumentMap extends DBTable {
 
     public RawInstrumentMap() {

@@ -1,5 +1,6 @@
 package mutopia.mudb.tables;
 
+/** Define and populate the {@code Version} table. */
 public class Version extends DBTable {
 
     public Version() {

@@ -5,6 +5,7 @@ import java.sql.Statement;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+/** Define and populate the {@code Piece} table. */
 public class Piece extends DBTable {
 
     public Piece() {

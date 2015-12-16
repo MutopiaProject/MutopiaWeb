@@ -10,6 +10,8 @@ import java.util.Iterator;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+
+/** Define and populate the {@code Instrument} table. */
 public class Instrument extends DBTable {
 
     public Instrument() {

@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.FileSystems;
 import java.util.Iterator;
 
+/** Define and populate the {@code RDFMap} table. */
 public class RDFMap extends DBTable {
 
     public RDFMap() {

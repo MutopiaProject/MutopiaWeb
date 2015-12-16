@@ -11,6 +11,7 @@ import java.util.Iterator;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+/** Define and populate the {@code Composer} table. */
 public class Composer extends DBTable {
 
     public Composer() {

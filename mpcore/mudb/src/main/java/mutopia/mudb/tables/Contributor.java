@@ -1,4 +1,6 @@
 package mutopia.mudb.tables;
+
+/** Define and populate the {@code Contributor} table. */
 public class Contributor extends DBTable {
 
     public Contributor() {

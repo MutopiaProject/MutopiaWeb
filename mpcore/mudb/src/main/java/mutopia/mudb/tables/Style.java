@@ -10,6 +10,7 @@ import java.util.Set;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
+/** Define and populate the {@code Style} table. */
 public class Style extends DBTable {
 
     public Style() {
