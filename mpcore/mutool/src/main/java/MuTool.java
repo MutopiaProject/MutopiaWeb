@@ -1,4 +1,5 @@
 import mutopia.mudb.*;
+import mutopia.mudb.tables.*;
 import mutopia.core.RDFGuesser;
 
 import java.io.IOException;
@@ -8,16 +9,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.DriverManager;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.FileSystems;
 import java.util.Iterator;
+import java.util.UUID;
 
 /** A utility application for the mudb library
  *
@@ -158,6 +162,57 @@ class MuTool {
         }
     }
 
+    private void rebuildDB(File dbFile) throws IOException, SQLException {
+        Logger log = LoggerFactory.getLogger(MuTool.class);
+
+        // List of DB table builders. Order may be important.
+        DBTable builders[] = new DBTable[] {
+            new Style(),
+            new Composer(),
+            new Instrument(),
+            new License(),
+            new Contributor(),
+            new Version(),
+            new RDFMap(),
+            new RawInstrumentMap(),
+            new Piece(),
+            new PieceInstrument()
+        } ;
+
+        // Create the new database in a temporary file.
+        File tmpf = 
+            new File("./",
+                     new StringBuilder()
+                     .append("Mu")
+                     .append(UUID.randomUUID())
+                     .append(".sqlite3").toString());
+        Connection conn =
+            DriverManager.getConnection("jdbc:sqlite:" + tmpf.getPath());
+        conn.setAutoCommit(false);
+
+        // Build all tables
+        for (DBTable b : builders) {
+            b.makeTable(conn);
+        }
+        conn.commit();
+
+        // Populate tables
+        for (DBTable b : builders) {
+            if (!b.populateTable(conn)) {
+                return ;
+            }
+        }
+        conn.commit();
+        conn.close();
+
+        // Move as carefully as possible
+        if (dbFile.exists()) {
+            File backup_fn = new File(dbFile.getPath() + "~");
+            dbFile.renameTo(backup_fn);
+            log.info("previous " + dbFile.getPath() + " renamed to " + backup_fn.getPath());
+        }
+        tmpf.renameTo(dbFile);
+    }
 
     /**
      *  MAIN
@@ -167,6 +222,10 @@ class MuTool {
         parser.accepts("issues-for", "Create input for a GITHUB issue from a view")
             .withRequiredArg()
             .describedAs("view for input");
+        parser.accepts("rebuild-db",      "Rebuild the DB from scratch")
+            .withRequiredArg()
+            .describedAs("new database filename")
+            .ofType(File.class);
         parser.accepts("check-rdf",       "Check RDF scanner against the database");
         parser.accepts("list-rdf",        "List RDF files to scan for updates");
         parser.accepts("update-rdf",      "Process RDF files to scan for updates");
@@ -192,6 +251,10 @@ class MuTool {
         if (options.has("list-properties")) {
             MuConfig.getInstance().dump();
             MuDB.getInstance().listProperties(System.out);
+        }
+        else if (options.has("rebuild-db")) {
+            File newdb = (File)options.valueOf("rebuild-db");
+            mu.rebuildDB(newdb);
         }
         else {
             Connection conn = MuDB.getInstance().getConnection();

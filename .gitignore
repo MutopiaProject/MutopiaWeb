@@ -1,6 +1,8 @@
 *~
 *.html
 *.rss
+# ignore idea project files
+*.iml
 
 # ignoring the ftp folder allows that tree to be populated with
 # psuedo mutopia data

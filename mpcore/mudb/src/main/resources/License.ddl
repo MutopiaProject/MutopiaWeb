@@ -1,0 +1,10 @@
+INSERT INTO "muLicense" VALUES(0,'Unlicensed','http://example.com/unlicensed/');
+INSERT INTO "muLicense" VALUES(1,'Public Domain','http://creativecommons.org/licenses/publicdomain/');
+INSERT INTO "muLicense" VALUES(2,'Creative Commons Attribution 3.0','http://creativecommons.org/licenses/by/3.0/');
+INSERT INTO "muLicense" VALUES(3,'Creative Commons Attribution-ShareAlike 3.0','http://creativecommons.org/licenses/by-sa/3.0/');
+INSERT INTO "muLicense" VALUES(4,'Creative Commons Attribution-ShareAlike 2.5','http://creativecommons.org/licenses/by-sa/2.5/');
+INSERT INTO "muLicense" VALUES(5,'Creative Commons Attribution-ShareAlike 2.0','http://creativecommons.org/licenses/by-sa/2.0/');
+INSERT INTO "muLicense" VALUES(6,'Creative Commons Attribution 2.5','http://creativecommons.org/licenses/by/2.5/');
+INSERT INTO "muLicense" VALUES(7,'Creative Commons Attribution-ShareAlike','http://creativecommons.org/licenses/by-sa/2.5/');
+INSERT INTO "muLicense" VALUES(8,'Creative Commons Attribution 4.0','http://creativecommons.org/licenses/by/4.0/');
+INSERT INTO "muLicense" VALUES(9,'Creative Commons Attribution-ShareAlike 4.0','http://creativecommons.org/licenses/by-sa/4.0/');
