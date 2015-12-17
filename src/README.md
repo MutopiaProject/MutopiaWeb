@@ -20,11 +20,24 @@ Assuming your workspace is in a folder called `$HOME/MutopiaWeb`:
 
 ```bash
 $ cd src/Mutopia_Archive
-$ perl ./Build.PL --install_base=$HOME/MutopiaWeb
+$ perl ./Build.PL
+$ ./Build installdeps
 $ ./Build
 $ ./Build test
-$ ./Build install
+$ ./Build install --install_base=$HOME/MutopiaWeb
 ```
+
+Before building the `Mutopia_HTMLGen` module, make sure your
+environment is setup,
+```bash
+$ export MUTOPIA_WEB=$HOME/MutopiaWeb
+$ export PERL5LIB=$MUTOPIA_WEB/lib/perl5
+$ # this is not required for this build but still used in many functions
+$ export MUTOPIA_BASE=$HOME/MutopiaProject
+```
+
+Now follow the same process with `Mutopia_HTMLGen` as you did with
+`Mutopia_Archive`.
 
 ## [Optional reading] How the `src` structure was built
 
@@ -118,12 +131,4 @@ lib/perl5/x86_64-linux-gnu-thread-multi/auto/Mutopia_HTMLGen
 lib/perl5/x86_64-linux-gnu-thread-multi/auto/Mutopia_HTMLGen/.packlist
 lib/perl5/x86_64-linux-gnu-thread-multi/auto/Mutopia_Archive
 lib/perl5/x86_64-linux-gnu-thread-multi/auto/Mutopia_Archive/.packlist
-```
-
-It was a similar process for `Mutopia_HTMLGen`. Because this second
-module uses the first, it is necessary to do this module after the
-first and set the PERL5LIB variable,
-
-```bash
-export PERL5LIB=<repo-top>/lib/perl5
 ```
