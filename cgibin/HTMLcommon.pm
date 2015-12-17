@@ -97,7 +97,7 @@ sub startPage {
             <img src="../images/mutopia-logo.svg" alt="Mutopia Project Logo" />
           </div>
           <div class="col-sm-6 text-right">
-            <form class="form-inline" action="cgibin/make-table.cgi" method="get">
+            <form class="form-inline" action="make-table.cgi" method="get">
               <div class="form-group">
                 <input class="form-control" type="text" name="searchingfor">
                 <button type="submit" value="Search" class="btn btn-default">Search</button>
