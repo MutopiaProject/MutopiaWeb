@@ -240,7 +240,7 @@ public class MuInstrument {
      * @throws SQLException on database error
      */
     public boolean saveWith(Connection conn,
-                            long piece_id) throws SQLException {
+                            int piece_id) throws SQLException {
         Logger log = LoggerFactory.getLogger(MuInstrument.class);
         final String X_INSERT_P_I =
             "INSERT OR IGNORE INTO muPieceInstrument" +
@@ -255,7 +255,7 @@ public class MuInstrument {
             String candidate = "";
             try {
                 candidate = translateRaw(conn, instrument);
-                pst.setLong(1, piece_id);
+                pst.setInt(1, piece_id);
                 pst.setString(2, candidate);
                 pst.execute();
                 count = count + 1;

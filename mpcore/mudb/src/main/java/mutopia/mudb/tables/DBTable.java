@@ -37,6 +37,12 @@ abstract public class DBTable {
     abstract public String createTableSQL() ;
 
     /** Populate the table.
+     *  Many tables are updated during the population of other tables.
+     *  For example, creating a row in the {@code Piece} table may create a
+     *  new row in the {@code muVersion} and {@code muContributor}
+     *  tables. These kinds of tables can choose to not implement this
+     *  method.
+     *
      *  @param conn the DB connection to use.
      *  @return true if the table was populated as defined.
      *  @throws SQLException on any database error.

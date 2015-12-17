@@ -176,15 +176,15 @@ public class MuPiece {
      * @return The row id found for the maintainer.
      * @throws SQLException on any database error.
      */
-    private long maintainerId(Connection conn) throws SQLException {
+    private int maintainerId(Connection conn) throws SQLException {
         Logger log = LoggerFactory.getLogger(MuPiece.class);
-        long mid;
+        int mid;
         try {
             PreparedStatement pst = conn.prepareStatement(Q_CONTRIB);
             pst.setString(1, get("maintainer"));
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                mid = rs.getLong(1);
+                mid = rs.getInt(1);
                 return mid;
             }
         } catch (SQLException ex) {
@@ -202,7 +202,7 @@ public class MuPiece {
         pst.executeUpdate();
         ResultSet rs = pst.getGeneratedKeys();
         rs.next();
-        mid = rs.getLong(1);
+        mid = rs.getInt(1);
 
         log.info("Added maintainer {}, id = {}", get("maintainer"), mid);
 
@@ -217,14 +217,14 @@ public class MuPiece {
      * @return The row id for this license.
      * @throws SQLException on any database error.
      */
-    private long licenseId(Connection conn) throws SQLException {
+    private int licenseId(Connection conn) throws SQLException {
         String q_LICENSEID = "SELECT _id FROM muLicense WHERE name=?";
         PreparedStatement pst =
                 conn.prepareStatement(q_LICENSEID, Statement.RETURN_GENERATED_KEYS);
         pst.setString(1, get("licence"));
         ResultSet rs = pst.executeQuery();
         rs.next();
-        return rs.getLong(1);
+        return rs.getInt(1);
     }
 
 
@@ -249,7 +249,7 @@ public class MuPiece {
      * @return The row id for this LilyPond version.
      * @throws SQLException on any database error.
      */
-    private long lpVersionId(Connection conn) throws SQLException {
+    private int lpVersionId(Connection conn) throws SQLException {
         Logger log = LoggerFactory.getLogger(MuPiece.class);
         String lpversion = get("lilypondVersion");
         try {
@@ -257,7 +257,7 @@ public class MuPiece {
             vstmt.setString(1, lpversion);
             ResultSet rs = vstmt.executeQuery();
             if (rs.next()) {
-                return rs.getLong(1);
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             // ignore checked exception
@@ -278,7 +278,7 @@ public class MuPiece {
         pst.executeUpdate();
         ResultSet rs = pst.getGeneratedKeys();
         if (rs.next()) {
-            long vid = rs.getLong(1);
+            int vid = rs.getInt(1);
             log.info("Added LilyPond version {} _id={}", lpversion, vid);
             return vid;
         } else {
@@ -353,15 +353,15 @@ public class MuPiece {
         String[] muid = getMuID();
 
         PreparedStatement pst = conn.prepareStatement(X_INSPIECE);
-        pst.setString(1, muid[1]);
-        pst.setString(2, props.get("title"));
-        pst.setString(3, props.get("composer"));
-        pst.setString(4, props.get("style"));
-        pst.setString(5, props.get("for"));
-        pst.setLong(6, licenseId(conn));
-        pst.setLong(7, maintainerId(conn));
-        pst.setLong(8, lpVersionId(conn));
-        pst.setString(9, props.get("opus"));
+        pst.setString(1,  muid[1]);
+        pst.setString(2,  props.get("title"));
+        pst.setString(3,  props.get("composer"));
+        pst.setString(4,  props.get("style"));
+        pst.setString(5,  props.get("for"));
+        pst.setInt(6,     licenseId(conn));
+        pst.setInt(7,     maintainerId(conn));
+        pst.setInt(8,     lpVersionId(conn));
+        pst.setString(9,  props.get("opus"));
         pst.setString(10, props.get("lyricist"));
         pst.setString(11, props.get("date"));
         pst.setString(12, muid[0]);

@@ -78,27 +78,27 @@ public class MuRDFMap {
     }
 
     /** Save an rdfref, associating it with a mutopia id.
-     * @param conn the connection to use for database transactions.
-     * @param muid the mutopia id as a string.
+     * @param conn     the connection to use for database transactions.
+     * @param piece_id the mutopia id as a string.
      * @throws SQLException on any database error.
      */
     public void saveWith(Connection conn,
-                         String muid) throws SQLException {
+                         String piece_id) throws SQLException {
         final String Q_RDFSPEC =
             "SELECT _id,rdfspec,piece_id FROM muRDFMap"
             + " WHERE piece_id=?";
         PreparedStatement pst = conn.prepareStatement(Q_RDFSPEC);
-        pst.setString(1, muid);
+        pst.setString(1, piece_id);
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
             final String X_UPDRSPEC =
                 "UPDATE muRDFMap SET rdfspec=? WHERE _id=?";
-            long rowid = rs.getLong(1);
+            int rowid = rs.getInt(1);
             String rspec = rs.getString(2);
             if (!rspec.equals(rdfpart)) {
                 pst = conn.prepareStatement(X_UPDRSPEC);
                 pst.setString(1, rdfpart);
-                pst.setLong(2, rowid);
+                pst.setInt(2, rowid);
                 pst.execute();
             }
             // else no update necessary
@@ -109,7 +109,7 @@ public class MuRDFMap {
                 "INSERT INTO muRDFMap (rdfspec, piece_id) VALUES (?, ?)";
             pst = conn.prepareStatement(X_INSRSPEC);
             pst.setString(1, rdfpart);
-            pst.setString(2, muid);
+            pst.setString(2, piece_id);
             pst.execute();
         }
     }
@@ -117,24 +117,13 @@ public class MuRDFMap {
     /**
      * Return a URL object that represents the location of the RDF
      * specified by the attributes of this class. The host is part of
-     * the URL is determined by the property {@code mutopia.host}.
+     * the URL and is determined by the property {@code mutopia.host}.
      * @return the assembled URL for this object
      * @throws MalformedURLException if the URL cannot be constructed
      */
     public URL getURL() throws MalformedURLException {
         String host = MuConfig.getInstance().getProperty("mutopia.host");
         return new URL("http", host, "/ftp/" + rdfpart);
-    }
-
-
-    /** Get the subject of this rdf.
-     * (Usefulness is questionable.)
-     * @return a string representing the subject.
-     * @throws MalformedURLException if the URL can't be parsed.
-     */
-    public String getSubject() throws MalformedURLException {
-        Path p = Paths.get(getURL().toString());
-        return p.getParent().toString() + "/";
     }
 
 }

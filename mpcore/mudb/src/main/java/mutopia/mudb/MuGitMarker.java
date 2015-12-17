@@ -50,7 +50,7 @@ import java.sql.PreparedStatement;
  *  <li>You are in the correct branch, usually {@code master}
  * </ul>
  */
-public class Marker {
+public class MuGitMarker {
     /** Git commit SHA for this marker */
     private String commit_sha;
 
@@ -62,7 +62,7 @@ public class Marker {
      * @param conn the Connection to the database
      * @throws SQLException on database errors
      */
-    public Marker(Connection conn) throws SQLException {
+    public MuGitMarker(Connection conn) throws SQLException {
         String q_RESOLVE = "SELECT commit_sha FROM muGitMarker WHERE _id=1";
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(q_RESOLVE);

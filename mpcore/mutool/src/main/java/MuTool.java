@@ -31,11 +31,12 @@ class MuTool {
     private MuTool() {}
 
     /** Get a list of pending rdf files and print to stdout.
-     * @param conn the SQLite connection object to use to construct the Marker object.
+     * @param conn the SQLite connection object to use to construct
+     *             the {@code MuGitMarker} object.
      * @throws SQLException on any database error.
      */
     private void listRDF(Connection conn) throws SQLException, IOException {
-        Marker m = new Marker(conn);
+        MuGitMarker m = new MuGitMarker(conn);
         HashSet<MuRDFMap> rdf_set = m.rdfSince();
         for (MuRDFMap rdf : rdf_set) {
             System.out.println(rdf.getURL());
@@ -57,7 +58,7 @@ class MuTool {
         Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(Q_MISSING_INSTRUMENTS);
         while (rs.next()) {
-            long piece_id = rs.getLong(1);
+            int piece_id = rs.getInt(1);
             String raw = rs.getString(2);
             MuInstrument instrument = new MuInstrument(raw);
             if (!instrument.saveWith(conn, piece_id)) {
@@ -68,7 +69,7 @@ class MuTool {
 
     /** Update the database with the latest changes in the archive.
      *
-     * Find the latest git reference (using a Marker), then get a list
+     * Find the latest git reference (using a {@code MuGitMarker}), then get a list
      * of RDF file references based on files changed since that git
      * reference. The list of RDF's is iterated and processed one by
      * one.
@@ -78,7 +79,7 @@ class MuTool {
      */
     private void updateByRDF(Connection conn) throws SQLException {
         Logger log = LoggerFactory.getLogger(MuTool.class);
-        Marker m = new Marker(conn);
+        MuGitMarker m = new MuGitMarker(conn);
         log.info("finding rdf references (git marker = {})", m);
 
         HashSet<MuRDFMap> rdf_set = m.rdfSince();
@@ -165,6 +166,16 @@ class MuTool {
     private void rebuildDB(File dbFile) throws IOException, SQLException {
         Logger log = LoggerFactory.getLogger(MuTool.class);
 
+        // A trigger for cleaning up references to the
+        // muPieceInstrument table when raw_instrument changes.
+        String pi_trigger[] = new String[] {
+            "CREATE TRIGGER muPITrigger",
+            "    AFTER UPDATE OF raw_instrument on muPiece",
+            "    BEGIN",
+            "        DELETE FROM muPieceInstrument WHERE piece_id=muPiece._id;",
+            "    END ;"
+        } ;
+
         // List of DB table builders. Order may be important.
         DBTable builders[] = new DBTable[] {
             new Style(),
@@ -176,7 +187,8 @@ class MuTool {
             new RDFMap(),
             new RawInstrumentMap(),
             new Piece(),
-            new PieceInstrument()
+            new PieceInstrument(),
+            new GitMarker()
         } ;
 
         // Create the new database in a temporary file.
@@ -202,6 +214,13 @@ class MuTool {
                 return ;
             }
         }
+
+        StringBuilder sb = new StringBuilder();
+        for (String s : pi_trigger) {
+            sb.append(s + "\n");
+        }
+        conn.createStatement().execute(sb.toString());
+
         conn.commit();
         conn.close();
 
