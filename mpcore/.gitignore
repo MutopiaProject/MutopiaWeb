@@ -2,6 +2,9 @@
 .classpath
 .settings
 build/
+# the for-testing.db file doesn't commit so it creates
+# a journal file that we can ignore
+*.db-journal
 
 # Ignore Gradle GUI config
 gradle-app.setting
