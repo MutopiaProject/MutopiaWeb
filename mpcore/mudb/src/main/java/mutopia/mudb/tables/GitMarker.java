@@ -1,6 +1,6 @@
 package mutopia.mudb.tables;
 
-/** Define and populate the {@code Version} table. */
+/** Define and populate the {@code GitMarker} table. */
 public class GitMarker extends DBTable {
     public GitMarker() {
         super("GitMarker");

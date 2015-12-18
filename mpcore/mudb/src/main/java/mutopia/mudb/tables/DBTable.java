@@ -60,17 +60,11 @@ abstract public class DBTable {
         st.execute(createTableSQL());
     }
 
-    /** Populate table from a DDL in resources. This method will look
-     *  for a file written in database description language (ddl),
-     *  typically containing insert statements, and processes these
-     *  statements for population. This is useful if you are loading
-     *  a translation table.
-     *
-     *  It is called from a derived class and uses the table name to
-     *  determine the filename. If {@code Foo} is derived from
-     *  {@code DBTable}, and has a table name of "Foo" this routine
-     *  will look in the resource folder for a file named,
-     *  {@code "/Foo.ddl"}.
+    /** Populate table from a file of sql insert statements in
+     *  resources. This method will look for a file named
+     *  {@code table-name + .sql} containing insert statements for the
+     *  table. This is useful if you are loading something like a
+     *  large symbol table.
      *
      *  @return true if populated successfully.
      *  @param conn the DB connection to use.
@@ -80,7 +74,7 @@ abstract public class DBTable {
     protected boolean populateFromDDL(Connection conn) throws SQLException,
                                                               IOException {
         InputStream is =
-            getClass().getResourceAsStream("/" + getTableName() + ".ddl");
+            getClass().getResourceAsStream("/" + getTableName() + ".sql");
         BufferedReader sql_in =
             new BufferedReader(new InputStreamReader(is));
 
