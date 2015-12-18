@@ -39,7 +39,38 @@ public class Piece extends DBTable {
         return sb.toString();
     }
 
+    /** Create triggers for the muPiece table.
+     *
+     *  <p>This trigger clears the mapping between {@code muPiece} and
+     *  {@code muInstrument} when {@code raw_instrument} changes by
+     *  deleting the relationship provided by {@code muPieceInstrument}.</p>
+     *
+     *  @param conn the DB connection to use
+     *  @throws SQLException on any database error.
+     */
+    @Override
+    public String createTriggerSQL() {
+        String pi_trigger[] = new String[] {
+            "CREATE TRIGGER muPITrigger",
+            "    AFTER UPDATE OF raw_instrument on muPiece",
+            "    BEGIN",
+            "        DELETE FROM muPieceInstrument WHERE piece_id=muPiece._id;",
+            "    END ;"
+        } ;
 
+        StringBuilder sb = new StringBuilder();
+        for (String s : pi_trigger) {
+            sb.append(s + "\n");
+        }
+        return sb.toString();
+    }
+
+
+    /** Populate the muPiece table.
+     *  @param conn the DB connection to use.
+     *  @return true if the table was populated as defined.
+     *  @throws SQLException on any database error.
+     */
     @Override
     public boolean populateTable(Connection conn) throws SQLException {
         Logger log = LoggerFactory.getLogger(Piece.class);

@@ -10,6 +10,7 @@ public class MarkerTest {
     @Test
     public void testCurrentMarker() throws SQLException {
         Connection conn = MuDB.getInstance().getConnection();
-        @SuppressWarnings("UnusedAssignment") Marker m = new Marker(conn);
+        @SuppressWarnings("UnusedAssignment")
+            MuGitMarker m = new MuGitMarker(conn);
     }
 }

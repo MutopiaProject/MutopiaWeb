@@ -80,7 +80,6 @@ public class PieceTest {
             Connection conn = MuDB.getInstance().getConnection();
             MuPiece p = MuPiece.fromLoadedModel(m);
             p.save(conn);
-            conn.commit();
         } catch (SQLException | IOException e) {
             Assert.fail(e.getMessage());
         } catch (MuException mue) {

@@ -17,7 +17,7 @@ abstract public class DBTable {
     /** The name of the table */
     private String tableName;
 
-    /** Abstract, not directly instantiable
+    /** Child classes must instantiate the parent with a table name.
      *  @param p_tableName the table name to construct
      */
     protected DBTable(String p_tableName) {
@@ -35,6 +35,14 @@ abstract public class DBTable {
      *  @return A string containing the CREATE TABLE sql statement.
      */
     abstract public String createTableSQL() ;
+
+    /** Create an SQL string containing triggers for this table. The
+     *  child class is not required to provide an implementation.
+     *  @return An SQL String this table, null if no trigger.
+     */
+    public String createTriggerSQL() {
+        return null;
+    }
 
     /** Populate the table.
      *  Many tables are updated during the population of other tables.
@@ -56,8 +64,23 @@ abstract public class DBTable {
      *  @throws SQLException on any database error.
      */
     public void makeTable(Connection conn) throws SQLException {
-        Statement st = conn.createStatement();
-        st.execute(createTableSQL());
+        String table_sql = createTableSQL();
+        if (table_sql != null) {
+            Statement st = conn.createStatement();
+            st.execute(createTableSQL());
+        }
+    }
+
+    /** Create a trigger for this table.
+     *  @param conn the DB connection to use
+     *  @throws SQLException on any database error.
+     */
+    public void makeTrigger(Connection conn) throws SQLException {
+        String trigger = createTriggerSQL();
+        if (trigger != null) {
+            Statement st = conn.createStatement();
+            st.execute(trigger);
+        }
     }
 
     /** Populate table from a file of sql insert statements in

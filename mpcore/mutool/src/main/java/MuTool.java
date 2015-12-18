@@ -166,16 +166,6 @@ class MuTool {
     private void rebuildDB(File dbFile) throws IOException, SQLException {
         Logger log = LoggerFactory.getLogger(MuTool.class);
 
-        // A trigger for cleaning up references to the
-        // muPieceInstrument table when raw_instrument changes.
-        String pi_trigger[] = new String[] {
-            "CREATE TRIGGER muPITrigger",
-            "    AFTER UPDATE OF raw_instrument on muPiece",
-            "    BEGIN",
-            "        DELETE FROM muPieceInstrument WHERE piece_id=muPiece._id;",
-            "    END ;"
-        } ;
-
         // List of DB table builders. Order may be important.
         DBTable builders[] = new DBTable[] {
             new Style(),
@@ -192,7 +182,7 @@ class MuTool {
         } ;
 
         // Create the new database in a temporary file.
-        File tmpf = 
+        File tmpf =
             new File("./",
                      new StringBuilder()
                      .append("Mu")
@@ -206,7 +196,11 @@ class MuTool {
         for (DBTable b : builders) {
             b.makeTable(conn);
         }
-        conn.commit();
+
+        // Build all triggers
+        for (DBTable b : builders) {
+            b.makeTrigger(conn);
+        }
 
         // Populate tables
         for (DBTable b : builders) {
@@ -214,12 +208,6 @@ class MuTool {
                 return ;
             }
         }
-
-        StringBuilder sb = new StringBuilder();
-        for (String s : pi_trigger) {
-            sb.append(s + "\n");
-        }
-        conn.createStatement().execute(sb.toString());
 
         conn.commit();
         conn.close();
