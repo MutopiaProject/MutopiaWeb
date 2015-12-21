@@ -1,4 +1,4 @@
 CREATE TABLE muStyle (
-    style TEXT PRIMARY KEY,
-    in_mutopia INTEGER DEFAULT(0)
-) WITHOUT ROWID;
+   style TEXT PRIMARY KEY,
+   in_mutopia INTEGER DEFAULT(0)
+) WITHOUT ROWID ;

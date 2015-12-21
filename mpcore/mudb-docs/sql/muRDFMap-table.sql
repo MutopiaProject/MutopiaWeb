@@ -1,6 +1,4 @@
 CREATE TABLE muRDFMap (
-    _id INTEGER PRIMARY KEY AUTOINCREMENT,
-    rdfspec TEXT,
-    piece_id INTEGER UNIQUE,
-    FOREIGN KEY(piece_id) REFERENCES muPiece(_id)
- );
+   rdfspec TEXT PRIMARY KEY,
+   piece_id INTEGER REFERENCES muPiece(_id) DEFAULT NULL
+) WITHOUT ROWID;

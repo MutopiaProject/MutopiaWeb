@@ -1,8 +1,8 @@
-.. _db_in_practice: In Practice
+.. _in-practice:
 
-=============
- In Practice
-=============
+===========
+In Practice
+===========
 
 Managing an update task
 -----------------------
@@ -48,14 +48,14 @@ and count the distinct instances. This gives us 17 versions.
 
 We have gone through some version update tasks and one thing that
 happens is that there is no mechanism to remove rows from the
-``muVersion`` table when a version becomes obsolete. Here is a query
-that finds these dangling rows.
+:ref:`version-table-label` table when a version becomes obsolete. Here
+is a query that finds these dangling rows.
 
 .. literalinclude:: sql/unused-versions.sql
     :language: sql
 
-This will give us a list of rows in the ``muVersion`` table that have
-no reference in the ``muPiece`` table::
+This will give us a list of rows in the :ref:`version-table-label`
+table that have no reference in the :ref:`piece-table-label` table::
 
     1.7.21
     2.1.34
@@ -73,18 +73,18 @@ exactly what we need
 
 Not surprisingly, that reduces the overall number of versions in use
 to 92, just 16 distinct versions if the query ignores the ``edit``
-value. Now that the ``muVersion`` table is correct, we can continue to
-the next step.
+value. Now that the :ref:`version-table-label` table is correct, we
+can continue to the next step.
 
 Step 2: Narrowing our view
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``muPiece`` table represents all pieces in the catalogue. What we
-would like to do is select a subset of those pieces that we can target
-for an update. SQL provides a very nice feature for this called a view
-which allows you to use a select statement to define a virtual table.
-We focused on pieces built with LilyPond 2.2 in the 4th set of
-updates and the table definition looked like this.
+The :ref:`piece-table-label` table represents all pieces in the
+catalogue. What we would like to do is select a subset of those pieces
+that we can target for an update. SQL provides a very nice feature for
+this called a view which allows you to use a select statement to
+define a virtual table. We focused on pieces built with LilyPond 2.2
+in the 4th set of updates and the table definition looked like this.
 
 
 .. literalinclude:: sql/view4.sql
@@ -274,7 +274,7 @@ returns this output, ::
     Trumpet, Organ/Piano|La Réjouissance des Feux d'Artifice Royaux (Royal Fireworks)
     Trumpet and organ, or flute and piano|Wedding Music
 
-The output is not pretty but I wanted to ``raw_instrument`` string
+The output is not pretty but I wanted the ``raw_instrument`` string
 displayed so you could see how the match is made. Note that the search
 finds the instruments in question regardless of order. You can further
 refine the search to narrow results even more.
@@ -288,8 +288,9 @@ Gives a similar set but skips pieces with a trumpet part::
     Voice (SATB) and Organ or Piano|All My Heart This Night Rejoices
 
 These aren't very complicated queries for ``fts`` and, in fact, they
-can be accomplished with the ``muPieceInstrument`` table as well. Here
-is one that is made very simple with the ``MATCH`` operator,
+can be accomplished with the :ref:`piece-instrument-table-label` table
+as well. Here is one that is made very simple with the ``MATCH``
+operator,
 
 .. literalinclude:: sql/fts-q3.sql
     :language: sql
@@ -303,6 +304,67 @@ piece that meets that criteria. ::
 These queries are somewhat contrived but it is an interesting search
 that can be accomplished with relatively literal effort. The biggest
 problem? Accuracy all depends on the consistency of the input.
+
+
+Popularity Counts
+-----------------
+
+We have already seen how the built-in function ``count()`` can be used
+as columnar data and sorted in the report output. This is convenient
+for answering questions like "who composed the most pieces in the archive?"
+
+Top ten composers in the archive
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The following is an example that provides a "top ten" list of most
+popular composer in the archive,
+
+.. literalinclude:: sql/top-ten-composer.sql
+    :language: sql
+
+The results are, ::
+
+    composer              c_count
+    --------------------  --------
+    BachJS                415
+    Traditional           125
+    MozartWA              89
+    GiulianiM             80
+    BeethovenLv           74
+    HoretzkyF             60
+    HandelGF              57
+    SchubertF             55
+    SorF                  55
+    DiabelliA             36
+
+
+Top ten instruments
+~~~~~~~~~~~~~~~~~~~
+Composers are relatively simple since, for this kind of list, we can
+simply output our internal tag without a join. This is similar with
+instruments, differing in that multiple instruments may be specified
+for a single piece (e.g., duets, symphonies). Since there is a
+many-to-many relationship between instruments and pieces, we can get
+count information for instruments directly from the mapping table,
+:ref:`piece-instrument-table-label`,
+
+.. literalinclude:: sql/top-ten-instruments.sql
+    :language: sql
+
+The results are no big surprise, ::
+
+    instrument        t_count
+    ----------------  --------
+    Piano             740
+    Voice             426
+    Guitar            338
+    Organ             182
+    Harpsichord       177
+    Violin            177
+    Cello             118
+    Continuo          93
+    Viola             84
+    Horn              67
+
 
 .. rubric:: Footnotes
 .. [#f1] Though not entirely accurate, I found an old list of versions

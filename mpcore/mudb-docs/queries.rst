@@ -1,10 +1,12 @@
-.. _db_queries: Sample Queries
+.. _db_queries:
 
+==============
 Sample Queries
 ==============
 
 This section contains a few useful queries to provide a sample of what the
-database can provide for data mining.
+database can provide for data mining. There are also a number of
+queries with explanations located in the :ref:`in-practice` chapter.
 
 Introduction to Joins
 ---------------------
@@ -26,8 +28,9 @@ sql::
 
 There is a human-readable problem here: we now know the license --- 2
 --- but it would be good to know what that meant. The 2 in this case
-references a row in the ``license_id`` table and that is where we need
-to go to get this information. This is done using a join.
+references a row in the :ref:`muLicense <license-table-label>` table
+and that is where we need to go to get this information. This is done
+using a join.
 
 .. literalinclude:: sql/copyright_join.sql
     :language: sql
@@ -58,9 +61,11 @@ Compound Queries
 Database queries are really all about sets and that notion is very
 apparent in compound queries, where a selection is made on one table
 based on a result set from another table. The example here is from the
-1:many relationship of ``pieces`` to ``instruments`` (as in, "a piece
-may be written for 1 or more instruments"). The table that defines
-this relationship is ``muPieceInstrument``.
+many-to-many relationship of :ref:`pieces <piece-table-label>`
+to :ref:`instruments <instrument-table-label>` (as in, "a
+piece may be written for 1 or more instruments, instruments may be
+used in more than one piece"). The table that defines this
+relationship is :ref:`muPieceInstrument <piece-instrument-table-label>`.
 
 .. literalinclude:: sql/compound-select-1.sql
    :language: sql
@@ -68,7 +73,8 @@ this relationship is ``muPieceInstrument``.
 This will give you a list of identifiers that represent pieces that
 specify that a Violin score is included. If you wanted to also know
 the composer and title of each piece, you could use the result set
-from that query to find that information in the ``muPiece`` table.
+from that query to find that information in the :ref:`muPiece
+<piece-table-label>` table.
 
 .. literalinclude:: sql/compound-select-2.sql
    :language: sql

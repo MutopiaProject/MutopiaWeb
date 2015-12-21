@@ -1,5 +1,6 @@
-.. _db-design: MP Database Design
+.. _db-design:
 
+================
 Database Details
 ================
 
@@ -73,10 +74,9 @@ use to enter a contributed work into the system.
 
 _id, unique primary key
     This is used to reference a specific entry into the Mutopia
-    archive. For pieces existing before the database, the value is the
-    existing mutopia id, typically found formatted in the ``footer``
-    header variable that is added by Mutopia when pieces are entered
-    into the system.
+    archive. The "Mutopia ID" found formatted in the ``footer`` is
+    considered unique among pieces it is used as the vale for this
+    field.
 
 title
    The title of the piece.
@@ -131,6 +131,7 @@ moreinfo
     Additional information relevant to the piece.
 
 
+.. _instrument-table-label:
 
 The muInstrument Table
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -142,6 +143,14 @@ additional instruments are added as they are found in headers.
 .. literalinclude:: sql/muInstrument-table.sql
    :language: sql
 
+.. note:: ``WITHOUT ROWID`` is an optimization on a table that
+          specifies that this table does not need a column for a
+          row id. Since this table will almost always use the
+          instrument text for lookup and relative reference, there is
+          no need for the additional column.
+
+
+.. _style-table-label:
 
 The muStyle Table
 ~~~~~~~~~~~~~~~~~
@@ -154,6 +163,19 @@ dealt with using the ``in_mutopia`` boolean.
    :language: sql
 
 
+.. _version-table-label:
+
+The muVersion Table
+~~~~~~~~~~~~~~~~~~~
+Having a separate table for the LilyPond compiler version makes it
+easier to count and sort occurrences in the archive.
+
+.. literalinclude:: sql/muVersion-table.sql
+    :language: sql
+
+
+.. _license-table-label:
+
 The muLicense Table
 ~~~~~~~~~~~~~~~~~~~
 Contributions to Mutopia, ideally, will use the small set of
@@ -163,6 +185,8 @@ licenses with which this table is seeded.
 .. literalinclude:: sql/muLicense-table.sql
    :language: sql
 
+
+.. _contributor-table-label:
 
 The muContributor Table
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,6 +211,7 @@ email
 url
     The contributor's web address, if given.
 
+.. _composer-table-label:
 
 The muComposer Table
 ~~~~~~~~~~~~~~~~~~~~
@@ -208,6 +233,8 @@ description
     the composer's lifespan information.
 
 
+.. _RDFMap-table-label:
+
 The muRDFMap Table
 ~~~~~~~~~~~~~~~~~~
 The muRDFMap table is used to map the physical structure (see
@@ -228,11 +255,13 @@ piece_id
     A reference to a row within the ``muPiece`` table
 
 
+.. _piece-instrument-table-label:
+
 The muPieceInstrument Table
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This table is used to implement the mapping from a single piece to 1
 or more instruments. The instrument names are parsed from the
-``raw_instruments`` column of ``muPiece`` (see :ref:`piece-table-label`).
+``raw_instruments`` column of :ref:`muPiece <piece-table-label>`.
 
 .. literalinclude:: sql/muPieceInstrument-table.sql
    :language: sql
