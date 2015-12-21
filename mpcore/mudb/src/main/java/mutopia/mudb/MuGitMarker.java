@@ -18,8 +18,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-//import java.sql.Timestamp;
-
+import java.nio.file.Path;
+import java.nio.file.FileSystems;
 
 /**
  * Mark a time in git history.
@@ -102,6 +102,12 @@ public class MuGitMarker {
     }
 
 
+    Path getWorkspace() {
+        String gitmaster = MuConfig.getInstance().getProperty("mutopia.base");
+        return FileSystems.getDefault().getPath(gitmaster, "ftp");
+    }
+
+
     /**
      * Set a marker representing the latest commit in the git history
      * of our repository.
@@ -109,7 +115,7 @@ public class MuGitMarker {
      * @return true if the history was read and the object updated
      */
     public boolean setLastMark() {
-        String gitmaster = MuConfig.getInstance().getProperty("mutopia.base");
+        Path top = getWorkspace();
 
         List<String> commands = new ArrayList<>();
         commands.add("git");
@@ -118,7 +124,7 @@ public class MuGitMarker {
         commands.add("--max-count=1"); // only want latest entry
         ProcessBuilder pb = new ProcessBuilder(commands);
         try {
-            pb.directory(new File(gitmaster));
+            pb.directory(top.toFile());
             final Process process = pb.start();
             BufferedReader br =
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -147,8 +153,8 @@ public class MuGitMarker {
      * @throws IOException on stream processing errors
      */
     private List<String> changedFiles() throws IOException {
-        String gitmaster = MuConfig.getInstance().getProperty("mutopia.base");
-        LinkedList<String> changedFiles = new LinkedList<>();
+        Path workspace = getWorkspace();
+        LinkedList<String> changes = new LinkedList<>();
         List<String> commands = new ArrayList<>();
         commands.add("git");
         commands.add("diff-tree");
@@ -158,38 +164,75 @@ public class MuGitMarker {
         commands.add(this.commit_sha + "..");
 
         ProcessBuilder pb = new ProcessBuilder(commands);
-        pb.directory(new File(gitmaster));
+        pb.directory(workspace.toFile());
         final Process process = pb.start();
         BufferedReader br =
                 new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = br.readLine()) != null) {
-            changedFiles.add(line);
+            changes.add(line);
         }
 
-        return changedFiles;
+        return changes;
+    }
+
+
+    /** Resolve the RDF file name.
+     *  Given a path to a LilyPond file, determine and return the RDF
+     *  file name. This uses a similar algorithm to {@link
+     *  #core.RDFGuesser} without the benefit of the tree walk.
+     *  @param lypath The path of a LilyPond file.
+     *  @return String path relative to the top of the ftp archive.
+     */
+    String resolveLyToRDF(Path lypath) {
+        // Control array bounds problems by getting enough space for
+        // the string array and then iterating through the path names.
+        String[] rpath = new String[ lypath.getNameCount() + 1];
+        int pos = 0;
+        for (Path p : lypath.subpath(1, lypath.getNameCount())) {
+            String name = p.getFileName().toString();
+            if (name.endsWith("-lys") || name.endsWith(".ly")) {
+                rpath[pos] = rpath[pos-1];
+                break;
+            }
+            else {
+                rpath[pos] = name;
+            }
+            pos += 1;
+        }
+
+        // Build the result string. Note that the forward slash is
+        // correct here since we are building the string for remote
+        // access via a URL.
+        StringBuilder sb = new StringBuilder(rpath[0]);
+        for (int ipos = 1; ipos <= pos; ipos++) {
+            sb.append("/");
+            sb.append(rpath[ipos]);
+        }
+        sb.append(".rdf");
+        return sb.toString();
     }
 
 
     /**
      * Create a set of MuRDFMap's affected since the last mark
      *
-     * @return a set of MuRDFMap instances
+     * @return a set of MuRDFMap instances, may be null if an io
+     *         exception occurred while getting the list of changed
+     *         files.
      */
     public HashSet<MuRDFMap> rdfSince() {
         HashSet<MuRDFMap> rdf_set = new HashSet<>();
-
         try {
             List<String> flist = changedFiles();
             for (String aFlist : flist) {
-                try {
-                    MuRDFMap rdf = new MuRDFMap(aFlist);
-                    rdf_set.add(rdf);
-                } catch (MuException ex) {
-                    // ignore checked exception
+                if (aFlist.endsWith(".ly")) {
+                    Path p = FileSystems.getDefault().getPath(aFlist);
+                    rdf_set.add(new MuRDFMap(resolveLyToRDF(p)));
                 }
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             // ignore checked exception
         }
         return rdf_set;
