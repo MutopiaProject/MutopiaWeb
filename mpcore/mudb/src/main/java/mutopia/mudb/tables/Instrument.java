@@ -47,6 +47,7 @@ public class Instrument extends DBTable {
                 ps.setString(1, iter.next());
                 ps.execute();
             }
+            populateFromDDL(conn);
         }
         catch (IOException | RuntimeException e) {
             log.warn("During datafile read: ", e.getMessage());

@@ -2,8 +2,12 @@ package mutopia.mudb.tables;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import java.net.URL;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /** Define and populate the {@code Piece} table. */
 public class Piece extends DBTable {
@@ -63,19 +67,6 @@ public class Piece extends DBTable {
             sb.append(s + "\n");
         }
         return sb.toString();
-    }
-
-
-    /** Populate the muPiece table.
-     *  @param conn the DB connection to use.
-     *  @return true if the table was populated as defined.
-     *  @throws SQLException on any database error.
-     */
-    @Override
-    public boolean populateTable(Connection conn) throws SQLException {
-        Logger log = LoggerFactory.getLogger(Piece.class);
-        log.info("Not yet implemented");
-        return true;
     }
 
 }

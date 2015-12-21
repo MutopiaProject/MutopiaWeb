@@ -2,8 +2,6 @@ package mutopia.mudb;
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.nio.file.Paths;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,38 +18,9 @@ import java.sql.PreparedStatement;
 public class MuRDFMap {
     private String rdfpart;
 
-    /** Construct an MuRDFMap from a LilyPond filename.
-     *  <p>An input file is scanned for various Mutopia-like bits from which to
-     *  infer the location of an RDF file.</p>
-     *
-     * @param filename Input file from which to construct an RDF specification.
-     * @throws MuException on invalid RDF specification in filename
-     */
-    MuRDFMap(String filename) throws MuException {
-        final String LY = ".ly";
-        final String ILY = ".ily";
-        final String LYS = "-lys";
-        final String FTP = "ftp";
-        String[] partv = filename.split("/", 2);
-        if (partv.length < 2 || !partv[0].equals(FTP) ) {
-            throw new MuException("Invalid RDF spec - " + filename);
-        }
-        StringBuilder rdf = new StringBuilder();
-        int lys = partv[1].indexOf(LYS);
-        if (lys > 0) {
-            rdf.append(partv[1].substring(0, lys));
-        }
-        else if (partv[1].endsWith(LY)) {
-            rdf.append(partv[1].substring(0, partv[1].length() - LY.length()));
-        }
-        else if (partv[1].endsWith(ILY)) {
-            rdf.append(partv[1].substring(0, partv[1].length() - ILY.length()));
-        }
-        else {
-            throw new MuException("Invalid RDF spec - " + filename);
-        }
-        rdf.append(".rdf");
-        rdfpart = rdf.toString();
+    /** Basic constructor */
+    public MuRDFMap(String p_rdfpart) {
+        rdfpart = p_rdfpart;
     }
 
     @Override
@@ -83,22 +52,26 @@ public class MuRDFMap {
      * @throws SQLException on any database error.
      */
     public void saveWith(Connection conn,
-                         String piece_id) throws SQLException {
+                         MuPiece piece) throws SQLException
+    {
+        Integer id = new Integer(piece.get("id"));
+        int piece_id = id.intValue();
+
         final String Q_RDFSPEC =
-            "SELECT _id,rdfspec,piece_id FROM muRDFMap"
-            + " WHERE piece_id=?";
+            "SELECT rdfspec,piece_id FROM muRDFMap"
+            + " WHERE rdfspec=?";
         PreparedStatement pst = conn.prepareStatement(Q_RDFSPEC);
-        pst.setString(1, piece_id);
+        pst.setString(1, rdfpart);
         ResultSet rs = pst.executeQuery();
         if (rs.next()) {
-            final String X_UPDRSPEC =
-                "UPDATE muRDFMap SET rdfspec=? WHERE _id=?";
-            int rowid = rs.getInt(1);
-            String rspec = rs.getString(2);
-            if (!rspec.equals(rdfpart)) {
+            String rspec = rs.getString(1);
+            int pid = rs.getInt(2);
+            if (pid != piece_id) {
+                final String X_UPDRSPEC =
+                    "UPDATE muRDFMap SET piece_id=? WHERE rdfspec=?";
                 pst = conn.prepareStatement(X_UPDRSPEC);
-                pst.setString(1, rdfpart);
-                pst.setInt(2, rowid);
+                pst.setInt(1, piece_id);
+                pst.setString(2, rdfpart);
                 pst.execute();
             }
             // else no update necessary
@@ -109,7 +82,7 @@ public class MuRDFMap {
                 "INSERT INTO muRDFMap (rdfspec, piece_id) VALUES (?, ?)";
             pst = conn.prepareStatement(X_INSRSPEC);
             pst.setString(1, rdfpart);
-            pst.setString(2, piece_id);
+            pst.setInt(2, piece_id);
             pst.execute();
         }
     }

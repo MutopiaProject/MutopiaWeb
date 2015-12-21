@@ -67,6 +67,29 @@ class MuTool {
         }
     }
 
+    private void updateMissingPieces(Connection conn) throws SQLException,
+                                                             IOException
+    {
+        Logger log = LoggerFactory.getLogger(MuTool.class);
+        Statement st = conn.createStatement();
+        String host = MuConfig.getInstance().getProperty("mutopia.host");
+        int counter = 0;
+        ResultSet rs =
+            st.executeQuery("SELECT rdfspec from muRDFMap WHERE piece_id ISNULL");
+        while (rs.next()) {
+            counter += 1;
+            MuRDFMap rdfmap = new MuRDFMap(rs.getString(1));
+            MuPiece piece = MuPiece.fromRDF(rdfmap);
+            try {
+                piece.save(conn);
+                rdfmap.saveWith(conn, piece);
+            }
+            catch (MuException me) {
+                log.info(me.getMessage());
+            }
+        }
+    }
+
     /** Update the database with the latest changes in the archive.
      *
      * Find the latest git reference (using a {@code MuGitMarker}), then get a list
@@ -77,7 +100,8 @@ class MuTool {
      * @param conn Connection to use for DB transactions
      * @throws SQLException for any database error
      */
-    private void updateByRDF(Connection conn) throws SQLException {
+    private void updateByRDF(Connection conn) throws SQLException,
+                                                     MuException {
         Logger log = LoggerFactory.getLogger(MuTool.class);
         MuGitMarker m = new MuGitMarker(conn);
         log.info("finding rdf references (git marker = {})", m);
@@ -91,12 +115,9 @@ class MuTool {
             try {
                 MuPiece piece = MuPiece.fromRDF(rspec);
                 piece.save(conn);
-                String[] muid = piece.getMuID();
-                rspec.saveWith(conn, muid[1]);
+                rspec.saveWith(conn, piece);
             } catch (IOException ex) {
                 log.warn("skipping {}", rspec);
-            } catch (MuException mex) {
-                log.warn("piece not saved - {}", mex.getMessage());
             }
         }
         if (m.setLastMark()) {
@@ -210,6 +231,10 @@ class MuTool {
         }
 
         conn.commit();
+        log.info("Basic db structure complete, loading pieces.");
+        updateMissingPieces(conn);
+        conn.commit();
+
         conn.close();
 
         // Move as carefully as possible

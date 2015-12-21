@@ -1,5 +1,6 @@
 package mutopia.mudb;
 
+import java.util.Map;
 import java.util.Hashtable;
 import java.util.HashSet;
 import java.net.URL;
@@ -23,7 +24,7 @@ import java.sql.PreparedStatement;
 
 /**
  * Represent a mutopia piece in the database.
- * 
+ *
  * <p>Pieces are currently constructed from the RDF files created during the
  * publication process. There are historical reasons for this but it
  * has the advantage of allowing a database to be updated separately
@@ -66,6 +67,7 @@ public class MuPiece {
         vocab.add("opus");
         vocab.add("lyricist");
         vocab.add("date");            // date_composed
+        vocab.add("date_published");
         vocab.add("source");
         vocab.add("moreInfo");
     }
@@ -85,6 +87,13 @@ public class MuPiece {
      */
     protected boolean containsKey(String k) {
         return props.containsKey(k);
+    }
+
+    private void dumpProps() {
+        //Set<Map.Entry<String,String>> s = props.entrySet();
+        for (Map.Entry<String,String> e : props.entrySet()) {
+            System.out.println(e.getKey() + " = " + e.getValue());
+        }
     }
 
     /**
@@ -118,19 +127,13 @@ public class MuPiece {
                 p.put(k, s.getLiteral().getString());
             }
         }
-        return p;
-        /*
-        Resource mu_piece = model.getResource(muNS + ".");
-        for (StmtIterator i = mu_piece.listProperties(); i.hasNext();) {
-            org.apache.jena.rdf.model.Statement s = i.next();
-            if (vocab.contains(s.getPredicate().getLocalName())) {
-                p.put(s.getPredicate().getLocalName(), s.getObject().toString());
-            }
+        Matcher muID = idPattern.matcher(p.get("id"));
+        if (muID.matches()) {
+            p.put("date_published", muID.group(1).replaceAll("/", "-"));
+            p.put("id", muID.group(2));
         }
-        */
+        return p;
     }
-
-    private final static String muNS = "http://www.mutopiaproject.org/piece-data/0.1/";
 
     /**
      * Class method to create a piece from an RDF file.
@@ -204,7 +207,7 @@ public class MuPiece {
         rs.next();
         mid = rs.getInt(1);
 
-        log.info("Added maintainer {}, id = {}", get("maintainer"), mid);
+        log.info("Added maintainer {}", get("maintainer"));
 
         return mid;
     }
@@ -279,40 +282,12 @@ public class MuPiece {
         ResultSet rs = pst.getGeneratedKeys();
         if (rs.next()) {
             int vid = rs.getInt(1);
-            log.info("Added LilyPond version {} _id={}", lpversion, vid);
+            log.info("Added LilyPond version {}", lpversion);
             return vid;
         } else {
             log.warn("Failed to get generated id for muVersion");
             return -1;
         }
-    }
-
-    /**
-     * Retrieve the Mutopia ID.
-     * <p>
-     * This is expected to be a string of the form,
-     * <p>
-     * <code>Mutopia-YYYY/MM/DD-digit</code><br>
-     *
-     * @return The parsed result as a 2-element String vector, v, such that,
-     * <ul>
-     * <li>v[0] is the publication date</li>
-     * <li>v[1] is the Mutopia id</li>
-     * </ul>
-     * @throws MuException if the regex parse fails to match
-     */
-    public String[] getMuID() throws MuException {
-        Logger log = LoggerFactory.getLogger(MuPiece.class);
-        // Mutopia-2014/12/14-1994
-        Matcher muID = idPattern.matcher(props.get("id"));
-        if (!muID.matches()) {
-            log.error("Failed format is {}", props.get("id"));
-            throw new MuException("Bad Mutopia ID format");
-        }
-        String[] midparts = new String[2];
-        midparts[0] = muID.group(1).replaceAll("/", "-");
-        midparts[1] = muID.group(2);
-        return midparts;
     }
 
 
@@ -342,18 +317,17 @@ public class MuPiece {
      *                      the appropriate properties.
      */
     public void save(Connection conn) throws SQLException,
-            MuException {
+                                             MuException {
         Logger log = LoggerFactory.getLogger(MuPiece.class);
 
         // Pre-requisite: a complete set of properties
         if (props.size() != vocab.size()) {
             throw new MuException("Insufficient properties available to save piece");
         }
-
-        String[] muid = getMuID();
+        //dumpProps();
 
         PreparedStatement pst = conn.prepareStatement(X_INSPIECE);
-        pst.setString(1,  muid[1]);
+        pst.setString(1,  props.get("id"));
         pst.setString(2,  props.get("title"));
         pst.setString(3,  props.get("composer"));
         pst.setString(4,  props.get("style"));
@@ -364,7 +338,7 @@ public class MuPiece {
         pst.setString(9,  props.get("opus"));
         pst.setString(10, props.get("lyricist"));
         pst.setString(11, props.get("date"));
-        pst.setString(12, muid[0]);
+        pst.setString(12, props.get("date_published"));
         pst.setString(13, props.get("source"));
         pst.setString(14, props.get("moreInfo"));
         pst.executeUpdate();

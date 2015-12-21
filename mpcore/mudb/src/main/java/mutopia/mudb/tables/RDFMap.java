@@ -23,8 +23,7 @@ public class RDFMap extends DBTable {
     public String createTableSQL() {
         String sql_table[] = new String[] {
             "CREATE TABLE muRDFMap (",
-            "   _id INTEGER PRIMARY KEY AUTOINCREMENT,",
-            "   rdfspec TEXT,",
+            "   rdfspec TEXT PRIMARY KEY,",
             "   piece_id INTEGER REFERENCES muPiece(_id) DEFAULT NULL",
             ") ;"
         } ;
@@ -51,7 +50,7 @@ public class RDFMap extends DBTable {
         // Do a find from the top of our hierarchy, building possible
         // RDF file specs as we go.
         Path p = FileSystems.getDefault().getPath(mtop, "ftp");
-        RDFGuesser sb = new RDFGuesser(p, false);
+        RDFGuesser sb = new RDFGuesser(p, true);
         try {
             Files.walkFileTree(p, sb);
         }
