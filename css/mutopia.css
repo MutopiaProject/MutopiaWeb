@@ -4,6 +4,14 @@ body {
     padding-bottom: 20px;
 /*  margin-bottom: 60px;*/
 }
+
+a {
+    color: rgb(0, 136, 170);
+}
+a:hover,
+a:focus {
+    color: rgb(0, 100, 125);
+}
 .jumbotron {
     padding-top: 40px;
     padding-bottom: 20px;
