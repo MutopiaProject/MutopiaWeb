@@ -12,43 +12,82 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-12 adv-search">
+        <div class="col-sm-offset-1 col-sm-11 adv-search">
           <h2>Advanced search</h2>
-
-          <form action="cgibin/make-table.cgi" method="get">
-            <p>Select options that narrow down the range of music that will be displayed:</p>
-            <ul>
-              <li>Search for: <input type="text" name="searchingfor" size="30" /></li>
-              <li>Composer: <select name="Composer">
+          <form class="form-horizontal" action="cgibin/make-table.cgi" method="get">
+            <p>Select options that narrow down the range of music that will be displayed</p>
+            <div class="form-group">
+              <label for="adv-search-for" class="col-sm-2 control-label">Search for</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="adv-search-for" placeholder="Title, ...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="adv-composer-sel" class="col-sm-2 control-label">Composer</label>
+              <div class="col-sm-8">
+                <select name="Composer" id="adv-composer-sel">
                   <option value="">all composers</option>
                   [[ COMPOSER_OPTIONS() ]]
-              </select></li>
-              <li>Instrument: <select name="Instrument">
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="adv-instr-sel" class="col-sm-2 control-label">Instrument</label>
+              <div class="col-sm-8">
+                <select name="Instrument" id="adv-instr-sel">
                   <option value="">any instrument</option>
                   [[ INSTRUMENT_OPTIONS() ]]
-              </select></li>
-              <li>Style: <select name="Style">
-                  <option value="">any</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="adv-style-sel" class="col-sm-2 control-label">Style</label>
+              <div class="col-sm-8">
+                <select name="Style" id="adv-style-sel">
+                  <option value="">any style</option>
                   [[ STYLE_OPTIONS() ]]
-              </select></li>
-              <li><input type="checkbox" name="solo" value="1" /> Display only music for a solo performer (single instrument)</li>
-
-              <li><input type="checkbox" name="recent" value="1" /> Display only music that's been added or updated in the last <input type="text" name="timelength" size="3" value="1" /> <select name="timeunit">
-                  <option value="week">week(s)</option>
-                  <option value="day">day(s)</option>
-              </select></li>
-
-              <li><input type="checkbox" name="lilyv" value="1" /> Display only music created with LilyPond version <input type="text" name="lilyversion" size="6" /> (can be more or less specific, e.g. '2' or '2.6' or '2.6.1')</li>
-            </ul>
-
-            <p>Select options that change the <i>way</i> the music will be displayed:</p>
-            <ul>
-              <li><input type="checkbox" name="preview" value="1" /> Include preview images in the results</li>
-            </ul>
-
-            <p style="text-align: center;"><input type="submit" value="Search" /></p>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-8 checkbox">
+                <label>
+                  <input type="checkbox"name="solo" value="1" />
+                  Display only music for a solo performer (single instrument)
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-8 checkbox">
+                <label>
+                  <input type="checkbox" name="recent" value="1" />
+                  Display only music that's been added or updated in the last
+                  <input type="text" name="timelength" size="3" value="1" />
+                  <select name="timeunit">
+                    <option value="week">week(s)</option>
+                    <option value="day">day(s)</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-8 checkbox">
+                <label>
+                  <input type="checkbox" name="lilyv" value="1" />Display only music created with LilyPond version
+                  <input type="text" name="lilyversion" size="6" /> (can be more or less specific, e.g. '2' or '2.6' or '2.6.1')
+                </label>
+              </div>
+            </div>
+            <p>Select options that change the <i>way</i> the music will be displayed</p>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-8 checkbox">
+                <label>
+                  <input type="checkbox" name="preview" value="1" />Include preview images in the results
+                </label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
           </form>
-
         </div>
       </div> <!-- row -->
     </div> <!-- .container -->
