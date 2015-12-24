@@ -12,43 +12,73 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-12 adv-search">
+        <div class="col-sm-offset-1 col-sm-10 adv-search">
           <h2>Advanced search</h2>
-
-          <form action="cgibin/make-table.cgi" method="get">
-            <p>Select options that narrow down the range of music that will be displayed:</p>
-            <ul>
-              <li>Search for: <input type="text" name="searchingfor" size="30" /></li>
-              <li>Composer: <select name="Composer">
-                  <option value="">all composers</option>
-                  [[ COMPOSER_OPTIONS() ]]
-              </select></li>
-              <li>Instrument: <select name="Instrument">
-                  <option value="">any instrument</option>
-                  [[ INSTRUMENT_OPTIONS() ]]
-              </select></li>
-              <li>Style: <select name="Style">
-                  <option value="">any</option>
-                  [[ STYLE_OPTIONS() ]]
-              </select></li>
-              <li><input type="checkbox" name="solo" value="1" /> Display only music for a solo performer (single instrument)</li>
-
-              <li><input type="checkbox" name="recent" value="1" /> Display only music that's been added or updated in the last <input type="text" name="timelength" size="3" value="1" /> <select name="timeunit">
-                  <option value="week">week(s)</option>
-                  <option value="day">day(s)</option>
-              </select></li>
-
-              <li><input type="checkbox" name="lilyv" value="1" /> Display only music created with LilyPond version <input type="text" name="lilyversion" size="6" /> (can be more or less specific, e.g. '2' or '2.6' or '2.6.1')</li>
-            </ul>
-
-            <p>Select options that change the <i>way</i> the music will be displayed:</p>
-            <ul>
-              <li><input type="checkbox" name="preview" value="1" /> Include preview images in the results</li>
-            </ul>
-
-            <p style="text-align: center;"><input type="submit" value="Search" /></p>
-          </form>
-
+          <div class="panel panel-default">
+            <form class="form-horizontal" action="cgibin/make-table.cgi" method="get">
+              <div class="panel-body adv-search-panel">
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control" id="adv-search-for" name="searchingfor" placeholder="Search for ..." >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-4">
+                    <select name="Composer" id="adv-composer-sel" class="form-control input-sm" placeholder="all composers">
+                      <option value="">all composers</option>
+                      [[ COMPOSER_OPTIONS() ]]
+                    </select>
+                  </div>
+                  <div class="col-sm-4">
+                    <select name="Instrument" id="adv-instr-sel" class="form-control input-sm" placeholder="any instrument">
+                      <option value="">any instrument</option>
+                      [[ INSTRUMENT_OPTIONS() ]]
+                    </select>
+                  </div>
+                  <div class="col-sm-2">
+                    <select name="Style" id="adv-style-sel" class="form-control input-sm" placeholder="any style">
+                      <option value="">any style</option>
+                      [[ STYLE_OPTIONS() ]]
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"name="solo" value="1" />
+                      Display only music for a solo performer (single instrument)
+                    </label>
+                    <div class="checkbox form-inline">
+                      <label>
+                        <input type="checkbox" name="recent" value="1" />
+                        Display only music that's been added or updated in the last
+                        <input type="number" name="timelength" value="1" min="1" class="form-control input-sm" />
+                        <select name="timeunit" class="form-control input-sm" placeholder="week(s)">
+                          <option value="week">week(s)</option>
+                          <option value="day">day(s)</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="checkbox form-inline">
+                      <label>
+                        <input type="checkbox" name="lilyv" value="1" />Display only music created with LilyPond version
+                        <input type="text" name="lilyversion" size="6" class="form-control input-sm" /> (can be more or less specific, e.g. '2' or '2.6' or '2.6.1')
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-footer">
+                <div class="form-inline">
+                  <button type="submit" class="btn btn-default">Submit</button>
+                  <label class="checkbox-inline">
+                    <input type="checkbox" name="preview" value="1" />Include preview images in the results
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div> <!-- row -->
     </div> <!-- .container -->

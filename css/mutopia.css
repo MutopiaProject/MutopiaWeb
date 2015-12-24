@@ -20,13 +20,14 @@ a:focus {
     background: transparent url("../images/bg-darker.jpg") repeat scroll 30% -15%;
 }
 
-
 .logo img {
     width: 262;
     height: 72;
 }
 
 .footer {
+    margin-top: 40px;
+    padding-top: 6px;
     background-color: #eee;
 }
 .sidebar-module-inset {
@@ -90,11 +91,14 @@ table.maintainer {
     margin-bottom: 2em;
 }
 
-/* for advanced search*/
-.adv-search li {
-    margin-top: 6px;
-    margin-bottom: 6px;
-    list-style: none;
+.adv-search-panel {
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.form-horizontal .checkbox-inline {
+    padding-top: 0px;
+    margin-left: 8px;
 }
 
 #advanced-search {
