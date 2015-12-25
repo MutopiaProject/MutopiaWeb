@@ -12,12 +12,22 @@ a:hover,
 a:focus {
     color: rgb(0, 100, 125);
 }
+
 .jumbotron {
     padding-top: 40px;
     padding-bottom: 20px;
     margin-bottom: 20px;
-    color: inherit;
     background: transparent url("../images/bg-darker.jpg") repeat scroll 30% -15%;
+}
+
+p.adv-search {
+    font-size: 12pt;
+}
+.adv-search-btn-grp {
+    width: 100%;
+}
+.adv-search-btn {
+    width: 40px;
 }
 
 .logo img {
@@ -105,14 +115,6 @@ table.maintainer {
 	display: none;
 }
 
-#searchcol {
-    text-align: right;
-}
-#searchbox {
-    width: 70%;
-    margin-left: 30%;
-}
-
 @media screen and (max-width: 767px) {
     #logo-div {
         text-align: center;
@@ -121,10 +123,6 @@ table.maintainer {
     #searchcol {
         text-align: center;
         margin-top: 40px;
-    }
-    #searchbox {
-        width: 100%;
-        margin-left: 0%;
     }
     #advanced-search {
         display: inline;
