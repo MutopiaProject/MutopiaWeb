@@ -6,7 +6,7 @@ use utf8;
 #
 # Routines common to the Mutopia site CGI scripts.
 # More info at perldoc HTMLcommon
-# 
+#
 
 our $VERSION = '0.01';
 
@@ -89,27 +89,31 @@ sub startPage {
     </div>
   </nav>
 
-    <!-- Logo and search -->
-    <div class="jumbotron">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6 text-left logo">
-            <img src="../images/mutopia-logo.svg" alt="Mutopia Project Logo" />
-          </div>
-          <div class="col-sm-6 text-right">
-            <form class="form-inline" action="make-table.cgi" method="get">
-              <div class="form-group">
-                <input class="form-control" type="text" name="searchingfor">
-                <button type="submit" value="Search" class="btn btn-default">Search</button>
-                <p style="padding-top:10px; margin-bottom:0px; font-size:1em; font-weight:normal;">
-                  <a href="advsearch.html">Advanced Search</a>
-                </p>
-              </div>
-            </form>
-          </div>            
+  <!-- Logo and search -->
+  <div class="jumbotron">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 text-left logo">
+          <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" />
         </div>
+
+        <div class="col-sm-5 col-sm-offset-1">
+          <form id="adv-searchbox" class="text-right" action="make-table.cgi" method="get">
+          <div class="input-group adv-search-btn-grp">
+            <input type="text" class="form-control" placeholder="Search for..." >
+            <span class="input-group-btn adv-search-btn">
+              <button class="btn btn-default btn-block">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+              </button>
+            </span>
+          </div>
+          <p class="adv-search"><a href="../advsearch.html">Advanced Search</a></p>
+          </form>
+        </div>
+
       </div>
     </div>
+  </div>
 
   <div class="container">
     <div class="row">
