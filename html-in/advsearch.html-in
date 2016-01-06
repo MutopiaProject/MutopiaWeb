@@ -18,9 +18,14 @@
             <form class="form-horizontal" action="cgibin/make-table.cgi" method="get">
               <div class="panel-body adv-search-panel">
                 <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
-                    <input type="text" class="form-control" id="adv-search-for" name="searchingfor" placeholder="Search for ..." >
+                  <div class="input-group adv-search-btn-grp">
+                    <input type="text" class="form-control" id="adv-search-for" name="searchingfor"
+                           placeholder="Keywords to search for ..." aria-describedby="btn-search-addon" >
+                    <span class="input-group-btn adv-search-btn" id="btn-search-addon">
+                      <button class="btn btn-default btn-block">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                      </button>
+                    </span>
                   </div>
                 </div>
                 <div class="form-group">
@@ -71,9 +76,9 @@
               </div>
               <div class="panel-footer">
                 <div class="form-inline">
-                  <button type="submit" class="btn btn-default">Submit</button>
+                  <button type="submit" class="btn btn-default">Search</button>
                   <label class="checkbox-inline">
-                    <input type="checkbox" name="preview" value="1" />Include preview images in the results
+                    <input type="checkbox" name="preview" value="1" />Show preview images in results
                   </label>
                 </div>
               </div>

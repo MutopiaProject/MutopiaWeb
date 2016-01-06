@@ -94,7 +94,7 @@ sub startPage {
     <div class="container">
       <div class="row">
         <div class="col-sm-6 text-left logo">
-          <img src="images/mutopia-logo.svg" alt="Mutopia Project Logo" />
+          <img src="../images/mutopia-logo.svg" alt="Mutopia Project Logo" />
         </div>
 
         <div class="col-sm-5 col-sm-offset-1">
