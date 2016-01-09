@@ -1,5 +1,9 @@
 #!/usr/bin/perl -wT
 
+# The "shebang" line above may have to be changed in a Windows environment:
+#
+#	#!perl -wT
+
 use strict;
 use POSIX;
 use utf8;

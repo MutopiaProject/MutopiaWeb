@@ -1,4 +1,9 @@
 #!/usr/bin/perl -wT
+
+# The "shebang" line above may have to be changed in a Windows environment:
+#
+#	#!perl -wT
+
 use strict;
 use POSIX;
 use utf8;
@@ -346,7 +351,16 @@ if ($matchCount == 0) {
 
 print qq(</table>\n);           # outer-table
 
-print qq(<a href="make-table.cgi?startat=$pageCount&searchingfor=$FORM{'searchingfor'}">Next $pageMax</a>) 
+print "<a href=\"make-table.cgi?startat=$pageCount"
+		. "&searchingfor=$FORM{'searchingfor'}"
+		. "&Composer=$FORM{'Composer'}"
+		. "&Instrument=$FORM{'Instrument'}"
+		. "&Style=$FORM{'Style'}"
+		. "&timelength=$FORM{'timelength'}"
+		. "&timeunit=$FORM{'timeunit'}"
+		. "&lilyversion=$FORM{'lilyversion'}"
+		. "&preview=$FORM{'preview'}\""
+		. ">Next $pageMax</a>\n"
 		unless eof CACHE;
 
 close CACHE;
