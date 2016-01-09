@@ -2,6 +2,15 @@
 
 # Deploy files and folder to the htdocs folder of your httpd server.
 # This script would typically be run after Update_website.pl.
+#
+# In a Windows environment, the "shebang" line of the CGI scripts may have to be changed:
+#
+#	#!/usr/bin/perl -wT
+# 	to..
+#	#!perl -wT
+#
+# ...or whatever is appropriate for the environment. 
+
 
 use strict;
 use warnings;
