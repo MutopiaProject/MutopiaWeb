@@ -11,3 +11,7 @@ ftp/
 #  lib may be created during installs but should not be committed
 lib/
 man/
+
+bin/
+-bin/deploy.pl
+-bin/Update_website.pl
