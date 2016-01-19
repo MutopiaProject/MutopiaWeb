@@ -115,6 +115,26 @@ table.maintainer {
 	display: none;
 }
 
+/* Prevent anchors from looking like links in headers and tables. */
+h2 a, h2 a:hover, h2 a:active {
+    color: inherit;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+h3 a, h3 a:hover, h3 a:active {
+    color: inherit;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+th a, th a:hover, th a:active {
+    color: inherit;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+
 @media screen and (max-width: 767px) {
     #logo-div {
         text-align: center;
