@@ -31,8 +31,7 @@
         <div class="col-sm-3 col-md-3">  
           <h3 class="tet-center"><span style="font-size: small; white-space: nowrap;">Browse</span><br>Latest Additions</h3>
           [[ LATEST_ADDITIONS(7) ]]
-          <p><a href="latestadditions.html">
-            <a href="#" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
+          <p><a href="latestadditions.html" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div> 
       
         <!-- Instruments -->
