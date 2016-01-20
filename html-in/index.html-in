@@ -19,7 +19,8 @@
         <div class="col-xs-12">
           <h2 class="text-left" id="free-for-everyone">Free Sheet Music for Everyone</h2>
           
-          <p class="lead">[[ NUMBER_OF_PIECES ]] pieces of music – free to download, modify, print, copy, distribute, perform, and record – all in the Public Domain or under Creative Commons licenses, in PDF, MIDI, and editable <a href="http://lilypond.org/">LilyPond</a> file formats.  <a href="#1">More &gt;&gt;&gt;</a></p>
+          <p class="lead">[[ NUMBER_OF_PIECES ]] pieces of music – free to download, modify, print, copy, distribute, perform, and record – all in the Public Domain or under Creative Commons licenses, in PDF, MIDI, and editable <a href="http://lilypond.org/">LilyPond</a> file formats.
+            <a href="#site-overview" class="btn-default btn-sm active" role="button">More <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
       </div>
 
@@ -30,7 +31,7 @@
         <div class="col-sm-3 col-md-3">  
           <h3 class="tet-center"><span style="font-size: small; white-space: nowrap;">Browse</span><br>Latest Additions</h3>
           [[ LATEST_ADDITIONS(7) ]]
-          <p><a href="latestadditions.html">Show All &gt;&gt;&gt;</a></p>
+          <p><a href="latestadditions.html" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div> 
       
         <!-- Instruments -->
@@ -39,7 +40,7 @@
           <div class="" style="color: rgb(130, 130, 130);">
             [[ TOP_INSTRUMENTS(15) ]] 
           </div>
-          <p><a href="browse.html">Show All &gt;&gt;&gt;</a></p>
+          <p><a href="browse.html#browse_details" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
         
         <!-- Composer -->
@@ -48,7 +49,7 @@
           <div style="color: rgb(130, 130, 130);">
             [[ TOP_COMPOSERS(15) ]]
           </div>
-          <p><a href="browse.html">Show All &gt;&gt;&gt;</a></p>
+          <p><a href="browse.html#browse_details" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
         
         <!-- Styles -->
@@ -63,16 +64,18 @@
         <div class="col-sm-3">
           <h3><span style="font-size: small; white-space: nowrap;">Browse</span><br>Collections</h3>
           [[ TOP_COLLECTIONS(15) ]]
-          <a href="browse.html">Show All &gt;&gt;&gt;</a></p>
+          <p><a href="browse.html#browse_details" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
       
       </div> <!-- row -->
       
       <!-- What we offer and Usage, row 3 -->
+      <span><a name="site-overview">&nbsp;</a><br \>
+
       <div class="row" style="border-top: 2px solid rgb(200, 200, 200); margin-top:20px; margin-bottom:20px; padding-bottom:20px;">
       
         <div class="col-sm-6 col-md-6">
-          <h3 id=1 class="">Classical and Contemporary</h3>
+          <h3>Classical and Contemporary</h3>
           
           <p>The Mutopia Project offers sheet music editions of classical music for free download. These are based on editions in the public domain. A team of volunteers typesets the music using <a href="http://lilypond.org/">LilyPond</a> software. Why not join them?! See the <a href="contribute.html">page on how to contribute</a> for more information.</p>
           
