@@ -25,11 +25,13 @@
 
           [[ BREAK() ]]
 
+          <p><a name="browse_details">&nbsp;</a></p><br \><br \>
+
           <table class="browse_table">
             <tr>
-              <th> <a name="byComposer" />Browse by Composer </th>
-              <th> <a name="byInstrument" />Browse by Instrument </th>
-              <th> <a name="byStyle" />Browse by Style </th>
+              <th><a name="byComposer" />Browse by Composer</th>
+              <th><a name="byInstrument" />Browse by Instrument</th>
+              <th><a name="byStyle" />Browse by Style</th>
             </tr>
             <tr>
               <td>
