@@ -70,15 +70,21 @@ public class RDFGuesser extends SimpleFileVisitor<Path> {
      */
     private Map<String,String> makeAnomalieMap() {
         Map<String,String> map = new HashMap<String,String>();
-        // Cases don't match for these 2 Bach pieces
+        // Cases don't match:
         map.put("BachJS/BWV636", "BachJS/BWV636/bwv636.rdf");
         map.put("BachJS/BWV727", "BachJS/BWV727/bwv727.rdf");
-        // Beethoven gets an altered name
+        map.put("SorF/O35/sorf_op35_no23/sorf_op35_no23.rdf", "SorF/O35/sorf_op35_no23/sorf_op35_No23.rdf");
+        // altered name:
         map.put("BeethovenLv/O17", "BeethovenLv/O17/BeethovenHornSonata.rdf");
-        // As does this PorporaN piece
         map.put("PorporaN/Semiramide", "PorporaN/Semiramide/Semiramide_riconosciuta.rdf");
         // Underscore to dash translation
         map.put("SatieE/Trois_Valses/Sa_Taille", "SatieE/Trois_Valses/Sa_Taille/Sa-Taille.rdf");
+        // n1 is found but the others are links that just confuse things
+        map.put("HaydnFJ/O76/op76-n2", "HaydnFJ/O76/op76-n2/op76-n2.rdf");
+        map.put("HaydnFJ/O76/op76-n3", "HaydnFJ/O76/op76-n2/op76-n3.rdf");
+        map.put("HaydnFJ/O76/op76-n4", "HaydnFJ/O76/op76-n2/op76-n4.rdf");
+        map.put("HaydnFJ/O76/op76-n5", "HaydnFJ/O76/op76-n2/op76-n5.rdf");
+        map.put("HaydnFJ/O76/op76-n6", "HaydnFJ/O76/op76-n2/op76-n6.rdf");
         return map;
     }
 

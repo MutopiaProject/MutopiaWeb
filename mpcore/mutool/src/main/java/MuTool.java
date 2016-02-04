@@ -162,7 +162,7 @@ class MuTool {
 
         // A prepared statement we can use throughout the iteration
         PreparedStatement pst =
-            conn.prepareStatement("SELECT _id FROM muRDFMap WHERE rdfspec=?");
+            conn.prepareStatement("SELECT piece_id FROM muRDFMap WHERE rdfspec=?");
 
         // Iterate the rdf set, counting and printing out missed rdf guesses
         int misses = 0;
@@ -259,6 +259,7 @@ class MuTool {
             .describedAs("new database filename")
             .ofType(File.class);
         parser.accepts("check-rdf",       "Check RDF scanner against the database");
+        parser.accepts("missing",         "Resolve rdf specs not matched to pieces");
         parser.accepts("list-rdf",        "List RDF files to scan for updates");
         parser.accepts("update-rdf",      "Process RDF files to scan for updates");
         parser.accepts("instruments",     "Process raw instruments into instrument-piece mappings");
@@ -302,6 +303,10 @@ class MuTool {
             }
             else if (options.has("instruments")) {
                 mu.updateInstruments(conn);
+                conn.commit();
+            }
+            else if (options.has("missing")) {
+                mu.updateMissingPieces(conn);
                 conn.commit();
             }
             else if (options.has("issues-for")) {
