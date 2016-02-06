@@ -9,10 +9,15 @@
 use strict;           # Must declare variables with "my" or "use vars"
 use File::Basename;   # dirname() 
 use File::Find;       # find()
+use Getopt::Long;
 use Cwd;              # getcwd()
 use Mutopia_Archive;  # subroutines for manipulating the archive
 use Mutopia_HTMLGen;  # subroutines for generating HTML
 use vars qw(%RDFData %replacers @rdfFiles);
+
+# Skip creating the cache if all you want is to regenerate the html.
+my $htmlonly;
+GetOptions ("html-only" => \$htmlonly) or die ("Error in command options\n");
 
 # Find the root of our data by assuming the script we are executing is
 # in a 'bin' folder which is a sibling to 'datafiles'. Allow an
@@ -25,12 +30,14 @@ $webroot =~ s|\\|/|g; # change MSDOS file separators
 my $muroot = $ENV{'MUTOPIA_BASE'} || $webroot;
 $muroot =~ s|\\|/|g; # change MSDOS file separators
 
-# Generate datafiles/*  ####################################################
+# Generate datafiles if not just generating the html from existing caches
 my @files = getRDFFileList("$muroot/ftp/");
 %RDFData = getAllRDFData("$muroot/ftp/", @files);
 
-makeCache();        # new format
-makeSearchCache();
+if (!$htmlonly) {
+    makeCache();        # new format
+    makeSearchCache();
+}
 Mutopia_HTMLGen::makeHTML(\%RDFData);
 
 ############################################################################
