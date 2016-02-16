@@ -8,14 +8,14 @@
     [[ INDEX("latestadditions") ]]
     [[ INCLUDE("nav-post.html-include") ]]
     [[ INCLUDE("jumbotron-search.html-include") ]]
-	
+
 	<div class="container">
       <div class="row">
         <h2>Browse by Composer</h2>
 	      [[ TOP_COMPOSERS(0) ]]
       </div> <!-- row -->
     </div> <!-- .container -->
-	
+
 	[[ INCLUDE("footer.html-include") ]]
 </body>
 </html>
