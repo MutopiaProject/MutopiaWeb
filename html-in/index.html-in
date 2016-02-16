@@ -5,7 +5,7 @@
   [[ INCLUDE("head-post.html-include") ]]
 
   <body>
-  
+
     <!-- Nagigation Bar -->
     [[ INCLUDE("nav-pre.html-include") ]]
     [[ INDEX("index") ]]
@@ -13,87 +13,90 @@
     [[ INCLUDE("jumbotron-search.html-include") ]]
 
     <div class="container">
-	
+
       <!-- Top Text, row 1 -->
       <div class="row">
         <div class="col-xs-12">
           <h2 class="text-left" id="free-for-everyone">Free Sheet Music for Everyone</h2>
-          
+
           <p class="lead">[[ NUMBER_OF_PIECES ]] pieces of music – free to download, modify, print, copy, distribute, perform, and record – all in the Public Domain or under Creative Commons licenses, in PDF, MIDI, and editable <a href="http://lilypond.org/">LilyPond</a> file formats.
             <a href="#site-overview" class="btn-default btn-sm active" role="button">More <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
       </div>
 
       <!-- Browse Options, row 2 -->
-      <div class="row" style="border-top: 2px solid rgb(200, 200, 200); margin-top:20px;">
-      
+      <div class="row top-page-sep">
+
         <!-- Lastest Additions -->
-        <div class="col-sm-3 col-md-3">  
-          <h3 class="tet-center"><span style="font-size: small; white-space: nowrap;">Browse</span><br>Latest Additions</h3>
+        <div class="col-sm-3 col-md-3">
+          <h3><a href="latestadditions.html">Latest Additions</a></h3>
           [[ LATEST_ADDITIONS(7) ]]
           <p><a href="latestadditions.html" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
-        </div> 
-      
+        </div>
+
         <!-- Instruments -->
         <div class="col-sm-2 col-md-2">
-          <h3><span style="font-size: small; white-space: nowrap;">Browse by</span><br>Instrument</h3>
-          <div class="" style="color: rgb(130, 130, 130);">
-            [[ TOP_INSTRUMENTS(15) ]] 
+          <h3><a href="instruments.html">Instruments</a></h3>
+          <div class="browse-list">
+            [[ TOP_INSTRUMENTS(15) ]]
+          <p><a href="instruments.html" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
           </div>
-          <p><a href="browse.html#browse_details" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
-        
+
         <!-- Composer -->
         <div class="col-sm-2 col-md-2">
-          <h3><span style="font-size: small; white-space: nowrap;">Browse by</span><br>Composer</h3>
-          <div style="color: rgb(130, 130, 130);">
+          <h3><a href="composers.html">Composers</a></h3>
+          <div class="browse-list">
             [[ TOP_COMPOSERS(15) ]]
           </div>
-          <p><a href="browse.html#browse_details" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
+          <p><a href="composers.html" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
         </div>
-        
+
         <!-- Styles -->
         <div class="col-sm-2 col-md-2">
-          <h3><span style="font-size: small; white-space: nowrap;">Browse by</span><br>Style</h3>
-          <div style="color: rgb(130, 130, 130);">
+          <h3>Styles</h3>
+          <div class="browse-list">
             [[ TOP_STYLES(15) ]]
           </div>
+          <!-- no button here because this is the entire list -->
         </div>
-        
+
         <!-- Collections -->
         <div class="col-sm-3">
-          <h3><span style="font-size: small; white-space: nowrap;">Browse</span><br>Collections</h3>
-          [[ TOP_COLLECTIONS(15) ]]
-          <p><a href="browse.html#browse_details" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
+          <h3><a href="collections.html" alt="Show all collections">Collections</a></h3>
+          <div class="browse-list">
+            [[ TOP_COLLECTIONS(15) ]]
+          <p><a href="collections.html" class="btn-default btn-sm active" role="button">Show All <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a></p>
+          </div>
         </div>
-      
-      </div> <!-- row -->
-      
-      <!-- What we offer and Usage, row 3 -->
-      <span><a name="site-overview">&nbsp;</a><br \>
 
-      <div class="row" style="border-top: 2px solid rgb(200, 200, 200); margin-top:20px; margin-bottom:20px; padding-bottom:20px;">
-      
+      </div> <!-- row -->
+
+      <!-- What we offer and Usage, row 3 -->
+      <a name="site-overview"><span>&nbsp;</span></a><br \>
+
+      <div class="row mid-page-sep">
+
         <div class="col-sm-6 col-md-6">
           <h3>Classical and Contemporary</h3>
-          
+
           <p>The Mutopia Project offers sheet music editions of classical music for free download. These are based on editions in the public domain. A team of volunteers typesets the music using <a href="http://lilypond.org/">LilyPond</a> software. Why not join them?! See the <a href="contribute.html">page on how to contribute</a> for more information.</p>
-          
+
           <p>We also offer a growing number of modern editions, arrangements and new music. The respective editors, arrangers and composers have chosen to make these works freely available.</p>
         </div>
-        
+
         <div class="col-sm-6 col-md-6">
           <h3>Usage of the Music</h3>
-          
+
           <p>All of the music on Mutopia may be freely downloaded, printed, copied, distributed, modified, performed and recorded. Music is supplied as PDF files for easy printing on either A4 or US Letter paper. The LilyPond source files are also available, which allow you to make your own editions based on ours. Computer-generated audio previews of the music are available as MIDI files, to give you a rough idea of what the music sounds like.</p>
-          
+
           <p>Most of our music is distributed under <a href="http://creativecommons.org/">Creative Commons</a> licenses. Each piece clearly lists what license it is distributed under. For precise details of what each license permits, see the <a href="legal.html">license details page</a>.</p>
          </div>
-         
+
       </div> <!-- row -->
-      
+
       <!-- RSS, Acknowledgements, Bandwidth, row 4 -->
-      <div class="row" style="border-top: 2px solid rgb(200, 200, 200); margin-top:20px; border-bottom: 2px solid rgb(200, 200, 200); margin-bottom:20px; padding-bottom:20px;">
+      <div class="row bottom-page-sep">
 
         <div class="col-sm-4">
           <h3>RSS Feed &nbsp; &nbsp; <a href="latestadditions.rss"><img src="images/feed-icon-28x28.png" alt="RSS" class="noborder" width="28" height="28" /></a></h3>
@@ -105,25 +108,25 @@
 
         <div class="col-sm-4">
           <h3>Acknowledgements</h3>
-          
+
           <p>All music on this site has been typeset using <a href="http://lilypond.org/">LilyPond</a>.</p>
-          
+
           <p>Many thanks to Eric Praetzel at the <a href="http://www.uwaterloo.ca/">University of Waterloo</a> for the loan of our web space and bandwidth.</p>
-          
+
           <p>Thanks also to all the people who have typeset music so that it can be freely available.  Credits to individual typesetters appear with each piece of music on Mutopia.</p>
         </div>
-          
+
         <div class="col-sm-4">
           <h3>Save Our Bandwidth</h3>
-          
-          <p class="txt-center">Use a mirror: 
+
+          <p class="txt-center">Use a mirror:
             <a href="http://www.mutopiaproject.org/" title="Main site in Canada"><b>Canada</b></a> |
             <a href="http://eremita.di.uminho.pt/mutopia/" title="Mirror in Portugal">Portugal</a>
           </p>
         </div>
-        
+
       </div> <!-- row -->
-      
+
     </div> <!-- container -->
 
     [[ INCLUDE("footer.html-include") ]]
