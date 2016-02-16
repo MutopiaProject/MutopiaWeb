@@ -141,9 +141,20 @@ sub BROWSE_BY_COMPOSER {
 
 sub TOP_COMPOSERS($) {
     my $maxNumber = shift;
-    my $count = 0;
     my %comps = Mutopia_Archive::getData("$webroot/datafiles/composers.dat");
     my $html = "";
+    my $cols = 1;
+    my $item_count = scalar keys %comps;
+    if ($maxNumber < 1) {
+        $maxNumber = $item_count;
+        $cols = 2;
+    }
+
+    $html .= "<div class=\"col-md-6 browse-list\">" if ($cols > 1);
+    $html .= "<ul>\n";
+    my $count = 0;
+    my $on_column = 0;
+    my $per_column = $item_count / $cols;
     for my $k (sort {Mutopia_Archive::byComposer($a,$b)} keys %comps) {
         last if $count > $maxNumber;
         
@@ -159,12 +170,22 @@ sub TOP_COMPOSERS($) {
 		} until (($finish == 1) || (eof SEARCHCACHE));
         close(SEARCHCACHE);
         
-        $comps{$k} =~ /^([^(]+)\s*\(/; # Strip off date
-        my $compName = $1;
-        $html .= "<p><a href='cgibin/make-table.cgi?Composer=$k'>";
-        $html .= $compName . "</a> [$noofpieces]</p>\n";
+        my $compName = $comps{$k};
+        $compName =~ s/\s*\(.*$// unless ($cols > 1); # Strip off date
+        $html .= "<li><a href='cgibin/make-table.cgi?Composer=$k'>";
+        $html .= $compName . "</a> [$noofpieces]</li>\n";
+        if ($cols > 1) {
+            my $at_col = int($count / $per_column);
+            if ($at_col != $on_column) {
+                $html .= "</ul></div><div class=\"col-md-6 browse-list\"><ul>\n";
+                $on_column = $at_col;
+            }
+        }
         $count++;
     }
+    $html .= "</ul>";
+    $html .= "</div>" if ($cols > 1);
+
     return $html;
 }
 
@@ -197,9 +218,21 @@ sub BROWSE_BY_INSTRUMENT {
 
 sub TOP_INSTRUMENTS($) {
     my $maxNumber = shift;
-    my $count = 0;
     my %insts = Mutopia_Archive::getData("$webroot/datafiles/instruments.dat");
     my $html = "";
+    my $cols = 1;
+    my $item_count = scalar keys %insts;
+    if ($maxNumber < 1) { 
+        $maxNumber = $item_count;
+        $cols = 3;
+    }
+
+    $html .= "<div class=\"col-md-4\">\n" if ($cols > 1);
+    $html .= "<ul>\n";
+
+    my $count = 0;
+    my $on_column = 0;
+    my $per_column = $item_count / $cols;
     for my $k (sort {Mutopia_Archive::byInstrument($a,$b)} keys %insts) {
         last if $count > $maxNumber;
             
@@ -217,10 +250,20 @@ sub TOP_INSTRUMENTS($) {
         } until (($finish == 1) || (eof SEARCHCACHE));
         close(SEARCHCACHE);
 
-        $html .= "<p><a href='cgibin/make-table.cgi?Instrument=$k'>";
-        $html .= $insts{$k} . "</a> [$noofpieces]</p>\n";
+        $html .= "<li><a href='cgibin/make-table.cgi?Instrument=$k'>";
+        $html .= $insts{$k} . "</a> [$noofpieces]</li>\n";
+        if ($cols > 1) {
+            my $at_col = int($count / $per_column);
+            if ($at_col != $on_column) {
+                $html .= "</ul></div><div class=\"col-md-4 browse-list\"><ul>\n";
+                $on_column = $at_col;
+            }
+        }
         $count++;
     }
+    $html .= "</ul>";
+    $html .= "</div>" if ($cols > 1);
+    
     return $html;
 }
 
@@ -253,7 +296,7 @@ sub TOP_STYLES($) {
     my $maxNumber = shift;
     my $count = 0;
     my %styles = Mutopia_Archive::getData("$webroot/datafiles/styles.dat");
-    my $html = "";
+    my $html = "<ul>\n";
     for my $k (sort keys %styles) {
         last if $count > $maxNumber;
         
@@ -269,10 +312,11 @@ sub TOP_STYLES($) {
         } until (($finish == 1) || (eof SEARCHCACHE));
         close(SEARCHCACHE);
 
-        $html .= "<p><a href='cgibin/make-table.cgi?Style=$k'>";
-        $html .= $styles{$k} . "</a> [$noofpieces]</p>\n";
+        $html .= "<li><a href='cgibin/make-table.cgi?Style=$k'>";
+        $html .= $styles{$k} . "</a> [$noofpieces]</li>\n";
         $count++
     }
+    $html .= "</ul>";
     return $html;
 }
 
@@ -307,7 +351,7 @@ sub TOP_COLLECTIONS($) {
     my $lineread;
     my $colname;
     my $coldesc;
-    my $html = "";
+    my $html = "<ul>\n";
 
     open (COLLECTIONS, '<:utf8', "$webroot/datafiles/collections.dat")
             or croak "cannot open $webroot/datafiles/collections.dat: $!";
@@ -317,10 +361,11 @@ sub TOP_COLLECTIONS($) {
         $colname = $1;
         $coldesc = $2;
 
-        $html .= "<p><a href=\"cgibin/make-table.cgi?collection=";
-        $html .= $colname . "&amp;preview=1\">" . $coldesc . "</a></p>\n";
+        $html .= "<li><a href=\"cgibin/make-table.cgi?collection=";
+        $html .= $colname . "&amp;preview=1\">" . $coldesc . "</a></li>\n";
         $count++;
     } 
+    $html .= "</ul>";
 
     close (COLLECTIONS);
 

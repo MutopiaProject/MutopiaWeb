@@ -50,6 +50,36 @@ p.adv-search {
     margin: 0 -15px 15px;
 }
 
+.top-page-sep {
+    border-top: 2px solid rgb(200, 200, 200);
+    margin-top: 20px;
+}
+
+.mid-page-sep {
+    border-top: 2px solid rgb(200, 200, 200);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.bottom-page-sep {
+    border-top: 2px solid rgb(200, 200, 200);
+    margin-top: 20px;
+    border-bottom: 2px solid rgb(200, 200, 200);
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.browse-list ul {
+    padding-left: 0;
+}
+.browse-list ul li {
+    color: rgb(130, 130, 130);
+    list-style-type: none;
+    padding-top: .5em;
+/*    line-height: 2;*/
+}
+
 th { text-align: center; }
 
 /* Browse table styling */

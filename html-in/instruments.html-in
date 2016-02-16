@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+	[[ INCLUDE("head-pre.html-include") ]]
+	<title>Mutopia: Browse by Instrument</title>
+	[[ INCLUDE("head-post.html-include") ]]
+<body>
+    [[ INCLUDE("nav-pre.html-include") ]]
+    [[ INDEX("latestadditions") ]]
+    [[ INCLUDE("nav-post.html-include") ]]
+    [[ INCLUDE("jumbotron-search.html-include") ]]
+	
+	<div class="container">
+      <div class="row browse-list">
+        <h2>Browse by Instrument</h2>
+	      [[ TOP_INSTRUMENTS(0) ]]
+      </div> <!-- row -->
+    </div> <!-- .container -->
+	
+	[[ INCLUDE("footer.html-include") ]]
+</body>
+</html>
