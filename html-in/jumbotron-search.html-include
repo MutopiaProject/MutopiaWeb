@@ -9,7 +9,7 @@
           <div class="col-sm-5 col-sm-offset-1">
             <form id="adv-searchbox" class="text-right" action="cgibin/make-table.cgi" method="get">
             <div class="input-group adv-search-btn-grp">
-              <input type="text" class="form-control" placeholder="Search for..." >
+              <input type="text" class="form-control" name="searchingfor" placeholder="Search for..." >
               <span class="input-group-btn adv-search-btn">
                 <button class="btn btn-default btn-block">
                   <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
