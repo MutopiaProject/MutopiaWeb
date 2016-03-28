@@ -203,7 +203,7 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
     next unless $go;
 
     # Apply remaining filters in the input form
-    next unless $FORM{'Instrument'} ? ($instrument =~ /$FORM{'Instrument'}/) : 1;
+    next unless $FORM{'Instrument'} ? ($instrument =~ /$FORM{'Instrument'}(s|es|[\W]|$)/) : 1;
     next unless $FORM{'Style'} ? ($style eq $FORM{'Style'}) : 1;
     next unless $FORM{'id'} ? ($id =~ /-$FORM{'id'}$/) : 1;
     next unless $FORM{'collection'} ? ($collections =~ /(^|,)$FORM{'collection'}(,|$)/) : 1;

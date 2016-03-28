@@ -1,4 +1,4 @@
-#!/usr/bin/perl -wT
+#!/usr/bin/perl -w
 #
 # Mutopia_HTMLGen.pm
 # Subroutines to help with generating HTML pages from html-in/* files.
@@ -203,7 +203,7 @@ sub BROWSE_BY_INSTRUMENT {
         do {
             chomp(my $templine = <SEARCHCACHE>);
             if ( ($templine =~ /^instruments:/) &&
-               ( $templine =~ /$k/ )) { $noofpieces++ }
+               ( $templine =~ /$k(s|es|[\W])/ )) { $noofpieces++ }
             if (($k eq "Harp") and ($templine =~ /Harpsichord/)) { $noofpieces-- }
             if ($templine =~ /^licence/) { $finish = 1 }
         } until (($finish == 1) || (eof SEARCHCACHE));
@@ -244,7 +244,7 @@ sub TOP_INSTRUMENTS($) {
         do {
             chomp(my $templine = <SEARCHCACHE>);
             if ( ($templine =~ /^instruments:/) &&
-               ( $templine =~ /$k/ )) { $noofpieces++ }
+               ( $templine =~ /$k(s|es|[\W])/ )) { $noofpieces++ }
             if (($k eq "Harp") and ($templine =~ /Harpsichord/)) { $noofpieces-- }
             if ($templine =~ /^licence/) { $finish = 1 }
         } until (($finish == 1) || (eof SEARCHCACHE));
