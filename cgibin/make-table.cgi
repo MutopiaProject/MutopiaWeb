@@ -5,8 +5,12 @@
 #	#!perl -wT
 
 use strict;
-use POSIX;
-use utf8;
+use POSIX qw(mktime);
+use Unicode::Collate;
+use Unicode::Normalize;
+use Encode qw(decode encode);
+use Benchmark;
+
 # since we aren't sure what the environment is for the site, make sure
 # that our common module can be loaded.
 my $rundir;
@@ -16,7 +20,7 @@ BEGIN {
 use lib "$rundir";
 use HTMLcommon;
 
-binmode(STDOUT, ":utf8");
+binmode STDOUT, 'encoding(UTF-8)';
 
 my %FORM = HTMLcommon::queryArgs();
 
@@ -56,14 +60,25 @@ if ($FORM{'recent'} and $FORM{'recent'} == 1) {
     }
 }
 
-print qq(<table class="outer-table">\n);
-
 if (!open( CACHE, '<:utf8', "../datafiles/musiccache.dat" )) {
     print qq(<div class="alert alert-danger" role="alert">\n);
     print qq(  <strong>Error:</strong> Failed to open the music cache.\nMessage is "$!".\n);
     print "</div>\n";
     last;
 }
+
+print qq(<table class="outer-table">\n);
+
+# get a collator for searching
+my ($collator, @searchlist);
+my $searching = $FORM{'searchingfor'} && $FORM{'searchingfor'} ne '';
+if ($searching) {
+    # A level 1 collator gives case and diacritical insensitivity.
+    $collator = Unicode::Collate->new(normalization => undef, level => 1);
+    @searchlist = split(/ /, $FORM{'searchingfor'}, 0);
+}
+
+my $t0 = Benchmark->new;
 
 # Read the cache into local variables.
 $matchCount = 0;
@@ -132,23 +147,21 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
 
     my $go = 1;
 
-    if ($FORM{'searchingfor'}) {
-        $FORM{'searchingfor'} =~ tr/a-z/A-Z/;
-        if ($FORM{'searchingfor'} ne '') {
-            my @searchlist = split(/ /, $FORM{'searchingfor'}, 0);
-            my $keywords = join('|',
-                                $title, $composer, $opus,
-                                $lyricist, $instrument,
-                                $date, $style, $metre, $arranger,
-                                $source, $copyright, $id,
-                                $maintainer, $maintaineremail,
-                                $maintainerweb, $extrainfo,
-                                $lilypondversion, $collections);
-            foreach my $searchitem (@searchlist) {
-                if (!(uc($keywords) =~ $searchitem)) {
-                    $go = 0;
-                    last;
-                }
+    if ($searching) {
+        my $keywords =          # more likely to be ASCII
+            uc(join('|',
+                    $style, $metre, $date, $opus, $copyright, $id,
+                    $maintaineremail, $collections, $instrument, 
+                    $lilypondversion, $maintainerweb, $extrainfo ));
+        my $ukeywords =         # keywords more likely to be encoded UTF-8
+            join('|',
+                 $title, $maintainer, $composer,
+                 $source, $arranger, $lyricist );
+        foreach (@searchlist) {
+            if (($keywords !~ uc($_)) 
+                && !$collator->match($ukeywords, Encode::decode("UTF-8", $_))) {
+                $go = 0;
+                last;
             }
         }
     }
@@ -182,14 +195,6 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
         }
     }
 
-    if ($FORM{'printav'}) {
-        if ($go == 1 and $FORM{'printav'} == 1) {
-            if ($printurl eq '') {
-                $go = 0;
-            }
-        }
-    }
-
     if ($FORM{'Instrument'}) {
         if ($go == 1 and $FORM{'Instrument'} eq 'Harp' and $instrument =~ /Harpsichord/) {
             $go = 0;
@@ -211,8 +216,8 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
 	# All filtering is done, but we may need to skip for pagination
 	$pageCount++;
 	next if $pageCount <= $startAt;
-	
-    # A match if we got this far. 
+
+    # A match if we got this far.
     $matchCount++;
 
     print qq(<tr><td>\n);       # start a row within the outer table
@@ -343,14 +348,21 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
     print qq(</tr></td>\n);      # outer table row element
 }
 
+print qq(</table>\n);           # outer-table
+
+my $t1 = Benchmark->new;
+print qq(<div class="text-right benchmark">\n);
+print "<small>Search time: ", timestr(timediff($t1, $t0)), "</small>\n";
+print qq(</div>\n);
+
 if ($matchCount == 0) {
     print qq(<div class="alert alert-info" role="alert">\n);
     print qq(  Sorry, no matches were found for your search criteria.\n);
     print "</div>\n";
 }
 
-print qq(</table>\n);           # outer-table
-
+utf8::decode($FORM{'searchingfor'});
+$FORM{'startat'} = $pageCount;
 print "<a href=\"make-table.cgi?startat=$pageCount"
 		. "&searchingfor=$FORM{'searchingfor'}"
 		. "&Composer=$FORM{'Composer'}"

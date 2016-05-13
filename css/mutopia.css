@@ -164,6 +164,9 @@ th a, th a:hover, th a:active {
     text-decoration: none;
 }
 
+.bench {
+    color: rgb(130, 130, 130);
+}
 
 @media screen and (max-width: 767px) {
     #logo-div {
