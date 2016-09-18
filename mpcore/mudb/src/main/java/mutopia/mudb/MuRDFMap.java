@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -26,7 +24,7 @@ public class MuRDFMap {
     public MuRDFMap(String p_rdfpart) {
         rdfpart = this.resolveToRDF(Paths.get(p_rdfpart)).toString();
     }
-    
+
     /** Resolve the RDF file name.
      *  Given a path to a LilyPond file, determine and return the RDF
      *  file name. This uses a similar algorithm to {@link
