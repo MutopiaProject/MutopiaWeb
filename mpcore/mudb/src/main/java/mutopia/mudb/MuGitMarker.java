@@ -177,43 +177,6 @@ public class MuGitMarker {
     }
 
 
-    /** Resolve the RDF file name.
-     *  Given a path to a LilyPond file, determine and return the RDF
-     *  file name. This uses a similar algorithm to {@link
-     *  #core.RDFGuesser} without the benefit of the tree walk.
-     *  @param lypath The path of a LilyPond file.
-     *  @return String path relative to the top of the ftp archive.
-     */
-    String resolveLyToRDF(Path lypath) {
-        // Control array bounds problems by getting enough space for
-        // the string array and then iterating through the path names.
-        String[] rpath = new String[ lypath.getNameCount() + 1];
-        int pos = 0;
-        for (Path p : lypath.subpath(1, lypath.getNameCount())) {
-            String name = p.getFileName().toString();
-            if (name.endsWith("-lys") || name.endsWith(".ly")) {
-                rpath[pos] = rpath[pos-1];
-                break;
-            }
-            else {
-                rpath[pos] = name;
-            }
-            pos += 1;
-        }
-
-        // Build the result string. Note that the forward slash is
-        // correct here since we are building the string for remote
-        // access via a URL.
-        StringBuilder sb = new StringBuilder(rpath[0]);
-        for (int ipos = 1; ipos <= pos; ipos++) {
-            sb.append("/");
-            sb.append(rpath[ipos]);
-        }
-        sb.append(".rdf");
-        return sb.toString();
-    }
-
-
     /**
      * Create a set of MuRDFMap's affected since the last mark
      *
@@ -226,9 +189,8 @@ public class MuGitMarker {
         try {
             List<String> flist = changedFiles();
             for (String aFlist : flist) {
-                if (aFlist.endsWith(".ly")) {
-                    Path p = FileSystems.getDefault().getPath(aFlist);
-                    rdf_set.add(new MuRDFMap(resolveLyToRDF(p)));
+                if (aFlist.endsWith(".ly") || aFlist.endsWith(".ily")) {
+                    rdf_set.add(new MuRDFMap(aFlist));
                 }
             }
         }
