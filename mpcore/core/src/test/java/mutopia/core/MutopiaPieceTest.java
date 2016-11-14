@@ -8,9 +8,17 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
+import org.junit.BeforeClass;
 
 public class MutopiaPieceTest {
 	private static final String VERSION_RE = "^\\d+\\.\\d+\\.\\d+$";
+
+    @BeforeClass
+    public static void initialize() {
+        if (MutopiaMaps.composerMap == null) {
+            fail("Is MUTOPIA_BASE in your environment?");
+        }
+    }
 
 	@Test
 	public void testMutopiaPiece() {
@@ -73,7 +81,8 @@ public class MutopiaPieceTest {
 		mp.populateField("source", "A little bird told me");
 		
 		// Haven't set license yet, so fail
-		assertFalse(mp.checkFieldConsistency(false));
+		assertFalse("Environment is probably incorrect", 
+                    mp.checkFieldConsistency(false));
 		
 		mp.populateField("license", "Public Domain");
 		assertTrue(mp.checkFieldConsistency(false));
