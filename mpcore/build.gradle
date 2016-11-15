@@ -25,6 +25,7 @@ project (':core') {
 
 project (':Mutopia') {
   apply plugin: 'application'
+  apply plugin: 'distribution'
   dependencies {
     compile project(':core')
   }
