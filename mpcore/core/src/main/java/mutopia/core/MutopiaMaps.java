@@ -61,8 +61,8 @@ public class MutopiaMaps
           composerMap = readDataFile("composers.dat");
           styleMap = readDataFile("styles.dat");
       }
-      catch (IOException ioe) {
-          System.err.println(ioe.getMessage());
+      catch (Exception ioe) {
+          System.err.println("Unable to initialize maps: " + ioe.getMessage());
       }
    }
 
@@ -189,7 +189,9 @@ public class MutopiaMaps
             throw new RuntimeException("MUTOPIA_BASE not set");
         }
 
-        Path path = FileSystems.getDefault().getPath(mutopiaDir, "datafiles", datFile);
+        Path path = FileSystems.getDefault().getPath(mutopiaDir,
+                                                     "datafiles",
+                                                     datFile);
         return MutopiaMaps.readPairFile(path);
     }
 

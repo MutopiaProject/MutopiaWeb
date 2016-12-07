@@ -11,7 +11,7 @@ import org.apache.commons.imaging.ImageReadException;
 
 /**
  * Class to store information about a Mutopia piece.
- * 
+ *
  * @author Chris Sawer
  */
 public class MutopiaPiece
@@ -49,7 +49,7 @@ public class MutopiaPiece
    /**
     * Creates a new MutopiaPiece object.  Populates {@code piecePropertyMap}, used to
     * set fields dynamically.
-    * 
+    *
     * @param lyFilename the name of the LilyPond file
     */
    public MutopiaPiece(String lyFilename)
@@ -72,7 +72,7 @@ public class MutopiaPiece
    /**
     * Set a field in this object based on a field name and value.  Field names that start with
     * "mutopia" will never have their values overwritten by a field name that does not.
-    * 
+    *
     * @param field the field name to set
     * @param value the value to set this field to
     */
@@ -120,16 +120,16 @@ public class MutopiaPiece
    }
 
    /**
-    * Sets several values based on the LilyPond file name and executable. 
+    * Sets several values based on the LilyPond file name and executable.
     * <ul>
     * <li>{@code filenameBase} is the file name without directory or extension</li>
     * <li>{@code multipleLyFiles}, {@code multipleMidFiles}, and
     *     {@code multiplePdfFiles} are booleans set to true if there are ZIP files for .ly files,
     *     .mid files, and .pdf file respectively</li>
-    * <li>{@code lilyVersion} is the LilyPond version</li> 
+    * <li>{@code lilyVersion} is the LilyPond version</li>
     * <li>{@code previewWidth} and {@code previewHeight} are the dimensions of the preview PNG file</li>
     * </ul>
-    * 
+    *
     * @param lilyCommandLine the LilyPond executable, used to get the version
     * @throws IOException from {@link #getLilyVersion()}
     */
@@ -157,7 +157,7 @@ public class MutopiaPiece
 
    /**
     * Parses the LilyPond version number from the executable's output.
-    * 
+    *
     * @param lilyCommandLine the LilyPond executable
     * @return the LilyPond version
     * @throws IOException if it has problems executing LilyPond
@@ -174,7 +174,7 @@ public class MutopiaPiece
 
    /**
     * Checks whether mandatory fields have been set.
-    *  
+    *
     * @param checkFooter true if footer value is mandatory
     * @return true if all mandatory fields are set, false otherwise
     */
@@ -251,7 +251,7 @@ public class MutopiaPiece
 
    /**
     * Checks whether mandatory fields from {@link #deriveCompileStuff(String)} have been set.
-    * 
+    *
     * @return true only if all mandatory fields are set, false otherwise
     */
    public boolean checkCompileConsistency()
@@ -274,11 +274,11 @@ public class MutopiaPiece
 
       return returnValue;
    }
-   
+
    // Return the dimensions of a PNG image
    private Dimension getPngSize(File file) {
 	   Dimension dim = null;
-	   
+
 	   for (ImageParser parser : ImageParser.getAllImageParsers()) {
 			if (".png".equalsIgnoreCase(parser.getDefaultExtension())) {
     			try {
@@ -289,7 +289,7 @@ public class MutopiaPiece
     			break;
 			}
 		}
-		
+
 		return dim;
    }
 
@@ -520,9 +520,9 @@ public class MutopiaPiece
    {
       return maintainerWeb;
    }
-   
+
    // For testing
-   public Map<String, PropertyDescriptor> getPiecePropertyMap() 
+   public Map<String, PropertyDescriptor> getPiecePropertyMap()
    {
 	   return piecePropertyMap;
    }
