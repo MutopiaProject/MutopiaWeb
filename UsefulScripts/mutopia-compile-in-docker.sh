@@ -6,13 +6,13 @@
 # ls -lZ
 
 # Determine lilypond version - check there is only one in *.ly
-VERSION_STRING_COUNT=$(grep -h "\\version" *.ly | sort | uniq | wc -l)
+VERSION_STRING_COUNT=$(grep -h "\\\\version" *.ly | sort | uniq | wc -l)
 if [ $VERSION_STRING_COUNT -ne 1 ]; then
     echo "Unable to determine LilyPond version"
     exit 1
 fi
 
-LILYPOND_VERSION=$(grep -h "\\version" *.ly | sort | uniq | sed -e 's/.*"\(.*\)".*/\1/')
+LILYPOND_VERSION=$(grep -h "\\\\version" *.ly | sort | uniq | sed -e 's/.*"\(.*\)".*/\1/')
 DOCKER_IMAGE=mutopia/lilypond:$LILYPOND_VERSION
 
 echo "Determined LilyPond version $LILYPOND_VERSION"
