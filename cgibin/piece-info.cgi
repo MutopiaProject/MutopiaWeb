@@ -75,7 +75,7 @@ else {
         chomp(my $a4pdffile = <CACHE>);
         chomp(my $letpsfile = <CACHE>);
         chomp(my $letpdffile = <CACHE>);
-        chomp(my $pngfile = <CACHE>);
+        chomp(my $previewfile = <CACHE>);
         chomp(my $pngheight = <CACHE>);
         chomp(my $pngwidth = <CACHE>);
         chomp(my $title = <CACHE>);
@@ -198,9 +198,19 @@ else {
 
         print "<br>\n";
         print qq(<div class="preview-image">);
-        print qq[<p><img src="$baseref$midrif$musicnm/$pngfile" ];
-        print qq[height="$pngheight" width="$pngwidth" border="0" ];
-        print qq[alt="Music preview" /></p>\n];
+
+        if ($previewfile =~ /\.png$/) {
+            print qq[<p><img src="$baseref$midrif$musicnm/$previewfile" ];
+            print qq[height="$pngheight" width="$pngwidth" border="0" ];
+            print qq[alt="Music preview" /></p>\n];
+        }
+        else {
+            print qq[<div class="preview-image">];
+            print qq[<object type="image/svg+xml" data="$baseref$midrif$musicnm/$previewfile">];
+            print qq[SVG music preview image not supported on your browser];
+            print qq[</object>];
+            print qq[</div>\n];
+        }
         print "</div>\n";
         if ($printurlurl ne '') {
             print qq[<table align="center" border="1" cellpadding="0" cellspacing="0"><tr>\n];
