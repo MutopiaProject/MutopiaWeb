@@ -93,7 +93,7 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
     chomp(my $a4pdffile = <CACHE>);
     chomp(my $letpsfile = <CACHE>);
     chomp(my $letpdffile = <CACHE>);
-    chomp(my $pngfile = <CACHE>);
+    chomp(my $previewfile = <CACHE>);
     chomp(my $pngheight = <CACHE>);
     chomp(my $pngwidth = <CACHE>);
     chomp(my $title = <CACHE>);
@@ -222,8 +222,17 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
     # that spans all 4 columns
     if ($FORM{'preview'} && $FORM{'preview'} == 1) {
         print qq(<tr class="preview"><td colspan="4" align="center">);
-        print qq(<img src="$baseref$midrif$musicnm/$pngfile" );
-        print qq(height="$pngheight" width="$pngwidth" alt="Preview image" />);
+
+        if ($previewfile =~ /\.png$/) {
+            print qq(<img src="$baseref$midrif$musicnm/$previewfile" );
+            print qq(alt="Music preview image" />);
+        }
+        else {
+            print qq(<object type="image/svg+xml" data="$baseref$midrif$musicnm/$previewfile">);
+            print qq(SVG music preview image not supported on your browser);
+            print qq(</object>);
+        }
+
         print qq(</td></tr>\n);
     }
     print "<tr>";
@@ -317,7 +326,7 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
         print '<td><a href="';
         print qq[$baseref$midrif$musicnm/$midfile">.mid file</a></td>\n];
     }
-    print qq(<td><a href="$baseref$midrif$musicnm/$pngfile">Preview image</a></td>\n);
+    print qq(<td><a href="$baseref$midrif$musicnm/$previewfile">Preview image</a></td>\n);
     print qq[<td><a href="$baseref$midrif$musicnm/">Appropriate FTP area</a></td>\n</tr><tr>\n];
     if ($a4psfile =~ /\.zip$/) {
         print qq(<td class="zipped"><a href="$baseref$midrif$musicnm/$a4psfile">A4 .ps files (zipped)</a></td>\n);

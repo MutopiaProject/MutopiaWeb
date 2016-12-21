@@ -201,8 +201,7 @@ else {
 
         if ($previewfile =~ /\.png$/) {
             print qq[<p><img src="$baseref$midrif$musicnm/$previewfile" ];
-            print qq[height="$pngheight" width="$pngwidth" border="0" ];
-            print qq[alt="Music preview" /></p>\n];
+            print qq[border="0" alt="Music preview image" /></p>\n];
         }
         else {
             print qq[<div class="preview-image">];
