@@ -130,6 +130,14 @@ table.maintainer {
     margin-top: 1em;
     margin-bottom: 2em;
 }
+.preview-image object {
+    background-color: #fff;
+    display:block;
+    margin-top: 1em;
+    margin-bottom: 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .adv-search-panel {
     margin-left: 12px;
