@@ -197,20 +197,19 @@ else {
         HTMLcommon::startPiece($title, $composer);
 
         print "<br>\n";
-        print qq(<div class="preview-image">);
 
+        print qq(<div class="preview-image">);
         if ($previewfile =~ /\.png$/) {
             print qq[<p><img src="$baseref$midrif$musicnm/$previewfile" ];
             print qq[border="0" alt="Music preview image" /></p>\n];
         }
         else {
-            print qq[<div class="preview-image">];
             print qq[<object type="image/svg+xml" data="$baseref$midrif$musicnm/$previewfile">];
             print qq[SVG music preview image not supported on your browser];
             print qq[</object>];
-            print qq[</div>\n];
         }
         print "</div>\n";
+
         if ($printurlurl ne '') {
             print qq[<table align="center" border="1" cellpadding="0" cellspacing="0"><tr>\n];
             print qq[<td><table border="0" cellpadding="5" cellspacing="10"><tr>\n];
