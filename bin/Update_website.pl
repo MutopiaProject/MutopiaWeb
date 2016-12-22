@@ -124,15 +124,6 @@ sub makeCache {
     }
     close (COLLECTIONS);
 
-    open (PRINTURLS, '<:utf8', "$muroot/datafiles/printurls.dat")
-        or die "cannot open $muroot/datafiles/printurls.dat: $!";
-    my @printurls;
-    my $noOfPrintUrls;
-    for ($noOfPrintUrls = 0; !(eof PRINTURLS); $noOfPrintUrls++) {
-        chomp($printurls[$noOfPrintUrls] = <PRINTURLS>);
-    }
-    close (PRINTURLS);
-	
 	# Use Unix text record endings or seek will be off in Windows
 	local $/ = "\n";
 
@@ -157,7 +148,6 @@ sub makeCache {
 		
         my @data = Mutopia_Archive::RDFtoCACHE %{ $RDFData{$_} };
         my $allCollections = "";
-        my $printURL = "";
 
         # find the id number of each piece
         my $date;
@@ -176,18 +166,11 @@ sub makeCache {
             }
         }
 
-        # does the piece have a print URL?
-        for (my $loop = 0; $loop < $noOfPrintUrls; $loop++) {
-            if ($printurls[$loop] =~ /^$id:/) {
-                $printURL = substr($printurls[$loop],index($printurls[$loop],":") + 1);
-            }
-        }
-
         # output to cache file
         print TEMPCACHE "**********\n$id\n$opus/\n$name\n";
         print TEMPCACHE "$_\n" for @data;
         print TEMPCACHE substr($allCollections, 0, -1) . "\n";
-        print TEMPCACHE $printURL . "\n";
+        print TEMPCACHE "\n"; # former printURL - TODO remove
     }
     close (TEMPCACHE);
 

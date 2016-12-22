@@ -172,22 +172,6 @@ else {
             my $lengthOfTitle = index($collectionData, ':', $startOfTitle) - $startOfTitle;
             $collectionName[$noOfCollections] = substr($collectionData, $startOfTitle, $lengthOfTitle);
         }
-        my $printurlshop = '';
-        my $printurlimg = '';
-        my $printurlimgwidth = '';
-        my $printurlimgheight = '';
-        my $printurlurl = '';
-        if ($printurl ne '') {
-            my $startOfImg = index($printurl, ':') + 1;
-            my $startOfWidth = index($printurl, ':', $startOfImg) + 1;
-            my $startOfHeight = index($printurl, ':', $startOfWidth) + 1;
-            my $startOfURL = index($printurl, ':', $startOfHeight) + 1;
-            my $printurlshop = substr($printurl, 0, $startOfImg - 1);
-            my $printurlimg = substr($printurl, $startOfImg, $startOfWidth - $startOfImg - 1);
-            my $printurlimgwidth = substr($printurl, $startOfWidth, $startOfHeight - $startOfWidth - 1);
-            my $printurlimgheight = substr($printurl, $startOfHeight, $startOfURL - $startOfHeight - 1);
-            my $printurlurl = substr($printurl, $startOfURL);
-        }
         my $upyear = substr($id, 8, 4);
         my $upmonth = substr($id, 13, 2);
         my $upday = substr($id, 16, 2);
@@ -210,17 +194,6 @@ else {
         }
         print "</div>\n";
 
-        if ($printurlurl ne '') {
-            print qq[<table align="center" border="1" cellpadding="0" cellspacing="0"><tr>\n];
-            print qq[<td><table border="0" cellpadding="5" cellspacing="10"><tr>\n];
-            print qq[<td><font size="+2"><b>New!</b></font></td>\n];
-            print qq[<td><a href="$printurlurl">Buy printed sheet music of this piece</a> from $printurlshop.</td>\n];
-            if ($printurlimg ne '') {
-                print qq[<td><a href="$printurlurl"><img src="$printurlimg" border="0" width="$printurlimgwidth" height="$printurlimgheight" alt="Shop logo" /></a></td>\n];
-            }
-            print "</tr></table>\n";
-            print "</td></tr></table>\n\n";
-        }
         print qq(<table class="table table-bordered result-table">);
         print "<tr><td><b>Instrument(s):</b> $for</td>\n";
         print "<td><b>Style:</b> $style</td></tr>\n";

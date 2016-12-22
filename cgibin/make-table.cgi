@@ -182,14 +182,6 @@ until (eof CACHE || $pageCount >= $startAt + $pageMax) {
         }
     }
 
-    if ($FORM{'printav'}) {
-        if ($go == 1 and $FORM{'printav'} == 1) {
-            if ($printurl eq '') {
-                $go = 0;
-            }
-        }
-    }
-
     if ($FORM{'Instrument'}) {
         if ($go == 1 and $FORM{'Instrument'} eq 'Harp' and $instrument =~ /Harpsichord/) {
             $go = 0;
