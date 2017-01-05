@@ -10,9 +10,5 @@ MIDI file, and preview images.
 
 `mutopia-clean.sh` will remove all publishing assets in a folder.
 
-`mutopia-env.sh` sets up a default environment for the other tools. If
-the user follows the naming convention, it can be useful for managing
-an environment that includes several LilyPond versions.
-
 `mutopia-combine.sh` finalizes the client-side publication by
 combining multiple assets into zip files and creating the RDF file.
