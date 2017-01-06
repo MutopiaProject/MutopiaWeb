@@ -58,7 +58,7 @@ if [ $MID_COUNT -lt 1 ]; then
    exit 1
 fi
 
-if [ ! -r "$BASE_NAME"-preview.png ]; then
+if [ ! -r "$BASE_NAME"-preview.svg ]; then
    echo "Unable to find preview image: aborting"
    exit 1
 fi
@@ -91,4 +91,3 @@ if [ -d "$BASE_NAME"-lys ]; then
 else
    Mutopia -r "$BASE_NAME".ly
 fi
-

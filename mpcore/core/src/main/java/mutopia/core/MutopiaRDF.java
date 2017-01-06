@@ -86,9 +86,9 @@ public class MutopiaRDF
       writeln(wr, "    <mp:pdfFileA4>" + piece.getFilenameBase() + (piece.getMultiplePdfFiles() ? "-a4-pdfs.zip" : "-a4.pdf") + "</mp:pdfFileA4>");
       writeln(wr, "    <mp:psFileLet>" + piece.getFilenameBase() + (piece.getMultiplePdfFiles() ? "-let-pss.zip" : "-let.ps.gz") + "</mp:psFileLet>");
       writeln(wr, "    <mp:pdfFileLet>" + piece.getFilenameBase() + (piece.getMultiplePdfFiles() ? "-let-pdfs.zip" : "-let.pdf") + "</mp:pdfFileLet>");
-      writeln(wr, "    <mp:pngFile>" + piece.getFilenameBase() + "-preview.png</mp:pngFile>");
-      writeln(wr, "    <mp:pngHeight>" + piece.getPreviewHeight() + "</mp:pngHeight>");
-      writeln(wr, "    <mp:pngWidth>" + piece.getPreviewWidth() + "</mp:pngWidth>");
+      writeln(wr, "    <mp:pngFile>" + piece.getFilenameBase() + "-preview.svg</mp:pngFile>");
+      writeln(wr, "    <mp:pngHeight>0</mp:pngHeight>");
+      writeln(wr, "    <mp:pngWidth>0</mp:pngWidth>");
       wr.newLine();
       writeln(wr, "    <mp:id>" + piece.getFooter() + "</mp:id>");
       writeln(wr, "    " + (piece.getMaintainer() != null ? "<mp:maintainer>" + xmlIfy(piece.getMaintainer()) +

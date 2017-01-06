@@ -6,9 +6,6 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.awt.Dimension;
 
-import org.apache.commons.imaging.ImageParser;
-import org.apache.commons.imaging.ImageReadException;
-
 /**
  * Class to store information about a Mutopia piece.
  *
@@ -23,8 +20,6 @@ public class MutopiaPiece
    private Boolean multiplePdfFiles = null;
 
    private String lilyVersion = null;
-   private Integer previewWidth = null;
-   private Integer previewHeight = null;
 
    private String title = null;
    private String composer = null;
@@ -127,7 +122,6 @@ public class MutopiaPiece
     *     {@code multiplePdfFiles} are booleans set to true if there are ZIP files for .ly files,
     *     .mid files, and .pdf file respectively</li>
     * <li>{@code lilyVersion} is the LilyPond version</li>
-    * <li>{@code previewWidth} and {@code previewHeight} are the dimensions of the preview PNG file</li>
     * </ul>
     *
     * @param lilyCommandLine the LilyPond executable, used to get the version
@@ -144,15 +138,6 @@ public class MutopiaPiece
       multiplePdfFiles = (new File(filenameBaseWithDir + "-a4-pss.zip").exists());
 
       lilyVersion = getLilyVersion(lilyCommandLine);
-
-      String previewFilename = filenameBaseWithDir + "-preview.png";
-	  File previewFile = new File(previewFilename);
-      if (previewFile.exists())
-      {
-         Dimension dim = getPngSize(previewFile);
-         previewWidth = new Integer( (int) Math.round(dim.getWidth()) );
-         previewHeight = new Integer( (int) Math.round(dim.getHeight()) );
-      }
    }
 
    /**
@@ -265,32 +250,7 @@ public class MutopiaPiece
          System.err.println("LilyPond version not looked up");
       }
 
-      // Preview width + height must have been looked up
-      if ((previewWidth == null) || (previewHeight == null))
-      {
-         returnValue = false;
-         System.err.println("Preview image size not looked up");
-      }
-
       return returnValue;
-   }
-
-   // Return the dimensions of a PNG image
-   private Dimension getPngSize(File file) {
-	   Dimension dim = null;
-
-	   for (ImageParser parser : ImageParser.getAllImageParsers()) {
-			if (".png".equalsIgnoreCase(parser.getDefaultExtension())) {
-    			try {
-    				dim = parser.getImageSize(file);
-    			} catch (ImageReadException | IOException e) {
-    				e.printStackTrace();
-    			}
-    			break;
-			}
-		}
-
-		return dim;
    }
 
    // Public getters
@@ -338,26 +298,6 @@ public class MutopiaPiece
    public String getLilyVersion()
    {
       return lilyVersion;
-   }
-
-   public void setPreviewWidth(String previewWidth)
-   {
-      this.previewWidth = new Integer(previewWidth);
-   }
-
-   public Integer getPreviewWidth()
-   {
-      return previewWidth;
-   }
-
-   public void setPreviewHeight(String previewHeight)
-   {
-      this.previewHeight = new Integer(previewHeight);
-   }
-
-   public Integer getPreviewHeight()
-   {
-      return previewHeight;
    }
 
    // Public getters and setters

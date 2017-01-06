@@ -49,8 +49,6 @@ public class MutopiaPieceTest {
 		assertTrue(mp.getMultipleMidFiles());
 		assertFalse(mp.getMultiplePdfFiles());
 		assertTrue(mp.getLilyVersion().matches(VERSION_RE));
-		assertEquals(new Integer(281), mp.getPreviewHeight()); 
-		assertEquals(new Integer(483), mp.getPreviewWidth()); 
 	}
 
 	@Test
