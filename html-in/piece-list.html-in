@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   [[ INCLUDE("head-pre.html-include") ]]
-    <title>Mutopia: List of all usic</title>
+    <title>Mutopia: List of all music</title>
   [[ INCLUDE("head-post.html-include") ]]
 
   <body>
