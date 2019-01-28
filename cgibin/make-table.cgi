@@ -7,6 +7,8 @@
 use strict;
 use POSIX;
 use utf8;
+use URI::Escape;
+
 # since we aren't sure what the environment is for the site, make sure
 # that our common module can be loaded.
 my $rundir;
@@ -353,19 +355,19 @@ if ($matchCount == 0) {
 print qq(</table>\n);           # outer-table
 
 print "<a href=\"make-table.cgi?startat=$pageCount"
-		. "&searchingfor=$FORM{'searchingfor'}"
-		. "&Composer=$FORM{'Composer'}"
-		. "&Instrument=$FORM{'Instrument'}"
-		. "&Style=$FORM{'Style'}"
-		. "&collection=$FORM{'collection'}"
-		. "&id=$FORM{'id'}"
-		. "&solo=$FORM{'solo'}"
-		. "&recent=$FORM{'recent'}"
-		. "&timelength=$FORM{'timelength'}"
-		. "&timeunit=$FORM{'timeunit'}"
-		. "&lilyversion=$FORM{'lilyversion'}"
-		. "&preview=$FORM{'preview'}\""
-		. ">Next $pageMax</a>\n"
+		. "&searchingfor=" . uri_escape($FORM{'searchingfor'})
+		. "&Composer=" . uri_escape($FORM{'Composer'})
+		. "&Instrument=" . uri_escape($FORM{'Instrument'})
+		. "&Style=" . uri_escape($FORM{'Style'})
+		. "&collection=" . uri_escape($FORM{'collection'})
+		. "&id=" . uri_escape($FORM{'id'})
+		. "&solo=" . uri_escape($FORM{'solo'})
+		. "&recent=" . uri_escape($FORM{'recent'})
+		. "&timelength=" . uri_escape($FORM{'timelength'})
+		. "&timeunit=" . uri_escape($FORM{'timeunit'})
+		. "&lilyversion=" . uri_escape($FORM{'lilyversion'})
+		. "&preview=" . uri_escape($FORM{'preview'})
+		. "\">Next $pageMax</a>\n"
 		unless eof CACHE;
 
 close CACHE;
